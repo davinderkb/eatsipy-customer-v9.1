@@ -67,6 +67,7 @@ import 'package:eatsipy_customer/widget/geoflutterfire/src/models/point.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:geocoding/geocoding.dart';
@@ -441,7 +442,11 @@ class FireStoreUtils {
 
   static Future<List<ZoneModel>?> getZone() async {
     List<ZoneModel> airPortList = [];
-    await fireStore.collection(CollectionName.zone).where('publish', isEqualTo: true).get().then((value) {
+    Query<Map<String, dynamic>> query = fireStore.collection(CollectionName.zone);
+    if (!kDebugMode) {
+      query = query.where('publish', isEqualTo: true);
+    }
+    await query.get().then((value) {
       for (var element in value.docs) {
         ZoneModel ariPortModel = ZoneModel.fromJson(element.data());
         airPortList.add(ariPortModel);

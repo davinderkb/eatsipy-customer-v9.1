@@ -21,41 +21,14 @@ class DashBoardController extends GetxController {
   }
 
   Future<void> getInit() async {
-    if (Constant.theme == "theme_2") {
-      if (Constant.walletSetting == false) {
-        pageList.value = [
-          const HomeScreen(),
-          const FavouriteScreen(),
-          const OrderScreen(),
-          const ProfileScreen(),
-        ];
-      } else {
-        pageList.value = [
-          const HomeScreen(),
-          const FavouriteScreen(),
-          const WalletScreen(),
-          const OrderScreen(),
-          const ProfileScreen(),
-        ];
-      }
-    } else {
-      if (Constant.walletSetting == false) {
-        pageList.value = [
-          const HomeScreenTwo(),
-          const FavouriteScreen(),
-          const OrderScreen(),
-          const ProfileScreen(),
-        ];
-      } else {
-        pageList.value = [
-          const HomeScreenTwo(),
-          const FavouriteScreen(),
-          const WalletScreen(),
-          const OrderScreen(),
-          const ProfileScreen(),
-        ];
-      }
-    }
+    final home = Constant.theme == "theme_2" ? const HomeScreenTwo() : const HomeScreen();
+    pageList.value = [
+      home,
+      const FavouriteScreen(),
+      if (Constant.walletSetting == true) const WalletScreen(),
+      const OrderScreen(),
+      const ProfileScreen(),
+    ];
   }
 
   DateTime? currentBackPressTime;

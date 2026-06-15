@@ -126,21 +126,41 @@ class Constant {
     }).join(', ');
   }
 
-  static String formatAddress({required SelectedLocationModel selectedLocation}) {
+  static String formatAddress(
+      {required SelectedLocationModel selectedLocation}) {
     List<String> parts = [];
 
-    if (selectedLocation.address!.name != null && selectedLocation.address!.name!.isNotEmpty) parts.add(selectedLocation.address!.name!);
-    if (selectedLocation.address!.subThoroughfare != null && selectedLocation.address!.subThoroughfare!.isNotEmpty) parts.add(selectedLocation.address!.subThoroughfare!);
-    if (selectedLocation.address!.thoroughfare != null && selectedLocation.address!.thoroughfare!.isNotEmpty) parts.add(selectedLocation.address!.thoroughfare!);
-    if (selectedLocation.address!.subLocality != null && selectedLocation.address!.subLocality!.isNotEmpty) parts.add(selectedLocation.address!.subLocality!);
-    if (selectedLocation.address!.locality != null && selectedLocation.address!.locality!.isNotEmpty) parts.add(selectedLocation.address!.locality!);
-    if (selectedLocation.address!.subAdministrativeArea != null && selectedLocation.address!.subAdministrativeArea!.isNotEmpty) {
+    if (selectedLocation.address!.name != null &&
+        selectedLocation.address!.name!.isNotEmpty)
+      parts.add(selectedLocation.address!.name!);
+    if (selectedLocation.address!.subThoroughfare != null &&
+        selectedLocation.address!.subThoroughfare!.isNotEmpty)
+      parts.add(selectedLocation.address!.subThoroughfare!);
+    if (selectedLocation.address!.thoroughfare != null &&
+        selectedLocation.address!.thoroughfare!.isNotEmpty)
+      parts.add(selectedLocation.address!.thoroughfare!);
+    if (selectedLocation.address!.subLocality != null &&
+        selectedLocation.address!.subLocality!.isNotEmpty)
+      parts.add(selectedLocation.address!.subLocality!);
+    if (selectedLocation.address!.locality != null &&
+        selectedLocation.address!.locality!.isNotEmpty)
+      parts.add(selectedLocation.address!.locality!);
+    if (selectedLocation.address!.subAdministrativeArea != null &&
+        selectedLocation.address!.subAdministrativeArea!.isNotEmpty) {
       parts.add(selectedLocation.address!.subAdministrativeArea!);
     }
-    if (selectedLocation.address!.administrativeArea != null && selectedLocation.address!.administrativeArea!.isNotEmpty) parts.add(selectedLocation.address!.administrativeArea!);
-    if (selectedLocation.address!.postalCode != null && selectedLocation.address!.postalCode!.isNotEmpty) parts.add(selectedLocation.address!.postalCode!);
-    if (selectedLocation.address!.country != null && selectedLocation.address!.country!.isNotEmpty) parts.add(selectedLocation.address!.country!);
-    if (selectedLocation.address!.isoCountryCode != null && selectedLocation.address!.isoCountryCode!.isNotEmpty) parts.add(selectedLocation.address!.isoCountryCode!);
+    if (selectedLocation.address!.administrativeArea != null &&
+        selectedLocation.address!.administrativeArea!.isNotEmpty)
+      parts.add(selectedLocation.address!.administrativeArea!);
+    if (selectedLocation.address!.postalCode != null &&
+        selectedLocation.address!.postalCode!.isNotEmpty)
+      parts.add(selectedLocation.address!.postalCode!);
+    if (selectedLocation.address!.country != null &&
+        selectedLocation.address!.country!.isNotEmpty)
+      parts.add(selectedLocation.address!.country!);
+    if (selectedLocation.address!.isoCountryCode != null &&
+        selectedLocation.address!.isoCountryCode!.isNotEmpty)
+      parts.add(selectedLocation.address!.isoCountryCode!);
 
     return parts.join(', ');
   }
@@ -176,11 +196,15 @@ class Constant {
   static String? adminType = "admin";
 
   static String amountShow({required String? amount}) {
-    final value = (amount == null || amount == "null" || amount.isEmpty) ? 0.0 : double.parse(amount);
+    final value = (amount == null || amount == "null" || amount.isEmpty)
+        ? 0.0
+        : double.parse(amount);
     final formatted = value.toStringAsFixed(currencyModel?.decimalDigits ?? 0);
     final symbol = currencyModel?.symbol ?? '';
 
-    return currencyModel?.symbolAtRight == true ? '$formatted $symbol' : '$symbol $formatted';
+    return currencyModel?.symbolAtRight == true
+        ? '$formatted $symbol'
+        : '$symbol $formatted';
   }
 
   static Color statusColor({required String? status}) {
@@ -211,16 +235,35 @@ class Constant {
     String commission = "0";
     if (adminCommission!.isEnabled == true) {
       if (vendorModel.adminCommission == null) {
-        if (adminCommission!.commissionType!.toLowerCase() == "Percent".toLowerCase() || adminCommission!.commissionType?.toLowerCase() == "Percentage".toLowerCase()) {
-          commission = (double.parse(price) + (double.parse(price) * double.parse(adminCommission!.amount.toString()) / 100)).toString();
+        if (adminCommission!.commissionType!.toLowerCase() ==
+                "Percent".toLowerCase() ||
+            adminCommission!.commissionType?.toLowerCase() ==
+                "Percentage".toLowerCase()) {
+          commission = (double.parse(price) +
+                  (double.parse(price) *
+                      double.parse(adminCommission!.amount.toString()) /
+                      100))
+              .toString();
         } else {
-          commission = (double.parse(price) + double.parse(adminCommission!.amount.toString())).toString();
+          commission = (double.parse(price) +
+                  double.parse(adminCommission!.amount.toString()))
+              .toString();
         }
       } else {
-        if (vendorModel.adminCommission!.commissionType!.toLowerCase() == "Percent".toLowerCase() || vendorModel.adminCommission!.commissionType?.toLowerCase() == "Percentage".toLowerCase()) {
-          commission = (double.parse(price) + (double.parse(price) * double.parse(vendorModel.adminCommission!.amount.toString()) / 100)).toString();
+        if (vendorModel.adminCommission!.commissionType!.toLowerCase() ==
+                "Percent".toLowerCase() ||
+            vendorModel.adminCommission!.commissionType?.toLowerCase() ==
+                "Percentage".toLowerCase()) {
+          commission = (double.parse(price) +
+                  (double.parse(price) *
+                      double.parse(
+                          vendorModel.adminCommission!.amount.toString()) /
+                      100))
+              .toString();
         } else {
-          commission = (double.parse(price) + double.parse(vendorModel.adminCommission!.amount.toString())).toString();
+          commission = (double.parse(price) +
+                  double.parse(vendorModel.adminCommission!.amount.toString()))
+              .toString();
         }
       }
     } else {
@@ -236,7 +279,9 @@ class Constant {
       if (taxModel.type == "fix") {
         taxAmount = double.parse(taxModel.tax.toString());
       } else {
-        taxAmount = (double.parse(amount.toString()) * double.parse(taxModel.tax!.toString())) / 100;
+        taxAmount = (double.parse(amount.toString()) *
+                double.parse(taxModel.tax!.toString())) /
+            100;
       }
     }
     return taxAmount;
@@ -253,8 +298,11 @@ class Constant {
   static double calculateDiscount({String? amount, CouponModel? offerModel}) {
     double taxAmount = 0.0;
     if (offerModel != null) {
-      if (offerModel.discountType == "Percentage" || offerModel.discountType == "percentage") {
-        taxAmount = (double.parse(amount.toString()) * double.parse(offerModel.discount.toString())) / 100;
+      if (offerModel.discountType == "Percentage" ||
+          offerModel.discountType == "percentage") {
+        taxAmount = (double.parse(amount.toString()) *
+                double.parse(offerModel.discount.toString())) /
+            100;
       } else {
         taxAmount = double.parse(offerModel.discount.toString());
       }
@@ -262,11 +310,15 @@ class Constant {
     return taxAmount;
   }
 
-  static String calculateReview({required String? reviewCount, required String? reviewSum}) {
-    if (0 == double.parse(reviewSum.toString()) && 0 == double.parse(reviewSum.toString())) {
+  static String calculateReview(
+      {required String? reviewCount, required String? reviewSum}) {
+    if (0 == double.parse(reviewSum.toString()) &&
+        0 == double.parse(reviewSum.toString())) {
       return "0";
     }
-    return (double.parse(reviewSum.toString()) / double.parse(reviewCount.toString())).toStringAsFixed(1);
+    return (double.parse(reviewSum.toString()) /
+            double.parse(reviewCount.toString()))
+        .toStringAsFixed(1);
   }
 
   static const userPlaceHolder = 'assets/images/user_placeholder.png';
@@ -283,7 +335,9 @@ class Constant {
 
   static Widget showEmptyView({required String message}) {
     return Center(
-      child: TranslatedText(message, style: const TextStyle(fontFamily: AppThemeData.medium, fontSize: 18)),
+      child: TranslatedText(message,
+          style:
+              const TextStyle(fontFamily: AppThemeData.medium, fontSize: 18)),
     );
   }
 
@@ -308,7 +362,8 @@ class Constant {
   }
 
   String? validateEmail(String? value) {
-    String pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    String pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     RegExp regExp = RegExp(pattern);
     if (value == null || value.isEmpty) {
       return "Email is Required";
@@ -319,7 +374,11 @@ class Constant {
     }
   }
 
-  static String getDistance({required String lat1, required String lng1, required String lat2, required String lng2}) {
+  static String getDistance(
+      {required String lat1,
+      required String lng1,
+      required String lat2,
+      required String lng2}) {
     double distance;
     double distanceInMeters = Geolocator.distanceBetween(
       double.parse(lat1),
@@ -336,7 +395,8 @@ class Constant {
   }
 
   bool hasValidUrl(String? value) {
-    String pattern = r'(http|https)://[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:/~+#-]*[\w@?^=%&amp;/~+#-])?';
+    String pattern =
+        r'(http|https)://[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:/~+#-]*[\w@?^=%&amp;/~+#-])?';
     RegExp regExp = RegExp(pattern);
     if (value == null || value.isEmpty) {
       return false;
@@ -346,10 +406,13 @@ class Constant {
     return true;
   }
 
-  static Future<String> uploadUserImageToFireStorage(File image, String filePath, String fileName) async {
-    Reference upload = FirebaseStorage.instance.ref().child('$filePath/$fileName');
+  static Future<String> uploadUserImageToFireStorage(
+      File image, String filePath, String fileName) async {
+    Reference upload =
+        FirebaseStorage.instance.ref().child('$filePath/$fileName');
     UploadTask uploadTask = upload.putFile(image);
-    var downloadUrl = await (await uploadTask.whenComplete(() {})).ref.getDownloadURL();
+    var downloadUrl =
+        await (await uploadTask.whenComplete(() {})).ref.getDownloadURL();
     return downloadUrl.toString();
   }
 
@@ -372,9 +435,12 @@ class Constant {
 
   Future<Uint8List> getBytesFromAsset(String path, int width) async {
     ByteData data = await rootBundle.load(path);
-    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(), targetWidth: width);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
+        targetWidth: width);
     ui.FrameInfo fi = await codec.getNextFrame();
-    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!.buffer.asUint8List();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
+        .buffer
+        .asUint8List();
   }
 
   static Future<TimeOfDay?> selectTime(context) async {
@@ -419,7 +485,9 @@ class Constant {
 
   static int calculateDifference(DateTime date) {
     DateTime now = DateTime.now();
-    return DateTime(date.year, date.month, date.day).difference(DateTime(now.year, now.month, now.day)).inDays;
+    return DateTime(date.year, date.month, date.day)
+        .difference(DateTime(now.year, now.month, now.day))
+        .inDays;
   }
 
   static String timestampToDate(Timestamp timestamp) {
@@ -453,7 +521,10 @@ class Constant {
   }
 
   static DateTime stringToDate(String openDineTime) {
-    return DateFormat('HH:mm').parse(DateFormat('HH:mm').format(DateFormat("hh:mm a").parse((Intl.getCurrentLocale() == "en_US") ? openDineTime : openDineTime.toLowerCase())));
+    return DateFormat('HH:mm').parse(DateFormat('HH:mm').format(
+        DateFormat("hh:mm a").parse((Intl.getCurrentLocale() == "en_US")
+            ? openDineTime
+            : openDineTime.toLowerCase())));
   }
 
   static LanguageModel getLanguage() {
@@ -466,13 +537,15 @@ class Constant {
     return "#${(orderId).substring(orderId.length - 10)}";
   }
 
-  static checkPermission({required BuildContext context, required Function() onTap}) async {
+  static checkPermission(
+      {required BuildContext context, required Function() onTap}) async {
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
     }
     if (permission == LocationPermission.denied) {
-      ShowToastDialog.showToast("You have to allow location permission to use your location");
+      ShowToastDialog.showToast(
+          "You have to allow location permission to use your location");
     } else if (permission == LocationPermission.deniedForever) {
       showDialog(
         context: context,
@@ -489,7 +562,10 @@ class Constant {
     int crossings = 0;
     for (int i = 0; i < polygon.length; i++) {
       int next = (i + 1) % polygon.length;
-      if (polygon[i].latitude <= point.latitude && polygon[next].latitude > point.latitude || polygon[i].latitude > point.latitude && polygon[next].latitude <= point.latitude) {
+      if (polygon[i].latitude <= point.latitude &&
+              polygon[next].latitude > point.latitude ||
+          polygon[i].latitude > point.latitude &&
+              polygon[next].latitude <= point.latitude) {
         double edgeLong = polygon[next].longitude - polygon[i].longitude;
         double edgeLat = polygon[next].latitude - polygon[i].latitude;
         double interpol = (point.latitude - polygon[i].latitude) / edgeLat;
@@ -502,16 +578,26 @@ class Constant {
   }
 
   static final smtpServer = SmtpServer(mailSettings!.host.toString(),
-      username: mailSettings!.userName.toString(), password: mailSettings!.password.toString(), port: 465, ignoreBadCertificate: false, ssl: true, allowInsecure: true);
+      username: mailSettings!.userName.toString(),
+      password: mailSettings!.password.toString(),
+      port: 465,
+      ignoreBadCertificate: false,
+      ssl: true,
+      allowInsecure: true);
 
-  static Future<void> sendMail({String? subject, String? body, bool? isAdmin = false, List<dynamic>? recipients}) async {
+  static Future<void> sendMail(
+      {String? subject,
+      String? body,
+      bool? isAdmin = false,
+      List<dynamic>? recipients}) async {
     // Create our message.
     if (mailSettings != null) {
       if (isAdmin == true) {
         recipients!.add(mailSettings!.userName.toString());
       }
       final message = Message()
-        ..from = Address(mailSettings!.userName.toString(), mailSettings!.fromName.toString())
+        ..from = Address(mailSettings!.userName.toString(),
+            mailSettings!.fromName.toString())
         ..recipients = recipients!
         ..subject = subject
         ..text = body
@@ -535,10 +621,12 @@ class Constant {
     // await connection.send(message);
   }
 
-  static Uri createCoordinatesUrl(double latitude, double longitude, [String? label]) {
+  static Uri createCoordinatesUrl(double latitude, double longitude,
+      [String? label]) {
     Uri uri;
     if (kIsWeb) {
-      uri = Uri.https('www.google.com', '/maps/search/', {'api': '1', 'query': '$latitude,$longitude'});
+      uri = Uri.https('www.google.com', '/maps/search/',
+          {'api': '1', 'query': '$latitude,$longitude'});
     } else if (Platform.isAndroid) {
       var query = '$latitude,$longitude';
       if (label != null) query += '($label)';
@@ -548,7 +636,8 @@ class Constant {
       if (label != null) params['q'] = label;
       uri = Uri.https('maps.apple.com', '/', params);
     } else {
-      uri = Uri.https('www.google.com', '/maps/search/', {'api': '1', 'query': '$latitude,$longitude'});
+      uri = Uri.https('www.google.com', '/maps/search/',
+          {'api': '1', 'query': '$latitude,$longitude'});
     }
 
     return uri;
@@ -571,7 +660,9 @@ class Constant {
     double totalAmountData = 0.0;
 
     for (var element in orderModel.products!) {
-      final double price = (double.parse(element.discountPrice.toString()) > 0) ? double.parse(element.discountPrice.toString()) : double.parse(element.price.toString());
+      final double price = (double.parse(element.discountPrice.toString()) > 0)
+          ? double.parse(element.discountPrice.toString())
+          : double.parse(element.price.toString());
 
       final double qty = double.parse(element.quantity.toString());
       final double extras = double.parse(element.extrasPrice.toString());
@@ -582,8 +673,10 @@ class Constant {
     /// ---------------- DISCOUNTS ----------------
     couponAmount = double.parse(orderModel.discount.toString());
 
-    if (orderModel.specialDiscount != null && orderModel.specialDiscount!['special_discount'] != null) {
-      specialDiscountAmount = double.parse(orderModel.specialDiscount!['special_discount'].toString());
+    if (orderModel.specialDiscount != null &&
+        orderModel.specialDiscount!['special_discount'] != null) {
+      specialDiscountAmount = double.parse(
+          orderModel.specialDiscount!['special_discount'].toString());
     }
 
     final double totalDiscount = couponAmount + specialDiscountAmount;
@@ -597,14 +690,18 @@ class Constant {
     /// ---------------- PRODUCT TAX (AFTER DISCOUNT) ----------------
     if (orderModel.taxScope == "product") {
       for (var element in orderModel.products!) {
-        final double price = (double.parse(element.discountPrice.toString()) > 0) ? double.parse(element.discountPrice.toString()) : double.parse(element.price.toString());
+        final double price =
+            (double.parse(element.discountPrice.toString()) > 0)
+                ? double.parse(element.discountPrice.toString())
+                : double.parse(element.price.toString());
 
         final double qty = double.parse(element.quantity.toString());
         final double extras = double.parse(element.extrasPrice.toString());
 
         final double itemAmount = (price * qty) + (extras * qty);
 
-        final double discountedItemAmount = itemAmount - (itemAmount * discountRatio);
+        final double discountedItemAmount =
+            itemAmount - (itemAmount * discountRatio);
 
         for (var taxElement in element.taxSetting!) {
           if (taxElement.type == "fix") {
@@ -638,12 +735,14 @@ class Constant {
 
     deliveryTips = double.parse(orderModel.tipAmount.toString());
 
-    packagingCharge = double.parse(orderModel.vendor!.packagingCharge.toString());
+    packagingCharge =
+        double.parse(orderModel.vendor!.packagingCharge.toString());
 
     platformFee = double.parse(orderModel.platformFee ?? '0.0');
 
     /// ---------------- DELIVERY TAX ----------------
-    if (orderModel.takeAway != true && orderModel.vendor?.isSelfDelivery != true) {
+    if (orderModel.takeAway != true &&
+        orderModel.vendor?.isSelfDelivery != true) {
       for (var taxElement in orderModel.driverDeliveryTax ?? []) {
         driverDeliveryTaxAmount += Constant.calculateTax(
           amount: deliveryCharges.toString(),
@@ -673,12 +772,23 @@ class Constant {
     }
 
     /// ---------------- TOTAL TAX ----------------
-    totalTaxAmount = productTaxAmount + orderTaxAmount + driverDeliveryTaxAmount + packagingTaxAmount + platformTaxAmount;
+    totalTaxAmount = productTaxAmount +
+        orderTaxAmount +
+        driverDeliveryTaxAmount +
+        packagingTaxAmount +
+        platformTaxAmount;
 
     /// ---------------- FINAL TOTAL ----------------
-    totalAmountData = (subTotal - totalDiscount) + totalTaxAmount + (orderModel.isFreeDelivery == false ? deliveryCharges + deliveryTips : 0) + packagingCharge + platformFee;
+    totalAmountData = (subTotal - totalDiscount) +
+        totalTaxAmount +
+        (orderModel.isFreeDelivery == false
+            ? deliveryCharges + deliveryTips
+            : 0) +
+        packagingCharge +
+        platformFee;
 
-    EmailTemplateModel? emailTemplateModel = await FireStoreUtils.getEmailTemplates(newOrderPlacedd);
+    EmailTemplateModel? emailTemplateModel =
+        await FireStoreUtils.getEmailTemplates(newOrderPlacedd);
 
     if (emailTemplateModel != null) {
       String firstHTML = """
@@ -696,9 +806,11 @@ class Constant {
     """;
 
       String newString = emailTemplateModel.message.toString();
-      newString = newString.replaceAll("{username}", "${Constant.userModel!.firstName} ${Constant.userModel!.lastName}");
+      newString = newString.replaceAll("{username}",
+          "${Constant.userModel!.firstName} ${Constant.userModel!.lastName}");
       newString = newString.replaceAll("{orderid}", orderModel.id.toString());
-      newString = newString.replaceAll("{date}", DateFormat('yyyy-MM-dd').format(orderModel.createdAt!.toDate()));
+      newString = newString.replaceAll("{date}",
+          DateFormat('yyyy-MM-dd').format(orderModel.createdAt!.toDate()));
       newString = newString.replaceAll(
         "{address}",
         orderModel.address?.getFullAddress() ?? '',
@@ -712,19 +824,25 @@ class Constant {
       double specialDiscount = 0.0;
       double discount = 0.0;
 
-      String specialLabel = '(${orderModel.specialDiscount!['special_discount_label']}${orderModel.specialDiscount!['specialType'] == "amount" ? currencyModel!.symbol : "%"})';
+      String specialLabel =
+          '(${orderModel.specialDiscount!['special_discount_label']}${orderModel.specialDiscount!['specialType'] == "amount" ? currencyModel!.symbol : "%"})';
       List<String> htmlList = [];
 
       for (var element in orderModel.products!) {
-        if (element.extrasPrice != null && element.extrasPrice!.isNotEmpty && double.parse(element.extrasPrice!) != 0.0) {
-          total += double.parse(element.quantity.toString()) * double.parse(element.extrasPrice!);
+        if (element.extrasPrice != null &&
+            element.extrasPrice!.isNotEmpty &&
+            double.parse(element.extrasPrice!) != 0.0) {
+          total += double.parse(element.quantity.toString()) *
+              double.parse(element.extrasPrice!);
         }
-        total += double.parse(element.quantity.toString()) * double.parse(element.price.toString());
+        total += double.parse(element.quantity.toString()) *
+            double.parse(element.price.toString());
 
         List<dynamic>? addon = element.extras;
         String extrasDisVal = '';
         for (int i = 0; i < addon!.length; i++) {
-          extrasDisVal += '${addon[i].toString().replaceAll("\"", "")} ${(i == addon.length - 1) ? "" : ","}';
+          extrasDisVal +=
+              '${addon[i].toString().replaceAll("\"", "")} ${(i == addon.length - 1) ? "" : ","}';
         }
         String product = """
         <tr>
@@ -742,7 +860,8 @@ class Constant {
       }
 
       if (orderModel.specialDiscount!.isNotEmpty) {
-        specialDiscount = double.parse(orderModel.specialDiscount!['special_discount'].toString());
+        specialDiscount = double.parse(
+            orderModel.specialDiscount!['special_discount'].toString());
       }
 
       if (orderModel.couponId != null && orderModel.couponId!.isNotEmpty) {
@@ -760,12 +879,14 @@ class Constant {
         }
       }
       if (orderModel.taxScope == "product") {
-        String taxHtml = """<br><span style="font-size: 1rem;">${'Tax on item total'}: ${amountShow(amount: productTaxAmount.toString())}</span>""";
+        String taxHtml =
+            """<br><span style="font-size: 1rem;">${'Tax on item total'}: ${amountShow(amount: productTaxAmount.toString())}</span>""";
         taxHtmlList.add(taxHtml);
       }
 
       if (orderModel.taxScope == "order") {
-        String taxHtml = """<br><span style="font-size: 1rem;">${'Tax on Order Total'}: ${amountShow(amount: orderTaxAmount.toString())}</span>""";
+        String taxHtml =
+            """<br><span style="font-size: 1rem;">${'Tax on Order Total'}: ${amountShow(amount: orderTaxAmount.toString())}</span>""";
         taxHtmlList.add(taxHtml);
       }
 
@@ -797,29 +918,45 @@ class Constant {
           }
         }
       }
-      taxHtmlList.add("""<br><span style="font-size: 1rem;"> Total Tax: ${amountShow(amount: totalTaxAmount.toString())}</span>""");
+      taxHtmlList.add(
+          """<br><span style="font-size: 1rem;"> Total Tax: ${amountShow(amount: totalTaxAmount.toString())}</span>""");
 
-      newString = newString.replaceAll("{subtotal}", amountShow(amount: subTotal.toString()));
+      newString = newString.replaceAll(
+          "{subtotal}", amountShow(amount: subTotal.toString()));
       newString = newString.replaceAll("{coupon}", orderModel.couponId ?? '');
-      newString = newString.replaceAll("{discountamount}", amountShow(amount: orderModel.discount.toString()));
+      newString = newString.replaceAll("{discountamount}",
+          amountShow(amount: orderModel.discount.toString()));
       newString = newString.replaceAll("{specialcoupon}", specialLabel);
-      newString = newString.replaceAll("{specialdiscountamount}", amountShow(amount: specialDiscount.toString()));
-      newString = newString.replaceAll("{shippingcharge}", amountShow(amount: deliveryCharges.toString()));
-      newString = newString.replaceAll("{packagingcharge}", amountShow(amount: packagingCharge.toString()));
-      newString = newString.replaceAll("{platformcharge}", amountShow(amount: platformFee.toString()));
-      newString = newString.replaceAll("{tipamount}", amountShow(amount: deliveryTips.toString()));
-      newString = newString.replaceAll("{totalAmount}", amountShow(amount: totalAmountData.toString()));
+      newString = newString.replaceAll("{specialdiscountamount}",
+          amountShow(amount: specialDiscount.toString()));
+      newString = newString.replaceAll(
+          "{shippingcharge}", amountShow(amount: deliveryCharges.toString()));
+      newString = newString.replaceAll(
+          "{packagingcharge}", amountShow(amount: packagingCharge.toString()));
+      newString = newString.replaceAll(
+          "{platformcharge}", amountShow(amount: platformFee.toString()));
+      newString = newString.replaceAll(
+          "{tipamount}", amountShow(amount: deliveryTips.toString()));
+      newString = newString.replaceAll(
+          "{totalAmount}", amountShow(amount: totalAmountData.toString()));
 
       String tableHTML = htmlList.join();
       String lastHTML = "</tbody></table>";
-      newString = newString.replaceAll("{productdetails}", firstHTML + tableHTML + lastHTML);
+      newString = newString.replaceAll(
+          "{productdetails}", firstHTML + tableHTML + lastHTML);
       newString = newString.replaceAll("{taxdetails}", taxHtmlList.join());
-      newString = newString.replaceAll("{newwalletbalance}.", amountShow(amount: Constant.userModel!.walletAmount.toString()));
+      newString = newString.replaceAll("{newwalletbalance}.",
+          amountShow(amount: Constant.userModel!.walletAmount.toString()));
 
       String subjectNewString = emailTemplateModel.subject.toString();
-      subjectNewString = subjectNewString.replaceAll("{orderid}", orderModel.id.toString());
+      subjectNewString =
+          subjectNewString.replaceAll("{orderid}", orderModel.id.toString());
 
-      await sendMail(subject: subjectNewString, isAdmin: emailTemplateModel.isSendToAdmin, body: newString, recipients: [Constant.userModel!.email]);
+      await sendMail(
+          subject: subjectNewString,
+          isAdmin: emailTemplateModel.isSendToAdmin,
+          body: newString,
+          recipients: [Constant.userModel!.email]);
     }
   }
 
@@ -827,7 +964,11 @@ class Constant {
     const R = 6371; // Earth's radius in km
     final dLat = _degToRad(lat2 - lat1);
     final dLon = _degToRad(lon2 - lon1);
-    final a = sin(dLat / 2) * sin(dLat / 2) + cos(_degToRad(lat1)) * cos(_degToRad(lat2)) * sin(dLon / 2) * sin(dLon / 2);
+    final a = sin(dLat / 2) * sin(dLat / 2) +
+        cos(_degToRad(lat1)) *
+            cos(_degToRad(lat2)) *
+            sin(dLon / 2) *
+            sin(dLon / 2);
     final c = 2 * atan2(sqrt(a), sqrt(1 - a));
     return R * c;
   }
@@ -848,8 +989,10 @@ class Constant {
       if (day == element.day.toString()) {
         if (element.timeslot!.isNotEmpty) {
           for (var element in element.timeslot!) {
-            var start = DateFormat("dd-MM-yyyy HH:mm").parse("$date ${element.from}");
-            var end = DateFormat("dd-MM-yyyy HH:mm").parse("$date ${element.to}");
+            var start =
+                DateFormat("dd-MM-yyyy HH:mm").parse("$date ${element.from}");
+            var end =
+                DateFormat("dd-MM-yyyy HH:mm").parse("$date ${element.to}");
             if (isCurrentDateInRange(start, end)) {
               return true;
             }
@@ -866,7 +1009,15 @@ class Constant {
   }
 
   static String getNextOpeningTime(VendorModel vendor, DateTime now) {
-    final daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    final daysOfWeek = [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday"
+    ];
 
     String today = DateFormat('EEEE').format(now); // e.g. "Friday"
     int todayIndex = daysOfWeek.indexOf(today);
@@ -882,14 +1033,19 @@ class Constant {
         orElse: () => WorkingHours(day: "", timeslot: []),
       );
 
-      if (daySchedule != null && daySchedule.day != null && daySchedule.day!.isNotEmpty && daySchedule.timeslot != null && daySchedule.timeslot!.isNotEmpty) {
+      if (daySchedule != null &&
+          daySchedule.day != null &&
+          daySchedule.day!.isNotEmpty &&
+          daySchedule.timeslot != null &&
+          daySchedule.timeslot!.isNotEmpty) {
         for (var slot in daySchedule.timeslot!) {
           if (slot.from == null || slot.to == null) continue;
 
           DateTime fromTime = DateFormat("HH:mm").parse(slot.from!);
 
           // Attach correct date (today + i days)
-          fromTime = DateTime(now.year, now.month, now.day + i, fromTime.hour, fromTime.minute);
+          fromTime = DateTime(
+              now.year, now.month, now.day + i, fromTime.hour, fromTime.minute);
 
           // ✅ Only care about NEXT future opening
           if (fromTime.isAfter(now)) {
