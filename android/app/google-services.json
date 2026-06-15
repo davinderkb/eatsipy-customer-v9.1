@@ -1,0 +1,34 @@
+{
+  "project_info": {
+    "project_number": "767332616034",
+    "firebase_url": "https://eatsipy-default-rtdb.firebaseio.com",
+    "project_id": "eatsipy",
+    "storage_bucket": "eatsipy.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:767332616034:android:984b831be8919c288c8e3b",
+        "android_client_info": {
+          "package_name": "com.eatsipy.customer.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "767332616034-2kgaieona97kgrp08q7fdeimuljec42m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.eatsipy.customer.android",
+            "certificate_hash": "6b5a3a08b7bcde894daae2a52e8b21995b78b7ef"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBfNHnUa6Lqk47j4WV1gX8jWbuyrGGxFsc"
+        }
+      ]
+    }
+  ],
+  "configuration_version": "1"
+}
