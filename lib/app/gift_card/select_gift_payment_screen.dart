@@ -1,15 +1,15 @@
-import 'package:customer/app/wallet_screen/wallet_screen.dart';
-import 'package:customer/constant/constant.dart';
-import 'package:customer/constant/show_toast_dialog.dart';
-import 'package:customer/controllers/gift_card_controller.dart';
-import 'package:customer/controllers/phonepay_controller.dart';
-import 'package:customer/payment/createRazorPayOrderModel.dart';
-import 'package:customer/payment/rozorpayConroller.dart';
-import 'package:customer/themes/app_them_data.dart';
-import 'package:customer/themes/round_button_fill.dart';
-import 'package:customer/utils/dark_theme_provider.dart';
+import 'package:eatsipy_customer/app/wallet_screen/wallet_screen.dart';
+import 'package:eatsipy_customer/constant/constant.dart';
+import 'package:eatsipy_customer/constant/show_toast_dialog.dart';
+import 'package:eatsipy_customer/controllers/gift_card_controller.dart';
+import 'package:eatsipy_customer/controllers/phonepay_controller.dart';
+import 'package:eatsipy_customer/payment/createRazorPayOrderModel.dart';
+import 'package:eatsipy_customer/payment/rozorpayConroller.dart';
+import 'package:eatsipy_customer/themes/app_them_data.dart';
+import 'package:eatsipy_customer/themes/round_button_fill.dart';
+import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:customer/widget/translated_text.dart';
+import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 

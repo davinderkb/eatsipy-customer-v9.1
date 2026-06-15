@@ -1,11 +1,11 @@
-import 'package:customer/constant/constant.dart';
-import 'package:customer/controllers/history_gift_card_controller.dart';
-import 'package:customer/models/gift_cards_order_model.dart';
-import 'package:customer/themes/app_them_data.dart';
-import 'package:customer/utils/dark_theme_provider.dart';
-import 'package:customer/widget/my_separator.dart';
+import 'package:eatsipy_customer/constant/constant.dart';
+import 'package:eatsipy_customer/controllers/history_gift_card_controller.dart';
+import 'package:eatsipy_customer/models/gift_cards_order_model.dart';
+import 'package:eatsipy_customer/themes/app_them_data.dart';
+import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
+import 'package:eatsipy_customer/widget/my_separator.dart';
 import 'package:flutter/material.dart';
-import 'package:customer/widget/translated_text.dart';
+import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 

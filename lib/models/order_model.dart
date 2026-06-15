@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:customer/models/cart_product_model.dart';
-import 'package:customer/models/cashbackModel.dart';
-import 'package:customer/models/tax_model.dart';
-import 'package:customer/models/user_model.dart';
-import 'package:customer/models/vendor_model.dart';
+import 'package:eatsipy_customer/models/cart_product_model.dart';
+import 'package:eatsipy_customer/models/cashbackModel.dart';
+import 'package:eatsipy_customer/models/tax_model.dart';
+import 'package:eatsipy_customer/models/user_model.dart';
+import 'package:eatsipy_customer/models/vendor_model.dart';
 
 class OrderModel {
   ShippingAddress? address;

@@ -1,8 +1,8 @@
-import 'package:customer/constant/constant.dart';
-import 'package:customer/constant/show_toast_dialog.dart';
-import 'package:customer/themes/app_them_data.dart';
-import 'package:customer/utils/dark_theme_provider.dart';
-import 'package:customer/widget/translated_text.dart';
+import 'package:eatsipy_customer/constant/constant.dart';
+import 'package:eatsipy_customer/constant/show_toast_dialog.dart';
+import 'package:eatsipy_customer/themes/app_them_data.dart';
+import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
+import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';

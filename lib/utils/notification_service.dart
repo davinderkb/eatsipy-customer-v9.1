@@ -1,14 +1,14 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:customer/app/chat_screens/driver_inbox_screen.dart';
-import 'package:customer/app/chat_screens/restaurant_inbox_screen.dart';
-import 'package:customer/app/dash_board_screens/dash_board_screen.dart';
-import 'package:customer/app/help_support_screen/help_support_screen.dart';
-import 'package:customer/constant/constant.dart';
-import 'package:customer/controllers/dash_board_controller.dart';
-import 'package:customer/utils/fire_store_utils.dart';
-import 'package:customer/utils/preferences.dart';
+import 'package:eatsipy_customer/app/chat_screens/driver_inbox_screen.dart';
+import 'package:eatsipy_customer/app/chat_screens/restaurant_inbox_screen.dart';
+import 'package:eatsipy_customer/app/dash_board_screens/dash_board_screen.dart';
+import 'package:eatsipy_customer/app/help_support_screen/help_support_screen.dart';
+import 'package:eatsipy_customer/constant/constant.dart';
+import 'package:eatsipy_customer/controllers/dash_board_controller.dart';
+import 'package:eatsipy_customer/utils/fire_store_utils.dart';
+import 'package:eatsipy_customer/utils/preferences.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';

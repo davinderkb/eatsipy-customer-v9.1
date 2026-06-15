@@ -1,16 +1,16 @@
 import 'dart:async';
 import 'dart:developer';
-import 'package:customer/constant/constant.dart';
-import 'package:customer/models/AttributesModel.dart';
-import 'package:customer/models/cart_product_model.dart';
-import 'package:customer/models/coupon_model.dart';
-import 'package:customer/models/favourite_item_model.dart';
-import 'package:customer/models/favourite_model.dart';
-import 'package:customer/models/product_model.dart';
-import 'package:customer/models/vendor_category_model.dart';
-import 'package:customer/models/vendor_model.dart';
-import 'package:customer/services/cart_provider.dart';
-import 'package:customer/utils/fire_store_utils.dart';
+import 'package:eatsipy_customer/constant/constant.dart';
+import 'package:eatsipy_customer/models/AttributesModel.dart';
+import 'package:eatsipy_customer/models/cart_product_model.dart';
+import 'package:eatsipy_customer/models/coupon_model.dart';
+import 'package:eatsipy_customer/models/favourite_item_model.dart';
+import 'package:eatsipy_customer/models/favourite_model.dart';
+import 'package:eatsipy_customer/models/product_model.dart';
+import 'package:eatsipy_customer/models/vendor_category_model.dart';
+import 'package:eatsipy_customer/models/vendor_model.dart';
+import 'package:eatsipy_customer/services/cart_provider.dart';
+import 'package:eatsipy_customer/utils/fire_store_utils.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';

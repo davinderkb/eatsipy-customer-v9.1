@@ -1,16 +1,16 @@
 // ignore: must_be_immutable
 
-import 'package:customer/app/restaurant_details_screen/restaurant_details_screen.dart';
-import 'package:customer/constant/constant.dart';
-import 'package:customer/models/story_model.dart';
-import 'package:customer/models/vendor_model.dart';
-import 'package:customer/themes/app_them_data.dart';
-import 'package:customer/utils/fire_store_utils.dart';
-import 'package:customer/utils/network_image_widget.dart';
-import 'package:customer/widget/story_view/controller/story_controller.dart';
-import 'package:customer/widget/story_view/utils.dart';
+import 'package:eatsipy_customer/app/restaurant_details_screen/restaurant_details_screen.dart';
+import 'package:eatsipy_customer/constant/constant.dart';
+import 'package:eatsipy_customer/models/story_model.dart';
+import 'package:eatsipy_customer/models/vendor_model.dart';
+import 'package:eatsipy_customer/themes/app_them_data.dart';
+import 'package:eatsipy_customer/utils/fire_store_utils.dart';
+import 'package:eatsipy_customer/utils/network_image_widget.dart';
+import 'package:eatsipy_customer/widget/story_view/controller/story_controller.dart';
+import 'package:eatsipy_customer/widget/story_view/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:customer/widget/translated_text.dart';
+import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../widget/story_view/widgets/story_view.dart';

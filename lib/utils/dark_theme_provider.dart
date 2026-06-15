@@ -1,4 +1,4 @@
-import 'package:customer/utils/dark_theme_preference.dart';
+import 'package:eatsipy_customer/utils/dark_theme_preference.dart';
 import 'package:flutter/foundation.dart';
 
 class DarkThemeProvider with ChangeNotifier {

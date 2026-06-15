@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:customer/widget/translated_text.dart';
+import 'package:eatsipy_customer/widget/translated_text.dart';
 
 class GradientText extends StatelessWidget {
   const GradientText(

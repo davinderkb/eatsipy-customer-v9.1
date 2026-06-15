@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:customer/models/vendor_model.dart';
-import 'package:customer/themes/responsive.dart';
-import 'package:customer/utils/network_image_widget.dart';
+import 'package:eatsipy_customer/models/vendor_model.dart';
+import 'package:eatsipy_customer/themes/responsive.dart';
+import 'package:eatsipy_customer/utils/network_image_widget.dart';
 import 'package:flutter/material.dart';
 
 class RestaurantImageView extends StatefulWidget {

@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 
-import 'package:customer/app/restaurant_details_screen/restaurant_details_screen.dart';
-import 'package:customer/constant/constant.dart';
-import 'package:customer/controllers/home_controller.dart';
+import 'package:eatsipy_customer/app/restaurant_details_screen/restaurant_details_screen.dart';
+import 'package:eatsipy_customer/constant/constant.dart';
+import 'package:eatsipy_customer/controllers/home_controller.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_map/flutter_map.dart' as flutterMap;

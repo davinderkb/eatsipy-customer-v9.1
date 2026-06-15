@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:customer/constant/constant.dart';
-import 'package:customer/constant/show_toast_dialog.dart';
-import 'package:customer/controllers/mtnmomo_controller.dart';
-import 'package:customer/models/payment_model/mtnmomo_model.dart';
-import 'package:customer/widget/translated_text.dart';
+import 'package:eatsipy_customer/constant/constant.dart';
+import 'package:eatsipy_customer/constant/show_toast_dialog.dart';
+import 'package:eatsipy_customer/controllers/mtnmomo_controller.dart';
+import 'package:eatsipy_customer/models/payment_model/mtnmomo_model.dart';
+import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

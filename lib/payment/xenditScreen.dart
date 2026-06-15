@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:customer/constant/show_toast_dialog.dart';
-import 'package:customer/payment/xenditModel.dart';
+import 'package:eatsipy_customer/constant/show_toast_dialog.dart';
+import 'package:eatsipy_customer/payment/xenditModel.dart';
 import 'package:flutter/material.dart';
-import 'package:customer/widget/translated_text.dart';
+import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:webview_flutter/webview_flutter.dart';

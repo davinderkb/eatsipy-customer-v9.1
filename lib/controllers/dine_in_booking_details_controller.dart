@@ -1,4 +1,4 @@
-import 'package:customer/models/dine_in_booking_model.dart';
+import 'package:eatsipy_customer/models/dine_in_booking_model.dart';
 import 'package:get/get.dart';
 
 class DineInBookingDetailsController extends GetxController {

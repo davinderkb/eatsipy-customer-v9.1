@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:customer/constant/constant.dart';
-import 'package:customer/models/cart_product_model.dart';
+import 'package:eatsipy_customer/constant/constant.dart';
+import 'package:eatsipy_customer/models/cart_product_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 

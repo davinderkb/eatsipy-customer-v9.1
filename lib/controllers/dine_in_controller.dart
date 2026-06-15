@@ -1,9 +1,9 @@
-import 'package:customer/constant/constant.dart';
-import 'package:customer/models/BannerModel.dart';
-import 'package:customer/models/favourite_model.dart';
-import 'package:customer/models/vendor_category_model.dart';
-import 'package:customer/models/vendor_model.dart';
-import 'package:customer/utils/fire_store_utils.dart';
+import 'package:eatsipy_customer/constant/constant.dart';
+import 'package:eatsipy_customer/models/BannerModel.dart';
+import 'package:eatsipy_customer/models/favourite_model.dart';
+import 'package:eatsipy_customer/models/vendor_category_model.dart';
+import 'package:eatsipy_customer/models/vendor_model.dart';
+import 'package:eatsipy_customer/utils/fire_store_utils.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';

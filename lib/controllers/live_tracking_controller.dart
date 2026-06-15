@@ -3,11 +3,11 @@ import 'dart:convert';
 import 'dart:math' as math;
 import 'dart:typed_data';
 
-import 'package:customer/constant/collection_name.dart';
-import 'package:customer/constant/constant.dart';
-import 'package:customer/models/order_model.dart';
-import 'package:customer/models/user_model.dart';
-import 'package:customer/utils/fire_store_utils.dart';
+import 'package:eatsipy_customer/constant/collection_name.dart';
+import 'package:eatsipy_customer/constant/constant.dart';
+import 'package:eatsipy_customer/models/order_model.dart';
+import 'package:eatsipy_customer/models/user_model.dart';
+import 'package:eatsipy_customer/utils/fire_store_utils.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_map/flutter_map.dart' as flutterMap;

@@ -1,10 +1,10 @@
-import 'package:customer/constant/constant.dart';
-import 'package:customer/constant/show_toast_dialog.dart';
-import 'package:customer/controllers/dash_board_controller.dart';
-import 'package:customer/themes/app_them_data.dart';
-import 'package:customer/utils/dark_theme_provider.dart';
-import 'package:customer/utils/dynamic_traslator.dart';
-import 'package:customer/utils/translation_notifier.dart';
+import 'package:eatsipy_customer/constant/constant.dart';
+import 'package:eatsipy_customer/constant/show_toast_dialog.dart';
+import 'package:eatsipy_customer/controllers/dash_board_controller.dart';
+import 'package:eatsipy_customer/themes/app_them_data.dart';
+import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
+import 'package:eatsipy_customer/utils/dynamic_traslator.dart';
+import 'package:eatsipy_customer/utils/translation_notifier.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';

@@ -1,9 +1,9 @@
-import 'package:customer/constant/constant.dart';
-import 'package:customer/themes/app_them_data.dart';
-import 'package:customer/utils/dark_theme_provider.dart';
-import 'package:customer/utils/dynamic_traslator.dart';
-import 'package:customer/utils/translation_notifier.dart';
-import 'package:customer/widget/translated_text.dart';
+import 'package:eatsipy_customer/constant/constant.dart';
+import 'package:eatsipy_customer/themes/app_them_data.dart';
+import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
+import 'package:eatsipy_customer/utils/dynamic_traslator.dart';
+import 'package:eatsipy_customer/utils/translation_notifier.dart';
+import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';

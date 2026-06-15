@@ -1,11 +1,11 @@
-import 'package:customer/app/wallet_screen/wallet_screen.dart';
-import 'package:customer/constant/constant.dart';
-import 'package:customer/controllers/cart_controller.dart';
-import 'package:customer/themes/app_them_data.dart';
-import 'package:customer/themes/round_button_fill.dart';
-import 'package:customer/utils/dark_theme_provider.dart';
+import 'package:eatsipy_customer/app/wallet_screen/wallet_screen.dart';
+import 'package:eatsipy_customer/constant/constant.dart';
+import 'package:eatsipy_customer/controllers/cart_controller.dart';
+import 'package:eatsipy_customer/themes/app_them_data.dart';
+import 'package:eatsipy_customer/themes/round_button_fill.dart';
+import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:customer/widget/translated_text.dart';
+import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 

@@ -1,8 +1,9 @@
-import 'package:customer/controllers/splash_controller.dart';
-import 'package:customer/themes/app_them_data.dart';
-import 'package:customer/utils/dark_theme_provider.dart';
+import 'package:eatsipy_customer/controllers/splash_controller.dart';
+import 'package:eatsipy_customer/themes/app_them_data.dart';
+import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:customer/widget/translated_text.dart';
+import 'package:eatsipy_customer/widget/translated_text.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
@@ -22,11 +23,14 @@ class SplashScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image.asset(
-                  "assets/images/ic_logo.png",
+                SvgPicture.asset(
+                  "assets/icons/ic_home.svg",
+                  width: 120,
+                  height: 120,
+                  colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 TranslatedText(
                   "Welcome to Eatsipy",

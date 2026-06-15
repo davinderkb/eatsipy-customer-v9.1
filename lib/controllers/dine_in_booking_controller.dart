@@ -1,5 +1,5 @@
-import 'package:customer/models/dine_in_booking_model.dart';
-import 'package:customer/utils/fire_store_utils.dart';
+import 'package:eatsipy_customer/models/dine_in_booking_model.dart';
+import 'package:eatsipy_customer/utils/fire_store_utils.dart';
 import 'package:get/get.dart';
 
 class DineInBookingController extends GetxController {

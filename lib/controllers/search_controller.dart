@@ -1,11 +1,11 @@
 import 'dart:developer';
 
-import 'package:customer/app/search_screen/voice_search_screen.dart';
-import 'package:customer/constant/constant.dart';
-import 'package:customer/controllers/voice_search_controller.dart';
-import 'package:customer/models/product_model.dart';
-import 'package:customer/models/vendor_model.dart';
-import 'package:customer/utils/fire_store_utils.dart';
+import 'package:eatsipy_customer/app/search_screen/voice_search_screen.dart';
+import 'package:eatsipy_customer/constant/constant.dart';
+import 'package:eatsipy_customer/controllers/voice_search_controller.dart';
+import 'package:eatsipy_customer/models/product_model.dart';
+import 'package:eatsipy_customer/models/vendor_model.dart';
+import 'package:eatsipy_customer/utils/fire_store_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 

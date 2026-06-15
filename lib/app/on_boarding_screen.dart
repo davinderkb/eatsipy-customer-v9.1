@@ -1,11 +1,12 @@
-import 'package:customer/app/auth_screen/login_screen.dart';
-import 'package:customer/controllers/on_boarding_controller.dart';
-import 'package:customer/themes/app_them_data.dart';
-import 'package:customer/themes/round_button_fill.dart';
-import 'package:customer/utils/dark_theme_provider.dart';
-import 'package:customer/utils/preferences.dart';
+import 'package:eatsipy_customer/app/auth_screen/login_screen.dart';
+import 'package:eatsipy_customer/controllers/on_boarding_controller.dart';
+import 'package:eatsipy_customer/themes/app_them_data.dart';
+import 'package:eatsipy_customer/themes/round_button_fill.dart';
+import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
+import 'package:eatsipy_customer/utils/preferences.dart';
 import 'package:flutter/material.dart';
-import 'package:customer/widget/translated_text.dart';
+import 'package:eatsipy_customer/widget/translated_text.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
@@ -50,10 +51,11 @@ class OnBoardingScreen extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Image.asset(
-                                        "assets/images/ic_logo.png",
+                                      SvgPicture.asset(
+                                        "assets/icons/ic_home.svg",
                                         width: 72,
                                         height: 72,
+                                        colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
                                       ),
                                       TranslatedText(
                                         "Eatsipy",
@@ -91,11 +93,11 @@ class OnBoardingScreen extends StatelessWidget {
                           height: 20,
                         ),
                         RoundedButtonFill(
-                          title: "Get Started",
+                          title: controller.onBoardingList.isEmpty || controller.isLastPage ? "Get Started" : "Next",
                           color: AppThemeData.primary300,
                           textColor: AppThemeData.grey50,
                           onPress: () {
-                            if (controller.selectedPageIndex.value == 2) {
+                            if (controller.onBoardingList.isEmpty || controller.isLastPage) {
                               Preferences.setBoolean(Preferences.isFinishOnBoardingKey, true);
                               Get.offAll(const LoginScreen());
                             } else {

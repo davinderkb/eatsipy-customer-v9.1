@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:async';
-import 'package:customer/constant/show_toast_dialog.dart';
-import 'package:customer/models/payment_model/instamojo_model.dart';
+import 'package:eatsipy_customer/constant/show_toast_dialog.dart';
+import 'package:eatsipy_customer/models/payment_model/instamojo_model.dart';
 import 'package:http/http.dart' as http;
 
 class InstamojoService {

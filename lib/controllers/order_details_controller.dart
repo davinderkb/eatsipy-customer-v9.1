@@ -1,8 +1,8 @@
-import 'package:customer/constant/constant.dart';
-import 'package:customer/models/cart_product_model.dart';
-import 'package:customer/models/order_model.dart';
-import 'package:customer/services/cart_provider.dart';
-import 'package:customer/utils/fire_store_utils.dart';
+import 'package:eatsipy_customer/constant/constant.dart';
+import 'package:eatsipy_customer/models/cart_product_model.dart';
+import 'package:eatsipy_customer/models/order_model.dart';
+import 'package:eatsipy_customer/services/cart_provider.dart';
+import 'package:eatsipy_customer/utils/fire_store_utils.dart';
 import 'package:get/get.dart';
 
 class OrderDetailsController extends GetxController {

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:customer/models/admin_commission.dart';
-import 'package:customer/models/subscription_plan_model.dart';
+import 'package:eatsipy_customer/models/admin_commission.dart';
+import 'package:eatsipy_customer/models/subscription_plan_model.dart';
 
 class VendorModel {
   String? author;

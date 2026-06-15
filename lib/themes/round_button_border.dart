@@ -1,7 +1,7 @@
-import 'package:customer/themes/app_them_data.dart';
-import 'package:customer/themes/responsive.dart';
+import 'package:eatsipy_customer/themes/app_them_data.dart';
+import 'package:eatsipy_customer/themes/responsive.dart';
 import 'package:flutter/material.dart';
-import 'package:customer/widget/translated_text.dart';
+import 'package:eatsipy_customer/widget/translated_text.dart';
 
 class RoundedButtonBorder extends StatelessWidget {
   final String title;

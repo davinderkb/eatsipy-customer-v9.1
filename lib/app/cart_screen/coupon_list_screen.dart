@@ -1,15 +1,15 @@
-import 'package:customer/constant/constant.dart';
-import 'package:customer/constant/show_toast_dialog.dart';
-import 'package:customer/controllers/cart_controller.dart';
-import 'package:customer/models/coupon_model.dart';
-import 'package:customer/themes/app_them_data.dart';
-import 'package:customer/themes/responsive.dart';
-import 'package:customer/themes/text_field_widget.dart';
-import 'package:customer/utils/dark_theme_provider.dart';
-import 'package:customer/widget/my_separator.dart';
+import 'package:eatsipy_customer/constant/constant.dart';
+import 'package:eatsipy_customer/constant/show_toast_dialog.dart';
+import 'package:eatsipy_customer/controllers/cart_controller.dart';
+import 'package:eatsipy_customer/models/coupon_model.dart';
+import 'package:eatsipy_customer/themes/app_them_data.dart';
+import 'package:eatsipy_customer/themes/responsive.dart';
+import 'package:eatsipy_customer/themes/text_field_widget.dart';
+import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
+import 'package:eatsipy_customer/widget/my_separator.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:customer/widget/translated_text.dart';
+import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 

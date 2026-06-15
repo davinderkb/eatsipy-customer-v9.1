@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart' hide Constant;
-import 'package:customer/app/dine_in_booking/dine_in_booking_screen.dart';
-import 'package:customer/constant/constant.dart';
-import 'package:customer/constant/send_notification.dart';
-import 'package:customer/constant/show_toast_dialog.dart';
-import 'package:customer/models/dine_in_booking_model.dart';
-import 'package:customer/models/favourite_model.dart';
-import 'package:customer/models/vendor_model.dart';
-import 'package:customer/utils/fire_store_utils.dart';
+import 'package:eatsipy_customer/app/dine_in_booking/dine_in_booking_screen.dart';
+import 'package:eatsipy_customer/constant/constant.dart';
+import 'package:eatsipy_customer/constant/send_notification.dart';
+import 'package:eatsipy_customer/constant/show_toast_dialog.dart';
+import 'package:eatsipy_customer/models/dine_in_booking_model.dart';
+import 'package:eatsipy_customer/models/favourite_model.dart';
+import 'package:eatsipy_customer/models/vendor_model.dart';
+import 'package:eatsipy_customer/utils/fire_store_utils.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';

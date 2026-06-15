@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:customer/models/payment_model/razorpay_model.dart';
-import 'package:customer/payment/createRazorPayOrderModel.dart';
+import 'package:eatsipy_customer/models/payment_model/razorpay_model.dart';
+import 'package:eatsipy_customer/payment/createRazorPayOrderModel.dart';
 import 'package:http/http.dart' as http;
 
 import '../constant/constant.dart';

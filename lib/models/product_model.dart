@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:customer/models/tax_model.dart';
+import 'package:eatsipy_customer/models/tax_model.dart';
 
 class ProductModel {
   int? fats;

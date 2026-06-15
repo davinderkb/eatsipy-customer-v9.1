@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:customer/models/user_model.dart';
-import 'package:customer/models/vendor_model.dart';
+import 'package:eatsipy_customer/models/user_model.dart';
+import 'package:eatsipy_customer/models/vendor_model.dart';
 
 class DineInBookingModel {
   String? discount;

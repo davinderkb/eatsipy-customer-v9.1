@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:customer/constant/show_toast_dialog.dart';
-import 'package:customer/models/payment_model/phonepe_model.dart';
+import 'package:eatsipy_customer/constant/show_toast_dialog.dart';
+import 'package:eatsipy_customer/models/payment_model/phonepe_model.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:phonepe_payment_sdk/phonepe_payment_sdk.dart';

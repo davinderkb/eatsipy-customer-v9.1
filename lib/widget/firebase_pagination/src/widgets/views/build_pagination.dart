@@ -1,7 +1,7 @@
 // Flutter Packages
-import 'package:customer/widget/firebase_pagination/src/models/page_options.dart';
-import 'package:customer/widget/firebase_pagination/src/models/view_type.dart';
-import 'package:customer/widget/firebase_pagination/src/models/wrap_options.dart';
+import 'package:eatsipy_customer/widget/firebase_pagination/src/models/page_options.dart';
+import 'package:eatsipy_customer/widget/firebase_pagination/src/models/view_type.dart';
+import 'package:eatsipy_customer/widget/firebase_pagination/src/models/wrap_options.dart';
 import 'package:flutter/material.dart';
 
 

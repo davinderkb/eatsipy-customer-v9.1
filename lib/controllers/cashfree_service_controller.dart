@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:customer/models/payment_model/cashfree_model.dart';
-import 'package:customer/models/user_model.dart';
+import 'package:eatsipy_customer/models/payment_model/cashfree_model.dart';
+import 'package:eatsipy_customer/models/user_model.dart';
 import 'package:http/http.dart' as http;
 
 class CashfreeService {

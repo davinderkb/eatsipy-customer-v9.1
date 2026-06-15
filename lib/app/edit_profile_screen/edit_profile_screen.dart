@@ -1,15 +1,15 @@
 import 'dart:io';
 
-import 'package:customer/constant/constant.dart';
-import 'package:customer/controllers/edit_profile_controller.dart';
-import 'package:customer/themes/app_them_data.dart';
-import 'package:customer/themes/responsive.dart';
-import 'package:customer/themes/round_button_fill.dart';
-import 'package:customer/themes/text_field_widget.dart';
-import 'package:customer/utils/dark_theme_provider.dart';
-import 'package:customer/utils/network_image_widget.dart';
+import 'package:eatsipy_customer/constant/constant.dart';
+import 'package:eatsipy_customer/controllers/edit_profile_controller.dart';
+import 'package:eatsipy_customer/themes/app_them_data.dart';
+import 'package:eatsipy_customer/themes/responsive.dart';
+import 'package:eatsipy_customer/themes/round_button_fill.dart';
+import 'package:eatsipy_customer/themes/text_field_widget.dart';
+import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
+import 'package:eatsipy_customer/utils/network_image_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:customer/widget/translated_text.dart';
+import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';

@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:customer/models/order_model.dart';
-import 'package:customer/services/database_helper.dart';
+import 'package:eatsipy_customer/models/order_model.dart';
+import 'package:eatsipy_customer/services/database_helper.dart';
 import 'package:get/get.dart';
 
 class OrderPlacingController extends GetxController {

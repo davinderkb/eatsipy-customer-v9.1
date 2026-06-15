@@ -1,4 +1,4 @@
-import 'package:customer/widget/place_picker/selected_location_model.dart';
+import 'package:eatsipy_customer/widget/place_picker/selected_location_model.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';

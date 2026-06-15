@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart' hide Constant;
-import 'package:customer/constant/constant.dart';
-import 'package:customer/models/gift_cards_order_model.dart';
-import 'package:customer/utils/fire_store_utils.dart';
+import 'package:eatsipy_customer/constant/constant.dart';
+import 'package:eatsipy_customer/models/gift_cards_order_model.dart';
+import 'package:eatsipy_customer/utils/fire_store_utils.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 

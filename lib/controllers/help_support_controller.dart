@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'package:customer/constant/constant.dart';
-import 'package:customer/models/conversation_model.dart';
-import 'package:customer/models/inbox_model.dart';
-import 'package:customer/models/user_model.dart';
-import 'package:customer/utils/fire_store_utils.dart';
-import 'package:customer/utils/preferences.dart';
+import 'package:eatsipy_customer/constant/constant.dart';
+import 'package:eatsipy_customer/models/conversation_model.dart';
+import 'package:eatsipy_customer/models/inbox_model.dart';
+import 'package:eatsipy_customer/models/user_model.dart';
+import 'package:eatsipy_customer/utils/fire_store_utils.dart';
+import 'package:eatsipy_customer/utils/preferences.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';

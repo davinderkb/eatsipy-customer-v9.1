@@ -1,4 +1,4 @@
-import 'package:customer/constant/show_toast_dialog.dart';
+import 'package:eatsipy_customer/constant/show_toast_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';

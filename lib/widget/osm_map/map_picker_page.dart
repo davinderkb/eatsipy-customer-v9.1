@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:customer/themes/app_them_data.dart';
-import 'package:customer/themes/round_button_fill.dart';
-import 'package:customer/utils/dark_theme_provider.dart';
-import 'package:customer/utils/dynamic_traslator.dart';
-import 'package:customer/widget/osm_map/map_controller.dart';
-import 'package:customer/widget/translated_text.dart';
+import 'package:eatsipy_customer/themes/app_them_data.dart';
+import 'package:eatsipy_customer/themes/round_button_fill.dart';
+import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
+import 'package:eatsipy_customer/utils/dynamic_traslator.dart';
+import 'package:eatsipy_customer/widget/osm_map/map_controller.dart';
+import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';

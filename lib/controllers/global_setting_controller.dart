@@ -1,6 +1,6 @@
-import 'package:customer/models/user_model.dart';
-import 'package:customer/utils/fire_store_utils.dart';
-import 'package:customer/utils/notification_service.dart';
+import 'package:eatsipy_customer/models/user_model.dart';
+import 'package:eatsipy_customer/utils/fire_store_utils.dart';
+import 'package:eatsipy_customer/utils/notification_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 

@@ -1,9 +1,9 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'dart:convert';
-import 'package:customer/constant/constant.dart';
-import 'package:customer/models/notification_model.dart';
-import 'package:customer/utils/fire_store_utils.dart';
+import 'package:eatsipy_customer/constant/constant.dart';
+import 'package:eatsipy_customer/models/notification_model.dart';
+import 'package:eatsipy_customer/utils/fire_store_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:http/http.dart' as http;

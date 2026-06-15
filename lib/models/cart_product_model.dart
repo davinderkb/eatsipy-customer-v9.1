@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:customer/models/tax_model.dart';
+import 'package:eatsipy_customer/models/tax_model.dart';
 
 class CartProductModel {
   String? id;

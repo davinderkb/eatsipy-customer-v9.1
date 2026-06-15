@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart' hide Constant;
-import 'package:customer/constant/constant.dart';
-import 'package:customer/models/subscription_plan_model.dart';
+import 'package:eatsipy_customer/constant/constant.dart';
+import 'package:eatsipy_customer/models/subscription_plan_model.dart';
 
 class UserModel {
   String? id;

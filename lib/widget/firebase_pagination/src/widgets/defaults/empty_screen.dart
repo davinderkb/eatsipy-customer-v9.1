@@ -1,6 +1,6 @@
 // Flutter Packages
 import 'package:flutter/material.dart';
-import 'package:customer/widget/translated_text.dart';
+import 'package:eatsipy_customer/widget/translated_text.dart';
 
 /// A [Widget] to show when there is no data to display.
 class EmptyScreen extends StatelessWidget {

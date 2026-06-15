@@ -1,5 +1,5 @@
-import 'package:customer/utils/dynamic_traslator.dart';
-import 'package:customer/utils/translation_notifier.dart';
+import 'package:eatsipy_customer/utils/dynamic_traslator.dart';
+import 'package:eatsipy_customer/utils/translation_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

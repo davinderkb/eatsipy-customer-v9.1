@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:customer/constant/constant.dart';
-import 'package:customer/controllers/live_tracking_controller.dart';
-import 'package:customer/themes/app_them_data.dart';
-import 'package:customer/utils/dark_theme_provider.dart';
+import 'package:eatsipy_customer/constant/constant.dart';
+import 'package:eatsipy_customer/controllers/live_tracking_controller.dart';
+import 'package:eatsipy_customer/themes/app_them_data.dart';
+import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_map/flutter_map.dart' as flutterMap;

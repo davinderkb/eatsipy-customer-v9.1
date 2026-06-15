@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:customer/constant/constant.dart';
-import 'package:customer/models/cart_product_model.dart';
-import 'package:customer/services/database_helper.dart';
-import 'package:customer/themes/custom_dialog_box.dart';
+import 'package:eatsipy_customer/constant/constant.dart';
+import 'package:eatsipy_customer/models/cart_product_model.dart';
+import 'package:eatsipy_customer/services/database_helper.dart';
+import 'package:eatsipy_customer/themes/custom_dialog_box.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';

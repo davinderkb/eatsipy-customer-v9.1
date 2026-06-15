@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:customer/utils/utils.dart';
-import 'package:customer/widget/osm_map/place_model.dart';
+import 'package:eatsipy_customer/utils/utils.dart';
+import 'package:eatsipy_customer/widget/osm_map/place_model.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';

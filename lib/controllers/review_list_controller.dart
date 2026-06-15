@@ -1,6 +1,6 @@
-import 'package:customer/models/rating_model.dart';
-import 'package:customer/models/vendor_model.dart';
-import 'package:customer/utils/fire_store_utils.dart';
+import 'package:eatsipy_customer/models/rating_model.dart';
+import 'package:eatsipy_customer/models/vendor_model.dart';
+import 'package:eatsipy_customer/utils/fire_store_utils.dart';
 import 'package:get/get.dart';
 
 class ReviewListController extends GetxController {

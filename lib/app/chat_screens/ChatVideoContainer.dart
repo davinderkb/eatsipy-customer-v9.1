@@ -1,4 +1,4 @@
-import 'package:customer/models/conversation_model.dart';
+import 'package:eatsipy_customer/models/conversation_model.dart';
 
 class ChatVideoContainer {
   Url videoUrl;

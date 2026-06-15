@@ -1,4 +1,4 @@
-import 'package:customer/themes/app_them_data.dart';
+import 'package:eatsipy_customer/themes/app_them_data.dart';
 import 'package:flutter/material.dart';
 
 
