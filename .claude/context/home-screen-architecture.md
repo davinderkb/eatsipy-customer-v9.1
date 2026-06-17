@@ -18,7 +18,7 @@ Scaffold with GetX<HomeController>. Gradient background (secondary colors fading
    - **Categories**: `titleView("Explore the Categories")` + `CategoryView` (100px height horizontal list)
    - **Top Banner**: if `bannerModel.isNotEmpty` → `BannerView` (150px PageView with dots)
    - **Largest Discounts**: if `couponRestaurantList.isNotEmpty` → `titleView` + `OfferView` (22% height PageView)
-   - **Featured & Trending**: if `newArrivalRestaurantList.isNotEmpty && openRestaurantList.isNotEmpty` → `NewArrival` (28% height horizontal ListView, max 10)
+   - **Featured & Trending**: if `newArrivalRestaurantList.length >= 3` → `NewArrival` (28% height horizontal ListView, max 10). List contains only open restaurants.
    - **Stories**: if storyList not empty + enabled → `StoryView` (180px horizontal)
    - **Advertisements**: if ads enabled + list not empty → horizontal cards (220px)
 
@@ -44,7 +44,7 @@ Pill-shaped bar at bottom center with: List/Map toggle, QR scan, Order type drop
 - `filteredAllList` — after applying filter chips
 - `openRestaurantList` — open restaurants from filteredAllList
 - `closedRestaurantList` — closed restaurants, sorted by nearest opening time (nulls last)
-- `newArrivalRestaurantList` — sorted by hybrid score (70% rating + 30% recency, 30-day decay)
+- `newArrivalRestaurantList` — **open restaurants only**, sorted by hybrid score (70% rating + 30% recency, 30-day decay)
 - `selectedFilters` — RxSet<String>
 - `favouriteList` — RxList<FavouriteModel>
 - `couponRestaurantList`, `couponList` — matched vendor/coupon pairs

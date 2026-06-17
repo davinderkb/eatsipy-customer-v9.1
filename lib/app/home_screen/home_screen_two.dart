@@ -1,10 +1,10 @@
 import 'dart:math';
+import 'package:badges/badges.dart' as badges;
 import 'package:eatsipy_customer/app/address_screens/address_list_screen.dart';
 import 'package:eatsipy_customer/app/advertisement_screens/all_advertisement_screen.dart';
 import 'package:eatsipy_customer/app/auth_screen/login_screen.dart';
 import 'package:eatsipy_customer/app/cart_screen/cart_screen.dart';
 import 'package:eatsipy_customer/app/home_screen/category_restaurant_screen.dart';
-import 'package:eatsipy_customer/app/home_screen/home_screen.dart';
 import 'package:eatsipy_customer/app/home_screen/restaurant_list_screen.dart';
 import 'package:eatsipy_customer/app/home_screen/story_view.dart';
 import 'package:eatsipy_customer/app/home_screen/view_all_category_screen.dart';
@@ -29,7 +29,6 @@ import 'package:eatsipy_customer/themes/custom_dialog_box.dart';
 import 'package:eatsipy_customer/themes/responsive.dart';
 import 'package:eatsipy_customer/themes/round_button_fill.dart';
 import 'package:eatsipy_customer/themes/text_field_widget.dart';
-import 'package:eatsipy_customer/utils/dynamic_traslator.dart';
 import 'package:eatsipy_customer/utils/fire_store_utils.dart';
 import 'package:eatsipy_customer/utils/network_image_widget.dart';
 import 'package:eatsipy_customer/utils/preferences.dart';
@@ -121,11 +120,7 @@ class HomeScreenTwo extends StatelessWidget {
                                           InkWell(
                                             onTap: () {
                                               DashBoardController dashBoardController = Get.put(DashBoardController());
-                                              if (Constant.walletSetting == false) {
-                                                dashBoardController.selectedIndex.value = 3;
-                                              } else {
-                                                dashBoardController.selectedIndex.value = 4;
-                                              }
+                                              dashBoardController.selectedIndex.value = 3;
                                             },
                                             child: ClipOval(
                                               child: NetworkImageWidget(
@@ -274,19 +269,40 @@ class HomeScreenTwo extends StatelessWidget {
                                           const SizedBox(
                                             width: 5,
                                           ),
-                                          InkWell(
-                                            onTap: () async {
-                                              (await Get.to(const CartScreen()));
-                                              controller.getCartData();
-                                            },
-                                            child: ClipOval(
-                                              child: Container(
-                                                  padding: const EdgeInsets.all(8.0),
-                                                  color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
-                                                  child: SvgPicture.asset(
-                                                    "assets/icons/ic_shoping_cart.svg",
-                                                    colorFilter: ColorFilter.mode(isDark ? AppThemeData.grey50 : AppThemeData.grey900, BlendMode.srcIn),
-                                                  )),
+                                          Obx(
+                                            () => badges.Badge(
+                                              showBadge: cartItem.isEmpty ? false : true,
+                                              position: badges.BadgePosition.topEnd(top: -4, end: -4),
+                                              badgeContent: Text(
+                                                "${cartItem.length}",
+                                                style: const TextStyle(
+                                                  fontSize: 11,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  fontFamily: 'Urbanist',
+                                                  fontWeight: FontWeight.w600,
+                                                  color: AppThemeData.grey50,
+                                                ),
+                                              ),
+                                              badgeStyle: const badges.BadgeStyle(
+                                                shape: badges.BadgeShape.circle,
+                                                badgeColor: AppThemeData.secondary300,
+                                                padding: EdgeInsets.all(5),
+                                              ),
+                                              child: InkWell(
+                                                onTap: () async {
+                                                  (await Get.to(const CartScreen()));
+                                                  controller.getCartData();
+                                                },
+                                                child: ClipOval(
+                                                  child: Container(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
+                                                      child: SvgPicture.asset(
+                                                        "assets/icons/ic_shoping_cart.svg",
+                                                        colorFilter: ColorFilter.mode(isDark ? AppThemeData.grey50 : AppThemeData.grey900, BlendMode.srcIn),
+                                                      )),
+                                                ),
+                                              ),
                                             ),
                                           )
                                         ],

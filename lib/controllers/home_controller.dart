@@ -122,7 +122,9 @@ class HomeController extends GetxController {
 
       // Batch update data lists (reduces rebuilds)
       allNearestRestaurant.assignAll(restaurants);
-      newArrivalRestaurantList.assignAll(restaurants);
+      newArrivalRestaurantList.assignAll(
+        restaurants.where((v) => Constant.statusCheckOpenORClose(vendorModel: v)),
+      );
       final nowMs = DateTime.now().millisecondsSinceEpoch;
       newArrivalRestaurantList.sort((a, b) {
         final ratingA = double.tryParse(Constant.calculateReview(reviewCount: a.reviewsCount.toString(), reviewSum: a.reviewsSum.toString())) ?? 0;

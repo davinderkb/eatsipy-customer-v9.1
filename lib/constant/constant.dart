@@ -1036,7 +1036,7 @@ class Constant {
 
   static String getNextOpeningTime(VendorModel vendor, DateTime now) {
     final nextOpen = getNextOpeningDateTime(vendor, now);
-    if (nextOpen == null) return "Temporarily unavailable";
+    if (nextOpen == null) return "Opens next week";
 
     final diff = nextOpen.difference(now);
 

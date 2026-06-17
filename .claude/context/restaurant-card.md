@@ -38,15 +38,26 @@ Container(shadowSm, radius16, theme-aware bg)
       Category text (13px, w400, if available)
       SizedBox(8)
       Row: star + rating + dot + distance icon + distance
-      if !isOpen: "Opens in 15 mins" / "Opens at 8 PM" / etc. (12px, danger300)
+      SizedBox(height: 16) — ALWAYS reserved for layout symmetry:
+        if !isOpen: "Opens in 15 mins" / "Opens at 8 PM" / etc. (12px, danger300)
+        if isOpen: SizedBox.shrink() (empty placeholder)
 ```
+
+### Recommended Image Sizes
+| Usage | Display Size | Recommended Source | Aspect Ratio |
+|-------|-------------|-------------------|--------------|
+| RestaurantCard image | 200px × full width (~375dp) | **1280 × 720px** | 16:9 |
+| Featured & Trending | 72% width × ~60% container | **1080 × 720px** | 3:2 |
+| Category icon | 64 × 64dp | **256 × 256px** | 1:1 (square) |
+
+All images use `BoxFit.cover` — slightly oversized is better than undersized. Source images should be JPEG/WebP at 70-85% quality.
 
 ### Opening Time Display Logic
 Method: `Constant.getNextOpeningTime(vendor, now)` in `lib/constant/constant.dart`
 
 | Condition | Output |
 |-----------|--------|
-| No opening in 7 days | "Temporarily unavailable" |
+| No opening in 7 days | "Opens next week" |
 | Within 60 minutes | "Opens in N mins" |
 | Later today | "Opens at 8:00 PM" |
 | Tomorrow | "Opens tomorrow" |

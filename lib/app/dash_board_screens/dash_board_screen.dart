@@ -1,4 +1,3 @@
-import 'package:eatsipy_customer/constant/constant.dart';
 import 'package:eatsipy_customer/constant/show_toast_dialog.dart';
 import 'package:eatsipy_customer/controllers/dash_board_controller.dart';
 import 'package:eatsipy_customer/themes/app_them_data.dart';
@@ -48,20 +47,12 @@ class DashBoardScreen extends StatelessWidget {
                         }
                         controller.selectedIndex.value = index;
                       },
-                      destinations: Constant.walletSetting == false
-                          ? [
-                              _destination(isDark, assetIcon: "assets/icons/ic_home.svg", label: 'Home'),
-                              _destination(isDark, assetIcon: "assets/icons/ic_fav.svg", label: 'Favourites'),
-                              _destination(isDark, assetIcon: "assets/icons/ic_orders.svg", label: 'Orders'),
-                              _destination(isDark, assetIcon: "assets/icons/ic_profile.svg", label: 'Profile'),
-                            ]
-                          : [
-                              _destination(isDark, assetIcon: "assets/icons/ic_home.svg", label: 'Home'),
-                              _destination(isDark, assetIcon: "assets/icons/ic_fav.svg", label: 'Favourites'),
-                              _destination(isDark, assetIcon: "assets/icons/ic_wallet.svg", label: 'Wallet'),
-                              _destination(isDark, assetIcon: "assets/icons/ic_orders.svg", label: 'Orders'),
-                              _destination(isDark, assetIcon: "assets/icons/ic_profile.svg", label: 'Profile'),
-                            ],
+                      destinations: [
+                        _destination(isDark, assetIcon: "assets/icons/ic_home.svg", label: 'Home'),
+                        _destination(isDark, assetIcon: "assets/icons/ic_fav.svg", label: 'Favourites'),
+                        _destination(isDark, assetIcon: "assets/icons/ic_orders.svg", label: 'Orders'),
+                        _destination(isDark, assetIcon: "assets/icons/ic_profile.svg", label: 'Profile'),
+                      ],
                     );
                   }),
             ),

@@ -266,10 +266,11 @@ class HomeScreen extends StatelessWidget {
                                             Obx(
                                               () => badges.Badge(
                                                 showBadge: cartItem.isEmpty ? false : true,
+                                                position: badges.BadgePosition.topEnd(top: -4, end: -4),
                                                 badgeContent: Text(
                                                   "${cartItem.length}",
                                                   style: const TextStyle(
-                                                    fontSize: 14,
+                                                    fontSize: 11,
                                                     overflow: TextOverflow.ellipsis,
                                                     fontFamily: 'Urbanist',
                                                     fontWeight: FontWeight.w600,
@@ -279,6 +280,7 @@ class HomeScreen extends StatelessWidget {
                                                 badgeStyle: const badges.BadgeStyle(
                                                   shape: badges.BadgeShape.circle,
                                                   badgeColor: AppThemeData.secondary300,
+                                                  padding: EdgeInsets.all(5),
                                                 ),
                                                 child: InkWell(
                                                   onTap: () async {
@@ -399,7 +401,7 @@ class HomeScreen extends StatelessWidget {
                                                   ),
                                                 ),
                                               // ── Featured & Trending ──
-                                              if (controller.newArrivalRestaurantList.isNotEmpty && controller.openRestaurantList.isNotEmpty)
+                                              if (controller.newArrivalRestaurantList.length >= 3)
                                                 Padding(
                                                   padding: const EdgeInsets.only(top: 20),
                                                   child: Padding(

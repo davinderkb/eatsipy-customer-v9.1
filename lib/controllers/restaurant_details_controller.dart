@@ -27,6 +27,10 @@ class RestaurantDetailsController extends GetxController {
   RxBool isNonVag = false.obs;
   RxBool isMenuOpen = false.obs;
 
+  final ScrollController menuScrollController = ScrollController();
+  final Map<String, GlobalKey> categoryKeys = {};
+  RxInt activeCategoryIndex = 0.obs;
+
   RxList<FavouriteModel> favouriteList = <FavouriteModel>[].obs;
   RxList<FavouriteItemModel> favouriteItemList = <FavouriteItemModel>[].obs;
   RxList<ProductModel> allProductList = <ProductModel>[].obs;
@@ -118,6 +122,24 @@ class RestaurantDetailsController extends GetxController {
     }
     var seen = <String>{};
     vendorCategoryList.value = vendorCategoryList.where((element) => seen.add(element.id.toString())).toList();
+
+    for (var cat in vendorCategoryList) {
+      categoryKeys[cat.id.toString()] = GlobalKey();
+    }
+  }
+
+  void scrollToCategory(int index) {
+    if (index >= vendorCategoryList.length) return;
+    activeCategoryIndex.value = index;
+    final key = categoryKeys[vendorCategoryList[index].id.toString()];
+    if (key?.currentContext != null) {
+      Scrollable.ensureVisible(
+        key!.currentContext!,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        alignment: 0.0,
+      );
+    }
   }
 
   void searchProduct(String name) {
@@ -173,6 +195,19 @@ class RestaurantDetailsController extends GetxController {
   }
 
   RxBool isOpen = false.obs;
+
+  String get todayTimingDisplay {
+    final now = DateTime.now();
+    final day = DateFormat('EEEE', 'en_US').format(now);
+    for (var wh in vendorModel.value.workingHours ?? []) {
+      if (wh.day == day && wh.timeslot != null && wh.timeslot!.isNotEmpty) {
+        final from = wh.timeslot!.first.from ?? '';
+        final to = wh.timeslot!.last.to ?? '';
+        return '$from – $to';
+      }
+    }
+    return '';
+  }
 
   void statusCheck() {
     final now = DateTime.now();

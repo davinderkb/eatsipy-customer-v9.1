@@ -11,6 +11,7 @@ import 'package:eatsipy_customer/app/gift_card/gift_card_screen.dart';
 import 'package:eatsipy_customer/app/help_support_screen/help_support_screen.dart';
 import 'package:eatsipy_customer/app/refer_friend_screen/refer_friend_screen.dart';
 import 'package:eatsipy_customer/app/terms_and_condition/terms_and_condition_screen.dart';
+import 'package:eatsipy_customer/app/wallet_screen/wallet_screen.dart';
 import 'package:eatsipy_customer/constant/constant.dart';
 import 'package:eatsipy_customer/constant/show_toast_dialog.dart';
 import 'package:eatsipy_customer/controllers/my_profile_controller.dart';
@@ -118,6 +119,44 @@ class ProfileScreen extends StatelessWidget {
                             const SizedBox(
                               height: 20,
                             ),
+                            if (Constant.walletSetting == true)
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  TranslatedText(
+                                    "Wallet",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: isDark ? AppThemeData.grey400 : AppThemeData.grey500,
+                                      fontFamily: 'Urbanist',
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Container(
+                                    width: Responsive.width(100, context),
+                                    decoration: ShapeDecoration(
+                                      color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                                      child: Column(
+                                        children: [
+                                          cardDecoration(isDark, themeChange, controller, "assets/icons/ic_wallet.svg", "Wallet", () {
+                                            Get.to(const WalletScreen());
+                                          }),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                ],
+                              ),
                             Constant.isEnabledForCustomer == true
                                 ? Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,

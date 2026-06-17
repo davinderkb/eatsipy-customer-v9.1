@@ -781,35 +781,26 @@ class FireStoreUtils {
   }
 
   static Future<List<ProductModel>> getProductByVendorId(String vendorId) async {
-    String selectedFoodType = Preferences.getString(Preferences.foodDeliveryType, defaultValue: "Delivery");
     List<ProductModel> list = [];
-    if (selectedFoodType == "TakeAway") {
-      await fireStore.collection(CollectionName.vendorProducts).where("vendorID", isEqualTo: vendorId).where('publish', isEqualTo: true).orderBy("createdAt", descending: false).get().then((value) {
-        for (var element in value.docs) {
-          ProductModel productModel = ProductModel.fromJson(element.data());
-          list.add(productModel);
-        }
-      }).catchError((error) {
-        log(error.toString());
-      });
-    } else {
-      await fireStore
-          .collection(CollectionName.vendorProducts)
-          .where("vendorID", isEqualTo: vendorId)
-          .where("takeawayOption", isEqualTo: false)
-          .where('publish', isEqualTo: true)
-          .orderBy("createdAt", descending: false)
-          .get()
-          .then((value) {
-        for (var element in value.docs) {
-          ProductModel productModel = ProductModel.fromJson(element.data());
-          list.add(productModel);
-        }
-      }).catchError((error) {
-        log(error.toString());
-      });
-    }
-
+    await fireStore
+        .collection(CollectionName.vendorProducts)
+        .where("vendorID", isEqualTo: vendorId)
+        .where('publish', isEqualTo: true)
+        .get()
+        .then((value) {
+      for (var element in value.docs) {
+        ProductModel productModel = ProductModel.fromJson(element.data());
+        list.add(productModel);
+      }
+    }).catchError((error) {
+      log('getProductByVendorId Error: $error');
+    });
+    list.sort((a, b) {
+      if (a.createdAt == null && b.createdAt == null) return 0;
+      if (a.createdAt == null) return -1;
+      if (b.createdAt == null) return 1;
+      return (a.createdAt as Timestamp).compareTo(b.createdAt as Timestamp);
+    });
     return list;
   }
 

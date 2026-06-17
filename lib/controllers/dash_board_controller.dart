@@ -3,7 +3,6 @@ import 'package:eatsipy_customer/app/home_screen/home_screen.dart';
 import 'package:eatsipy_customer/app/home_screen/home_screen_two.dart';
 import 'package:eatsipy_customer/app/order_list_screen/order_screen.dart';
 import 'package:eatsipy_customer/app/profile_screen/profile_screen.dart';
-import 'package:eatsipy_customer/app/wallet_screen/wallet_screen.dart';
 import 'package:eatsipy_customer/constant/constant.dart';
 import 'package:get/get.dart';
 
@@ -25,7 +24,6 @@ class DashBoardController extends GetxController {
     pageList.value = [
       home,
       const FavouriteScreen(),
-      if (Constant.walletSetting == true) const WalletScreen(),
       const OrderScreen(),
       const ProfileScreen(),
     ];

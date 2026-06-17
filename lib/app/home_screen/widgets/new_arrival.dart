@@ -27,7 +27,7 @@ class NewArrival extends StatelessWidget {
         itemCount: controller.newArrivalRestaurantList.length >= 10 ? 10 : controller.newArrivalRestaurantList.length,
         itemBuilder: (BuildContext context, int index) {
           VendorModel vendorModel = controller.newArrivalRestaurantList[index];
-          bool isOpen = Constant.statusCheckOpenORClose(vendorModel: vendorModel);
+          final isDark = Theme.of(context).brightness == Brightness.dark;
           return InkWell(
             key: ValueKey(vendorModel.id),
             onTap: () {
@@ -48,16 +48,11 @@ class NewArrival extends StatelessWidget {
                         child: Stack(
                           fit: StackFit.expand,
                           children: [
-                            ColorFiltered(
-                              colorFilter: isOpen
-                                  ? const ColorFilter.mode(Colors.transparent, BlendMode.multiply)
-                                  : AppThemeData.desatLight,
-                              child: NetworkImageWidget(
-                                imageUrl: vendorModel.photo.toString(),
-                                fit: BoxFit.cover,
-                                height: Responsive.height(100, context),
-                                width: Responsive.width(100, context),
-                              ),
+                            NetworkImageWidget(
+                              imageUrl: vendorModel.photo.toString(),
+                              fit: BoxFit.cover,
+                              height: Responsive.height(100, context),
+                              width: Responsive.width(100, context),
                             ),
                             Container(
                               decoration: BoxDecoration(
@@ -68,22 +63,6 @@ class NewArrival extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            if (!isOpen)
-                              Positioned(
-                                top: AppThemeData.space12,
-                                left: AppThemeData.space12,
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                  decoration: BoxDecoration(
-                                    color: AppThemeData.grey900.withValues(alpha: 0.75),
-                                    borderRadius: BorderRadius.circular(AppThemeData.radius8),
-                                  ),
-                                  child: const TranslatedText(
-                                    "Closed",
-                                    style: TextStyle(color: AppThemeData.grey50, fontSize: 11, fontFamily: 'Urbanist', fontWeight: FontWeight.w600),
-                                  ),
-                                ),
-                              ),
                             Positioned(
                               right: AppThemeData.space12,
                               top: AppThemeData.space12,
@@ -114,11 +93,11 @@ class NewArrival extends StatelessWidget {
                     TranslatedText(
                       vendorModel.title.toString(),
                       maxLines: 1,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 15,
                         overflow: TextOverflow.ellipsis,
                         fontFamily: 'Urbanist', fontWeight: FontWeight.w700,
-                        color: AppThemeData.grey50,
+                        color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                       ),
                     ),
                     const SizedBox(height: AppThemeData.space4),
@@ -136,13 +115,13 @@ class NewArrival extends StatelessWidget {
                             "${Constant.calculateReview(reviewCount: vendorModel.reviewsCount.toString(), reviewSum: vendorModel.reviewsSum.toString())} (${vendorModel.reviewsCount!.toStringAsFixed(0)})",
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(fontSize: 12, fontFamily: 'Urbanist', fontWeight: FontWeight.w500, color: AppThemeData.grey400),
+                            style: TextStyle(fontSize: 12, fontFamily: 'Urbanist', fontWeight: FontWeight.w500, color: isDark ? AppThemeData.grey400 : AppThemeData.grey500),
                           ),
                         ),
                         const SizedBox(width: AppThemeData.space8),
-                        Container(width: 4, height: 4, decoration: const BoxDecoration(shape: BoxShape.circle, color: AppThemeData.grey500)),
+                        Container(width: 4, height: 4, decoration: BoxDecoration(shape: BoxShape.circle, color: isDark ? AppThemeData.grey500 : AppThemeData.grey400)),
                         const SizedBox(width: AppThemeData.space8),
-                        SvgPicture.asset("assets/icons/ic_map_distance.svg", width: 14, height: 14),
+                        SvgPicture.asset("assets/icons/ic_map_distance.svg", width: 14, height: 14, colorFilter: ColorFilter.mode(isDark ? AppThemeData.grey400 : AppThemeData.grey500, BlendMode.srcIn)),
                         const SizedBox(width: 4),
                         Flexible(
                           child: Text(
@@ -154,30 +133,20 @@ class NewArrival extends StatelessWidget {
                             )} ${Constant.distanceType}",
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(fontSize: 12, fontFamily: 'Urbanist', fontWeight: FontWeight.w500, color: AppThemeData.grey400),
+                            style: TextStyle(fontSize: 12, fontFamily: 'Urbanist', fontWeight: FontWeight.w500, color: isDark ? AppThemeData.grey400 : AppThemeData.grey500),
                           ),
                         ),
                         if (vendorModel.isSelfDelivery == true && Constant.isSelfDeliveryFeature == true) ...[
                           const SizedBox(width: AppThemeData.space8),
-                          Container(width: 4, height: 4, decoration: const BoxDecoration(shape: BoxShape.circle, color: AppThemeData.grey500)),
+                          Container(width: 4, height: 4, decoration: BoxDecoration(shape: BoxShape.circle, color: isDark ? AppThemeData.grey500 : AppThemeData.grey400)),
                           const SizedBox(width: AppThemeData.space8),
-                          const TranslatedText(
+                          TranslatedText(
                             "Free",
-                            style: TextStyle(fontSize: 12, fontFamily: 'Urbanist', fontWeight: FontWeight.w500, color: AppThemeData.grey400),
+                            style: TextStyle(fontSize: 12, fontFamily: 'Urbanist', fontWeight: FontWeight.w500, color: isDark ? AppThemeData.grey400 : AppThemeData.grey500),
                           ),
                         ],
                       ],
                     ),
-                    if (!isOpen)
-                      Padding(
-                        padding: const EdgeInsets.only(top: AppThemeData.space4),
-                        child: TranslatedText(
-                          Constant.getNextOpeningTime(vendorModel, DateTime.now()),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(color: AppThemeData.danger300, fontSize: 12, fontFamily: 'Urbanist', fontWeight: FontWeight.w500),
-                        ),
-                      ),
                   ],
                 ),
               ),

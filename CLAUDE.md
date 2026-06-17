@@ -25,3 +25,9 @@ Detailed architecture documentation is in `.claude/context/`:
 - `home-screen-architecture.md` — home screen layout, sections, controller, filters
 - `design-system.md` — AppThemeData constants, colors, spacing, shadows, desaturation
 - `restaurant-card.md` — RestaurantCard widget, visual states, parameters
+
+## Cross-App Change Tracking
+When making changes that affect Firestore schema, shared data models, or patterns that exist in companion apps, update the relevant tracking file:
+- `cross-app-admin.md` — Admin panel changes needed
+- `cross-app-restaurant.md` — Restaurant app changes needed
+- `cross-app-driver.md` — Driver app changes needed

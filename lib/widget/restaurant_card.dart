@@ -238,16 +238,20 @@ class RestaurantCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    if (!isOpen)
-                      Padding(
-                        padding: const EdgeInsets.only(top: AppThemeData.space8),
-                        child: TranslatedText(
-                          Constant.getNextOpeningTime(vendorModel, DateTime.now()),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(color: AppThemeData.danger300, fontSize: 12, fontFamily: 'Urbanist', fontWeight: FontWeight.w500),
-                        ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: AppThemeData.space8),
+                      child: SizedBox(
+                        height: 16,
+                        child: isOpen
+                            ? const SizedBox.shrink()
+                            : TranslatedText(
+                                Constant.getNextOpeningTime(vendorModel, DateTime.now()),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(color: AppThemeData.danger300, fontSize: 12, fontFamily: 'Urbanist', fontWeight: FontWeight.w500),
+                              ),
                       ),
+                    ),
                   ],
                 ),
               ),
