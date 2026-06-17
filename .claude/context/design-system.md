@@ -85,6 +85,20 @@
 
 ---
 
+## UI Patterns (Restaurant Cards — Home Screen)
+
+### Food Showcase Overlay (RestaurantImageView)
+Shown only in showcase slider mode (2+ active `card_showcase_items`):
+- **Gradient:** Bottom-to-top `LinearGradient`, `black@0.65` → `transparent`, from `bottomCenter` to `center`
+- **Dish name:** white, 14px Urbanist w600, `Expanded` with `ellipsis`
+- **Price:** white, 14px Urbanist w700, uses `Constant.amountShow()`
+- **Layout:** `Padding(horizontal: 12, bottom: 20)` → `Row` inside gradient container
+- **Pagination dots:** `AnimatedContainer` circles, 6px inactive (white@0.5), 8px active (white), `bottom: 8` center-aligned
+- **Timer:** 6-second auto-slide interval, pauses on user drag, resumes after 3s idle
+- Single showcase / cover / stock image modes: no overlay, no dots, no timer — just a clean food photo
+
+---
+
 ## UI Patterns (Restaurant Details Screen)
 
 ### Typography-First Header

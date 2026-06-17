@@ -503,5 +503,8 @@ If the app fetches entire Firestore collections without limits:
 - **Keep project-specific tokens current** — cart badges use `AppThemeData.cartBadge`; restaurant detail cart island uses `AppThemeData.cartBar`.
 - **Run `flutter analyze`** after each batch of changes to catch errors early
 - **Test the golden path** after each major phase
+- **Protect Home/Menu behavior with tests** — use unit tests for image priority, filtering, local menu search, and category metadata; widget tests for empty-section removal, keyboard-safe search results, no-photo item alignment, floating menu visibility, and cart badge positioning; limited golden tests for stable badge/item/cart-island surfaces.
+- **Avoid live services in tests** — no Firebase, Firestore, network, or ordering-flow side effects in unit/widget/golden coverage.
+- **Use scoped quality gates until legacy formatting is normalized** — for the current Home/Menu suite, run `dart format --set-exit-if-changed lib/utils/quality lib/widget/restaurant_image_view.dart lib/controllers/home_controller.dart lib/controllers/restaurant_details_controller.dart lib/app/home_screen/home_screen.dart test`, `flutter analyze lib/utils/quality lib/widget/restaurant_image_view.dart lib/controllers/home_controller.dart lib/controllers/restaurant_details_controller.dart lib/app/home_screen/home_screen.dart test`, and `flutter test`.
 - **Be efficient** — use sed/bulk scripts for repetitive patterns, manual edits for unique screens
 - **Start with `final theme = Theme.of(context);`** at the top of every `build()` method for cleaner references

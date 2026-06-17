@@ -27,6 +27,16 @@ Flutter food delivery customer app. Firebase/Firestore backend. GetX state manag
 - Restaurant menu item descriptions fade at the edge in list previews. Product image taps open the existing detail bottom sheet with larger image and full description while preserving current add/cart behavior.
 - Restaurant menu items without photos still reserve the trailing action column so text and ADD/quantity placement aligns with photo items.
 - Restaurant menu search uses a local in-memory index; never query Firebase per keystroke. Search mode hides the floating menu navigator/cart strip, scrolls the search section into view, and adds keyboard-aware bottom spacing for reachable results.
+- Home and restaurant menu quality coverage now lives under `test/unit`, `test/widget`, and `test/golden`. Keep logic that affects image priority, home section visibility, menu search, category metadata, floating menu visibility, keyboard-safe search layouts, no-photo card alignment, and cart badge placement covered by tests.
+
+## Quality Checks
+- For focused changes, run scoped format/analyze checks on the touched Dart files plus `test`, then run `flutter test`.
+- Current verified scoped gate for the Home/Restaurant menu quality work:
+  - `dart format --set-exit-if-changed lib/utils/quality lib/widget/restaurant_image_view.dart lib/controllers/home_controller.dart lib/controllers/restaurant_details_controller.dart lib/app/home_screen/home_screen.dart test`
+  - `flutter analyze lib/utils/quality lib/widget/restaurant_image_view.dart lib/controllers/home_controller.dart lib/controllers/restaurant_details_controller.dart lib/app/home_screen/home_screen.dart test`
+  - `flutter test`
+- Do not rely on live Firebase, network, or Firestore initialization in these tests; use local fakes/helpers.
+- Golden coverage should stay limited to stable UI surfaces such as cart badge placement and menu/item layout states.
 
 ## Context Files
 Detailed architecture documentation is in `.claude/context/`:

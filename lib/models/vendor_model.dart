@@ -46,6 +46,10 @@ class VendorModel {
   String? subscriptionTotalOrders;
   bool? isSelfDelivery;
   String? packagingCharge;
+  bool? isCoverImageApproved;
+  String? coverImageUrl;
+  bool? showCardShowcase;
+  List<CardShowcaseItem>? cardShowcaseItems;
 
   VendorModel(
       {this.author,
@@ -90,7 +94,11 @@ class VendorModel {
       this.subscriptionPlan,
       this.subscriptionTotalOrders,
       this.isSelfDelivery,
-      this.packagingCharge});
+      this.packagingCharge,
+      this.isCoverImageApproved,
+      this.coverImageUrl,
+      this.showCardShowcase,
+      this.cardShowcaseItems});
 
   VendorModel.fromJson(Map<String, dynamic> json) {
     author = json['author'];
@@ -111,7 +119,8 @@ class VendorModel {
     g = json['g'] != null ? G.fromJson(json['g']) : null;
     hidephotos = json['hidephotos'];
     reststatus = json['reststatus'];
-    filters = json['filters'] != null ? Filters.fromJson(json['filters']) : null;
+    filters =
+        json['filters'] != null ? Filters.fromJson(json['filters']) : null;
     reviewsCount = json['reviewsCount'] ?? 0.0;
     photo = json['photo'];
     description = json['description'];
@@ -122,8 +131,12 @@ class VendorModel {
     longitude = double.parse(json['longitude'].toString());
     enabledDiveInFuture = json['enabledDiveInFuture'];
     restaurantCost = json['restaurantCost']?.toString();
-    deliveryCharge = json['DeliveryCharge'] != null ? DeliveryCharge.fromJson(json['DeliveryCharge']) : null;
-    adminCommission = json['adminCommission'] != null ? AdminCommission.fromJson(json['adminCommission']) : null;
+    deliveryCharge = json['DeliveryCharge'] != null
+        ? DeliveryCharge.fromJson(json['DeliveryCharge'])
+        : null;
+    adminCommission = json['adminCommission'] != null
+        ? AdminCommission.fromJson(json['adminCommission'])
+        : null;
     authorProfilePic = json['authorProfilePic'];
     authorName = json['authorName'];
     phonenumber = json['phonenumber'];
@@ -138,14 +151,29 @@ class VendorModel {
     reviewsSum = json['reviewsSum'] ?? 0.0;
     photos = json['photos'] ?? [];
     title = json['title'];
-    categoryTitle = json['categoryTitle'] is String ? [] : json['categoryTitle'] ?? [];
+    categoryTitle = json['categoryTitle'] is String
+        ? (json['categoryTitle'] as String).isNotEmpty
+            ? [json['categoryTitle']]
+            : []
+        : json['categoryTitle'] ?? [];
     latitude = double.parse(json['latitude'].toString());
     subscriptionPlanId = json['subscriptionPlanId'];
     subscriptionExpiryDate = json['subscriptionExpiryDate'];
-    subscriptionPlan = json['subscription_plan'] != null ? SubscriptionPlanModel.fromJson(json['subscription_plan']) : null;
+    subscriptionPlan = json['subscription_plan'] != null
+        ? SubscriptionPlanModel.fromJson(json['subscription_plan'])
+        : null;
     subscriptionTotalOrders = json['subscriptionTotalOrders'];
     isSelfDelivery = json['isSelfDelivery'] ?? false;
     packagingCharge = json['packagingCharge'] ?? "0";
+    isCoverImageApproved = json['is_cover_image_approved'] ?? false;
+    coverImageUrl = json['cover_image_url'];
+    showCardShowcase = json['show_card_showcase'] ?? false;
+    if (json['card_showcase_items'] != null) {
+      cardShowcaseItems = <CardShowcaseItem>[];
+      json['card_showcase_items'].forEach((v) {
+        cardShowcaseItems!.add(CardShowcaseItem.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -194,7 +222,8 @@ class VendorModel {
     data['authorName'] = authorName;
     data['phonenumber'] = phonenumber;
     if (specialDiscount != null) {
-      data['specialDiscount'] = specialDiscount!.map((v) => v.toJson()).toList();
+      data['specialDiscount'] =
+          specialDiscount!.map((v) => v.toJson()).toList();
     }
     data['specialDiscountEnable'] = specialDiscountEnable;
     data['coordinates'] = coordinates;
@@ -205,7 +234,22 @@ class VendorModel {
     data['latitude'] = latitude;
     data['isSelfDelivery'] = isSelfDelivery ?? false;
     data['packagingCharge'] = packagingCharge;
+    data['is_cover_image_approved'] = isCoverImageApproved;
+    data['cover_image_url'] = coverImageUrl;
+    data['show_card_showcase'] = showCardShowcase;
+    if (cardShowcaseItems != null) {
+      data['card_showcase_items'] =
+          cardShowcaseItems!.map((v) => v.toJson()).toList();
+    }
     return data;
+  }
+
+  List<CardShowcaseItem> get activeShowcaseItems {
+    if (cardShowcaseItems == null) return [];
+    final active =
+        cardShowcaseItems!.where((item) => item.isActive == true).toList();
+    active.sort((a, b) => (a.displayOrder ?? 0).compareTo(b.displayOrder ?? 0));
+    return active;
   }
 }
 
@@ -283,7 +327,15 @@ class Filters {
   String? freeWiFi;
   String? takesReservations;
 
-  Filters({this.goodForLunch, this.outdoorSeating, this.liveMusic, this.vegetarianFriendly, this.goodForDinner, this.goodForBreakfast, this.freeWiFi, this.takesReservations});
+  Filters(
+      {this.goodForLunch,
+      this.outdoorSeating,
+      this.liveMusic,
+      this.vegetarianFriendly,
+      this.goodForDinner,
+      this.goodForBreakfast,
+      this.freeWiFi,
+      this.takesReservations});
 
   Filters.fromJson(Map<String, dynamic> json) {
     goodForLunch = json['Good for Lunch'];
@@ -316,7 +368,11 @@ class DeliveryCharge {
   num? deliveryChargesPerKm;
   bool? vendorCanModify;
 
-  DeliveryCharge({this.minimumDeliveryChargesWithinKm, this.minimumDeliveryCharges, this.deliveryChargesPerKm, this.vendorCanModify});
+  DeliveryCharge(
+      {this.minimumDeliveryChargesWithinKm,
+      this.minimumDeliveryCharges,
+      this.deliveryChargesPerKm,
+      this.vendorCanModify});
 
   DeliveryCharge.fromJson(Map<String, dynamic> json) {
     minimumDeliveryChargesWithinKm = json['minimum_delivery_charges_within_km'];
@@ -368,7 +424,8 @@ class SpecialDiscountTimeslot {
   String? type;
   String? from;
 
-  SpecialDiscountTimeslot({this.discount, this.discountType, this.to, this.type, this.from});
+  SpecialDiscountTimeslot(
+      {this.discount, this.discountType, this.to, this.type, this.from});
 
   SpecialDiscountTimeslot.fromJson(Map<String, dynamic> json) {
     discount = json['discount'];
@@ -385,6 +442,43 @@ class SpecialDiscountTimeslot {
     data['to'] = to;
     data['type'] = type;
     data['from'] = from;
+    return data;
+  }
+}
+
+class CardShowcaseItem {
+  String? productId;
+  String? name;
+  String? price;
+  String? imageUrl;
+  int? displayOrder;
+  bool? isActive;
+
+  CardShowcaseItem(
+      {this.productId,
+      this.name,
+      this.price,
+      this.imageUrl,
+      this.displayOrder,
+      this.isActive});
+
+  CardShowcaseItem.fromJson(Map<String, dynamic> json) {
+    productId = json['product_id'];
+    name = json['name'];
+    price = json['price']?.toString();
+    imageUrl = json['image_url'];
+    displayOrder = json['display_order'];
+    isActive = json['is_active'] ?? true;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['product_id'] = productId;
+    data['name'] = name;
+    data['price'] = price;
+    data['image_url'] = imageUrl;
+    data['display_order'] = displayOrder;
+    data['is_active'] = isActive;
     return data;
   }
 }

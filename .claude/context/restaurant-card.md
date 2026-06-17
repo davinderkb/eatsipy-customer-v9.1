@@ -43,6 +43,30 @@ Container(shadowSm, radius16, theme-aware bg)
         if isOpen: SizedBox.shrink() (empty placeholder)
 ```
 
+### Image Rendering Priority (4-Tier)
+
+`RestaurantImageView` resolves which image to display using this priority:
+
+| Priority | Mode | Condition | Display |
+|----------|------|-----------|---------|
+| 1 | Showcase slider | `show_card_showcase=true` + 2+ active `card_showcase_items` | PageView with auto-slide (6s), dish name + price overlay, pagination dots |
+| 2 | Single showcase | `show_card_showcase=true` + 1 active item | Static food image, no overlay |
+| 3 | Approved cover | `is_cover_image_approved=true` + valid `cover_image_url` | Static cover image, no overlay |
+| 4 | Category stock | `fallbackImageUrl` provided by HomeController | Stock food photo from Firebase `settings/category_stock_images` |
+| — | Placeholder | None of the above | Grey background with fork/knife icon |
+
+Restaurant banner/gallery photos (`photo`, `photos` fields) are **not rendered on cards**.
+
+**Showcase overlay spec:** Bottom gradient (black@0.65 → transparent), dish name (white 14px w600) + price (white 14px w700) in a row. Pagination dots: 6px circles (active=white, inactive=white@0.5).
+
+**Stock image dedup:** `HomeController.assignFallbackImages()` uses a sliding window of 3 to prevent adjacent cards from showing the same stock image.
+
+**Firestore fields on vendor document:**
+- `is_cover_image_approved` (bool) — admin approval flag
+- `cover_image_url` (String) — approved cover image URL
+- `show_card_showcase` (bool) — enable food showcase slider
+- `card_showcase_items` (List<Map>) — max 5 items: `product_id`, `name`, `price`, `image_url`, `display_order`, `is_active`
+
 ### Recommended Image Sizes
 | Usage | Display Size | Recommended Source | Aspect Ratio |
 |-------|-------------|-------------------|--------------|

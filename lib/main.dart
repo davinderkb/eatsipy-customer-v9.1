@@ -17,12 +17,15 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   // Initialize Firebase app depending on environment
   // Initialize the correct Firebase app
   FirebaseApp firebaseApp = await Firebase.initializeApp(
@@ -32,12 +35,14 @@ void main() async {
     // Initialize FirestoreUtils with default DB
     FireStoreUtils.instance.init(firebaseApp);
   } else {
-    FireStoreUtils.instance.init(firebaseApp, databaseId: 'staging'); // pass databaseId if named DB
+    FireStoreUtils.instance.init(firebaseApp,
+        databaseId: 'staging'); // pass databaseId if named DB
   }
 
   await FirebaseAppCheck.instance.activate(
     webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
-    androidProvider: kDebugMode ? AndroidProvider.debug : AndroidProvider.playIntegrity,
+    androidProvider:
+        kDebugMode ? AndroidProvider.debug : AndroidProvider.playIntegrity,
     appleProvider: kDebugMode ? AppleProvider.debug : AppleProvider.appAttest,
   );
 
@@ -86,12 +91,16 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     getCurrentAppTheme();
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (Preferences.getString(Preferences.languageCodeKey).toString().isNotEmpty) {
+      if (Preferences.getString(Preferences.languageCodeKey)
+          .toString()
+          .isNotEmpty) {
         LanguageModel languageModel = Constant.getLanguage();
         LocalizationService().changeLocale(languageModel.slug.toString());
       } else {
-        LanguageModel languageModel = LanguageModel(slug: "en", isRtl: false, title: "English");
-        Preferences.setString(Preferences.languageCodeKey, jsonEncode(languageModel.toJson()));
+        LanguageModel languageModel =
+            LanguageModel(slug: "en", isRtl: false, title: "English");
+        Preferences.setString(
+            Preferences.languageCodeKey, jsonEncode(languageModel.toJson()));
         LocalizationService().changeLocale(languageModel.slug.toString());
       }
     });
@@ -104,7 +113,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
 
   void getCurrentAppTheme() async {
-    themeChangeProvider.darkTheme = await themeChangeProvider.darkThemePreference.getTheme();
+    themeChangeProvider.darkTheme =
+        await themeChangeProvider.darkThemePreference.getTheme();
   }
 
   @override

@@ -11,6 +11,7 @@ import 'package:eatsipy_customer/models/vendor_category_model.dart';
 import 'package:eatsipy_customer/models/vendor_model.dart';
 import 'package:eatsipy_customer/services/cart_provider.dart';
 import 'package:eatsipy_customer/utils/fire_store_utils.dart';
+import 'package:eatsipy_customer/utils/quality/restaurant_menu_quality_helpers.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -48,7 +49,7 @@ class RestaurantDetailsController extends GetxController {
   RxList<ProductModel> productList = <ProductModel>[].obs;
   RxList<VendorCategoryModel> vendorCategoryList = <VendorCategoryModel>[].obs;
   RxList<MenuCategoryMeta> menuCategoryMetaList = <MenuCategoryMeta>[].obs;
-  final List<MenuSearchEntry> _menuSearchIndex = <MenuSearchEntry>[];
+  final List<MenuSearchIndexEntry> _menuSearchIndex = <MenuSearchIndexEntry>[];
 
   RxList<CouponModel> couponList = <CouponModel>[].obs;
 
@@ -249,10 +250,12 @@ class RestaurantDetailsController extends GetxController {
     final appBarBottom =
         (mediaQuery?.padding.top ?? 0) + kToolbarHeight + _categoryScrollTopGap;
     final sectionTop = renderObject.localToGlobal(Offset.zero).dy;
-    final targetOffset =
-        (menuScrollController.offset + sectionTop - appBarBottom).clamp(
-      menuScrollController.position.minScrollExtent,
-      menuScrollController.position.maxScrollExtent,
+    final targetOffset = RestaurantMenuQualityHelpers.appBarAwareScrollTarget(
+      currentScrollOffset: menuScrollController.offset,
+      sectionTop: sectionTop,
+      appBarBottom: appBarBottom,
+      minScrollExtent: menuScrollController.position.minScrollExtent,
+      maxScrollExtent: menuScrollController.position.maxScrollExtent,
     );
 
     menuScrollController.animateTo(
@@ -295,22 +298,18 @@ class RestaurantDetailsController extends GetxController {
   }
 
   void buildMenuCategoryMetadata() {
-    final metadata = <MenuCategoryMeta>[];
-    for (final category in vendorCategoryList) {
-      final categoryId = category.id.toString();
-      final itemCount = productList
-          .where((product) => product.categoryID == categoryId)
-          .length;
-      if (itemCount == 0) continue;
-      metadata.add(
-        MenuCategoryMeta(
-          categoryId: categoryId,
-          categoryName: category.title.toString(),
-          itemCount: itemCount,
-          scrollOffset: categoryScrollOffsets[categoryId],
-        ),
-      );
-    }
+    final metadata = RestaurantMenuQualityHelpers.buildCategoryMetadata(
+      categories: vendorCategoryList,
+      products: productList,
+      scrollOffsets: categoryScrollOffsets,
+    )
+        .map((meta) => MenuCategoryMeta(
+              categoryId: meta.categoryId,
+              categoryName: meta.categoryName,
+              itemCount: meta.itemCount,
+              scrollOffset: meta.scrollOffset,
+            ))
+        .toList();
     menuCategoryMetaList.value = metadata;
     if (activeCategoryIndex.value >= metadata.length) {
       activeCategoryIndex.value = metadata.isEmpty ? 0 : metadata.length - 1;
@@ -357,10 +356,12 @@ class RestaurantDetailsController extends GetxController {
       if (sectionTop >= appBarBottom && sectionTop <= appBarBottom + 56) {
         return;
       }
-      final targetOffset =
-          (menuScrollController.offset + sectionTop - appBarBottom).clamp(
-        menuScrollController.position.minScrollExtent,
-        menuScrollController.position.maxScrollExtent,
+      final targetOffset = RestaurantMenuQualityHelpers.appBarAwareScrollTarget(
+        currentScrollOffset: menuScrollController.offset,
+        sectionTop: sectionTop,
+        appBarBottom: appBarBottom,
+        minScrollExtent: menuScrollController.position.minScrollExtent,
+        maxScrollExtent: menuScrollController.position.maxScrollExtent,
       );
 
       menuScrollController.animateTo(
@@ -372,73 +373,34 @@ class RestaurantDetailsController extends GetxController {
   }
 
   void _applyVisibleMenuFilters() {
-    final query = _normalizeSearchText(searchQuery.value);
+    final query =
+        RestaurantMenuQualityHelpers.normalizeSearchText(searchQuery.value);
     Iterable<ProductModel> filtered;
     if (query.isEmpty) {
       filtered = allProductList;
     } else {
-      filtered = _searchProducts(query);
+      filtered = RestaurantMenuQualityHelpers.searchProducts(
+        index: _menuSearchIndex,
+        query: query,
+      );
     }
 
-    if (isVag.value == true && isNonVag.value == false) {
-      filtered = filtered.where((product) => product.nonveg == false);
-    } else if (isVag.value == false && isNonVag.value == true) {
-      filtered = filtered.where((product) => product.nonveg == true);
-    }
-
-    productList.value = filtered.toList();
+    productList.value = RestaurantMenuQualityHelpers.applyDietFilters(
+      products: filtered,
+      vegOnly: isVag.value,
+      nonVegOnly: isNonVag.value,
+    );
     buildMenuCategoryMetadata();
     update();
   }
 
-  List<ProductModel> _searchProducts(String query) {
-    final scored = <({ProductModel product, int score})>[];
-    for (final entry in _menuSearchIndex) {
-      var score = 0;
-      if (entry.normalizedName.startsWith(query)) {
-        score = 400;
-      } else if (entry.normalizedName.contains(query)) {
-        score = 300;
-      } else if (entry.normalizedCategory.contains(query)) {
-        score = 200;
-      } else if (entry.normalizedDescription.contains(query) ||
-          entry.normalizedDietTag.contains(query)) {
-        score = 100;
-      }
-      if (score > 0) {
-        scored.add((product: entry.product, score: score));
-      }
-    }
-    scored.sort((a, b) {
-      final scoreCompare = b.score.compareTo(a.score);
-      if (scoreCompare != 0) return scoreCompare;
-      return (a.product.name ?? '').compareTo(b.product.name ?? '');
-    });
-    return scored.map((entry) => entry.product).toList();
-  }
-
   void _buildMenuSearchIndex() {
-    final categoryNames = {
-      for (final category in vendorCategoryList)
-        category.id.toString(): category.title.toString(),
-    };
     _menuSearchIndex
       ..clear()
-      ..addAll(allProductList.map((product) {
-        final categoryName = categoryNames[product.categoryID] ?? '';
-        return MenuSearchEntry(
-          product: product,
-          normalizedName: _normalizeSearchText(product.name ?? ''),
-          normalizedDescription:
-              _normalizeSearchText(product.description ?? ''),
-          normalizedCategory: _normalizeSearchText(categoryName),
-          normalizedDietTag: product.nonveg == true ? 'non veg nonveg' : 'veg',
-        );
-      }));
-  }
-
-  String _normalizeSearchText(String value) {
-    return value.toLowerCase().trim().replaceAll(RegExp(r'\s+'), ' ');
+      ..addAll(RestaurantMenuQualityHelpers.buildSearchIndex(
+        products: allProductList,
+        categories: vendorCategoryList,
+      ));
   }
 
   Future<List<ProductModel>> getProductByCategory(
@@ -510,10 +472,10 @@ class RestaurantDetailsController extends GetxController {
   }
 
   bool isCurrentDateInRange(DateTime startDate, DateTime endDate) {
-    print(startDate);
-    print(endDate);
+    debugPrint(startDate.toString());
+    debugPrint(endDate.toString());
     final currentDate = DateTime.now();
-    print(currentDate);
+    debugPrint(currentDate.toString());
     return currentDate.isAfter(startDate) && currentDate.isBefore(endDate);
   }
 
@@ -667,21 +629,5 @@ class MenuCategoryMeta {
     required this.categoryName,
     required this.itemCount,
     this.scrollOffset,
-  });
-}
-
-class MenuSearchEntry {
-  final ProductModel product;
-  final String normalizedName;
-  final String normalizedDescription;
-  final String normalizedCategory;
-  final String normalizedDietTag;
-
-  const MenuSearchEntry({
-    required this.product,
-    required this.normalizedName,
-    required this.normalizedDescription,
-    required this.normalizedCategory,
-    required this.normalizedDietTag,
   });
 }

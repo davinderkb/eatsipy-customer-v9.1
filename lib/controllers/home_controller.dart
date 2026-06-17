@@ -12,37 +12,45 @@ import 'package:eatsipy_customer/models/vendor_model.dart';
 import 'package:eatsipy_customer/services/cart_provider.dart';
 import 'package:eatsipy_customer/utils/fire_store_utils.dart';
 import 'package:eatsipy_customer/utils/preferences.dart';
+import 'package:eatsipy_customer/utils/quality/home_quality_helpers.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class HomeController extends GetxController {
-  final DashBoardController dashBoardController = Get.find<DashBoardController>();
+  final DashBoardController dashBoardController =
+      Get.find<DashBoardController>();
   final CartProvider cartProvider = CartProvider();
 
   RxBool isLoading = true.obs;
   RxBool isListView = true.obs;
   RxString selectedOrderTypeValue = "Delivery".tr.obs;
 
-  final Rx<PageController> pageController = PageController(viewportFraction: 0.877).obs;
-  final Rx<PageController> pageBottomController = PageController(viewportFraction: 0.877).obs;
+  final Rx<PageController> pageController =
+      PageController(viewportFraction: 0.877).obs;
+  final Rx<PageController> pageBottomController =
+      PageController(viewportFraction: 0.877).obs;
   final RxInt currentPage = 0.obs;
   final RxInt currentBottomPage = 0.obs;
 
   late TabController tabController;
 
   // 🔹 Caching & reactive data
-  final RxList<VendorCategoryModel> vendorCategoryModel = <VendorCategoryModel>[].obs;
+  final RxList<VendorCategoryModel> vendorCategoryModel =
+      <VendorCategoryModel>[].obs;
   final RxList<VendorModel> allNearestRestaurant = <VendorModel>[].obs;
   final RxList<VendorModel> newArrivalRestaurantList = <VendorModel>[].obs;
   final RxList<VendorModel> couponRestaurantList = <VendorModel>[].obs;
-  final RxList<AdvertisementModel> advertisementList = <AdvertisementModel>[].obs;
+  final RxList<AdvertisementModel> advertisementList =
+      <AdvertisementModel>[].obs;
   final RxList<CouponModel> couponList = <CouponModel>[].obs;
   final RxList<StoryModel> storyList = <StoryModel>[].obs;
   final RxList<BannerModel> bannerModel = <BannerModel>[].obs;
   final RxList<BannerModel> bannerBottomModel = <BannerModel>[].obs;
   final RxList<FavouriteModel> favouriteList = <FavouriteModel>[].obs;
+
+  final Map<String, String> fallbackImageAssignments = {};
 
   StreamSubscription? _cartSubscription;
   StreamSubscription? _restaurantSubscription;
@@ -55,8 +63,11 @@ class HomeController extends GetxController {
 
   Future<void> getData() async {
     isLoading.value = true;
-    selectedOrderTypeValue.value = Preferences.getString(Preferences.foodDeliveryType, defaultValue: "Delivery");
-    if (!Constant.takeawayEnabled && selectedOrderTypeValue.value == 'TakeAway') {
+    selectedOrderTypeValue.value = Preferences.getString(
+        Preferences.foodDeliveryType,
+        defaultValue: "Delivery");
+    if (!Constant.takeawayEnabled &&
+        selectedOrderTypeValue.value == 'TakeAway') {
       selectedOrderTypeValue.value = 'Delivery';
       Preferences.setString(Preferences.foodDeliveryType, 'Delivery');
     }
@@ -66,6 +77,7 @@ class HomeController extends GetxController {
       getZone(),
       getCartData(),
     ]);
+    await Constant.loadCategoryStockImages();
     _listenForRestaurants(); // 🔹 Stream listens in background
   }
 
@@ -73,15 +85,25 @@ class HomeController extends GetxController {
     await FireStoreUtils.getTaxList().then(
       (value) {
         if (value != null) {
-          Constant.taxProductList = value.where((TaxModel taxModel) => taxModel.scope == "product").toList();
-          Constant.orderProductTaxList = value.where((TaxModel taxModel) => taxModel.scope == "order").toList();
-          Constant.driverDeliveryTaxList = value.where((TaxModel taxModel) => taxModel.scope == "delivery").toList();
+          Constant.taxProductList = value
+              .where((TaxModel taxModel) => taxModel.scope == "product")
+              .toList();
+          Constant.orderProductTaxList = value
+              .where((TaxModel taxModel) => taxModel.scope == "order")
+              .toList();
+          Constant.driverDeliveryTaxList = value
+              .where((TaxModel taxModel) => taxModel.scope == "delivery")
+              .toList();
 
           if (Constant.packagingChargeEnable == true) {
-            Constant.packagingTaxList = value.where((TaxModel taxModel) => taxModel.scope == "packaging").toList();
+            Constant.packagingTaxList = value
+                .where((TaxModel taxModel) => taxModel.scope == "packaging")
+                .toList();
           }
           if (Constant.platformFeeModel?.enable == true) {
-            Constant.platformTaxList = value.where((TaxModel taxModel) => taxModel.scope == "platform").toList();
+            Constant.platformTaxList = value
+                .where((TaxModel taxModel) => taxModel.scope == "platform")
+                .toList();
           }
         }
       },
@@ -102,7 +124,8 @@ class HomeController extends GetxController {
   // ✅ Stream-based restaurant updates
   void _listenForRestaurants() {
     _restaurantSubscription?.cancel();
-    _restaurantSubscription = FireStoreUtils.getAllNearestRestaurant().listen((restaurants) async {
+    _restaurantSubscription =
+        FireStoreUtils.getAllNearestRestaurant().listen((restaurants) async {
       if (restaurants.isEmpty) {
         isLoading.value = false;
         return;
@@ -113,24 +136,38 @@ class HomeController extends GetxController {
         final aOpen = Constant.statusCheckOpenORClose(vendorModel: a);
         final bOpen = Constant.statusCheckOpenORClose(vendorModel: b);
         if (aOpen == bOpen) {
-          final ratingA = Constant.calculateReview(reviewCount: a.reviewsCount.toString(), reviewSum: a.reviewsSum.toString());
-          final ratingB = Constant.calculateReview(reviewCount: b.reviewsCount.toString(), reviewSum: b.reviewsSum.toString());
+          final ratingA = Constant.calculateReview(
+              reviewCount: a.reviewsCount.toString(),
+              reviewSum: a.reviewsSum.toString());
+          final ratingB = Constant.calculateReview(
+              reviewCount: b.reviewsCount.toString(),
+              reviewSum: b.reviewsSum.toString());
           return ratingB.compareTo(ratingA);
         }
         return aOpen ? -1 : 1;
       });
 
-      // Batch update data lists (reduces rebuilds)
+      // Assign fallback images BEFORE triggering reactive rebuild
+      assignFallbackImages(restaurants);
       allNearestRestaurant.assignAll(restaurants);
       newArrivalRestaurantList.assignAll(
-        restaurants.where((v) => Constant.statusCheckOpenORClose(vendorModel: v)),
+        restaurants
+            .where((v) => Constant.statusCheckOpenORClose(vendorModel: v)),
       );
       final nowMs = DateTime.now().millisecondsSinceEpoch;
       newArrivalRestaurantList.sort((a, b) {
-        final ratingA = double.tryParse(Constant.calculateReview(reviewCount: a.reviewsCount.toString(), reviewSum: a.reviewsSum.toString())) ?? 0;
-        final ratingB = double.tryParse(Constant.calculateReview(reviewCount: b.reviewsCount.toString(), reviewSum: b.reviewsSum.toString())) ?? 0;
-        final ageA = (nowMs - (a.createdAt?.millisecondsSinceEpoch ?? 0)) / 86400000;
-        final ageB = (nowMs - (b.createdAt?.millisecondsSinceEpoch ?? 0)) / 86400000;
+        final ratingA = double.tryParse(Constant.calculateReview(
+                reviewCount: a.reviewsCount.toString(),
+                reviewSum: a.reviewsSum.toString())) ??
+            0;
+        final ratingB = double.tryParse(Constant.calculateReview(
+                reviewCount: b.reviewsCount.toString(),
+                reviewSum: b.reviewsSum.toString())) ??
+            0;
+        final ageA =
+            (nowMs - (a.createdAt?.millisecondsSinceEpoch ?? 0)) / 86400000;
+        final ageB =
+            (nowMs - (b.createdAt?.millisecondsSinceEpoch ?? 0)) / 86400000;
         final scoreA = (ratingA * 0.7) + (1.0 / (1.0 + ageA / 30) * 5.0 * 0.3);
         final scoreB = (ratingB * 0.7) + (1.0 / (1.0 + ageB / 30) * 5.0 * 0.3);
         return scoreB.compareTo(scoreA);
@@ -160,7 +197,8 @@ class HomeController extends GetxController {
     couponRestaurantList.clear();
     for (final c in values) {
       if (c.expiresAt!.toDate().isAfter(now)) {
-        final match = restaurants.firstWhereOrNull((r) => r.id == c.resturantId);
+        final match =
+            restaurants.firstWhereOrNull((r) => r.id == c.resturantId);
         if (match != null) {
           couponList.add(c);
           couponRestaurantList.add(match);
@@ -173,14 +211,16 @@ class HomeController extends GetxController {
     final values = await FireStoreUtils.getStory();
     final vendorIds = restaurants.map((r) => r.id).toSet();
 
-    storyList.assignAll(values.where((s) => vendorIds.contains(s.vendorID)).toList());
+    storyList.assignAll(
+        values.where((s) => vendorIds.contains(s.vendorID)).toList());
   }
 
   Future<void> _fetchAds(List<VendorModel> restaurants) async {
     final values = await FireStoreUtils.getAllAdvertisement();
     final vendorIds = restaurants.map((r) => r.id).toSet();
 
-    advertisementList.assignAll(values.where((a) => vendorIds.contains(a.vendorId)).toList());
+    advertisementList.assignAll(
+        values.where((a) => vendorIds.contains(a.vendorId)).toList());
   }
 
   // ✅ Cached and parallel category + banner + favourite fetch
@@ -229,7 +269,12 @@ class HomeController extends GetxController {
   final RxList<VendorModel> openRestaurantList = <VendorModel>[].obs;
   final RxList<VendorModel> closedRestaurantList = <VendorModel>[].obs;
 
-  static const List<String> filterKeys = ['Nearest', 'Rating 4.0+', 'Free Delivery', 'Offers'];
+  static const List<String> filterKeys = [
+    'Nearest',
+    'Rating 4.0+',
+    'Free Delivery',
+    'Offers'
+  ];
 
   void toggleFilter(String filter) {
     if (selectedFilters.contains(filter)) {
@@ -250,58 +295,46 @@ class HomeController extends GetxController {
   }
 
   void _splitByStatus() {
-    openRestaurantList.assignAll(
-      filteredAllList.where((v) => Constant.statusCheckOpenORClose(vendorModel: v)),
-    );
-    final closed = filteredAllList.where((v) => !Constant.statusCheckOpenORClose(vendorModel: v)).toList();
     final now = DateTime.now();
-    closed.sort((a, b) {
-      final aTime = Constant.getNextOpeningDateTime(a, now);
-      final bTime = Constant.getNextOpeningDateTime(b, now);
-      if (aTime == null && bTime == null) return 0;
-      if (aTime == null) return 1;
-      if (bTime == null) return -1;
-      return aTime.compareTo(bTime);
-    });
-    closedRestaurantList.assignAll(closed);
+    final split = HomeQualityHelpers.splitByStatus(
+      source: filteredAllList,
+      isOpen: (vendor) => Constant.statusCheckOpenORClose(vendorModel: vendor),
+      nextOpeningOf: (vendor) => Constant.getNextOpeningDateTime(vendor, now),
+    );
+    openRestaurantList.assignAll(split.open);
+    closedRestaurantList.assignAll(split.closed);
   }
 
   List<VendorModel> _filterList(List<VendorModel> source) {
-    var result = source.toList();
+    return HomeQualityHelpers.filterRestaurants(
+      source: source,
+      selectedFilters: selectedFilters,
+      offerVendorIds: couponRestaurantList.map((vendor) => vendor.id),
+      selfDeliveryEnabled: Constant.isSelfDeliveryFeature,
+      ratingOf: (vendor) =>
+          double.tryParse(Constant.calculateReview(
+              reviewCount: vendor.reviewsCount.toString(),
+              reviewSum: vendor.reviewsSum.toString())) ??
+          0,
+      distanceOf: (vendor) =>
+          double.tryParse(Constant.getDistance(
+              lat1: vendor.latitude.toString(),
+              lng1: vendor.longitude.toString(),
+              lat2: Constant.selectedLocation.location!.latitude.toString(),
+              lng2:
+                  Constant.selectedLocation.location!.longitude.toString())) ??
+          0,
+    );
+  }
 
-    if (selectedFilters.contains('Rating 4.0+')) {
-      result = result.where((v) {
-        final rating = double.tryParse(Constant.calculateReview(
-                reviewCount: v.reviewsCount.toString(), reviewSum: v.reviewsSum.toString())) ??
-            0;
-        return rating >= 4.0;
-      }).toList();
-    }
-    if (selectedFilters.contains('Free Delivery')) {
-      result = result.where((v) => v.isSelfDelivery == true && Constant.isSelfDeliveryFeature == true).toList();
-    }
-    if (selectedFilters.contains('Offers')) {
-      final couponVendorIds = couponRestaurantList.map((v) => v.id).toSet();
-      result = result.where((v) => couponVendorIds.contains(v.id)).toList();
-    }
-    if (selectedFilters.contains('Nearest')) {
-      result.sort((a, b) {
-        final distA = double.tryParse(Constant.getDistance(
-                lat1: a.latitude.toString(),
-                lng1: a.longitude.toString(),
-                lat2: Constant.selectedLocation.location!.latitude.toString(),
-                lng2: Constant.selectedLocation.location!.longitude.toString())) ??
-            0;
-        final distB = double.tryParse(Constant.getDistance(
-                lat1: b.latitude.toString(),
-                lng1: b.longitude.toString(),
-                lat2: Constant.selectedLocation.location!.latitude.toString(),
-                lng2: Constant.selectedLocation.location!.longitude.toString())) ??
-            0;
-        return distA.compareTo(distB);
-      });
-    }
-    return result;
+  void assignFallbackImages(List<VendorModel> vendors) {
+    fallbackImageAssignments.clear();
+    fallbackImageAssignments.addAll(HomeQualityHelpers.assignFallbackImages(
+      vendors: vendors,
+      stockImagesFor: Constant.getStockImagesForVendor,
+    ));
+    debugPrint(
+        '📸 Fallback assignments: ${fallbackImageAssignments.length} / ${vendors.length} vendors');
   }
 
   @override

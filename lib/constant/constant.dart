@@ -193,6 +193,40 @@ class Constant {
   static bool isEnableAdsFeature = true;
   static bool isSelfDeliveryFeature = false;
 
+  static Map<String, List<String>> categoryStockImages = {};
+
+  static Future<void> loadCategoryStockImages() async {
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection('settings')
+          .doc('category_stock_images')
+          .get();
+      if (doc.exists && doc.data() != null) {
+        final data = doc.data()!;
+        categoryStockImages = data.map((key, value) =>
+            MapEntry(key.toLowerCase(), List<String>.from(value ?? [])));
+      }
+      debugPrint(
+          '📸 Stock images loaded: ${categoryStockImages.keys.toList()}, counts: ${categoryStockImages.map((k, v) => MapEntry(k, v.length))}');
+    } catch (e) {
+      debugPrint('📸 Stock images load error: $e');
+    }
+  }
+
+  static List<String> getStockImagesForVendor(VendorModel vendor) {
+    final categories = vendor.categoryTitle ?? [];
+    if (categories.isNotEmpty) {
+      final joined =
+          categories.map((c) => c.toString().toLowerCase()).join(' ');
+      for (final key in categoryStockImages.keys) {
+        if (key != 'default' && joined.contains(key)) {
+          return categoryStockImages[key]!;
+        }
+      }
+    }
+    return categoryStockImages['default'] ?? [];
+  }
+
   static FreeDeliveryByAdminModel? freeDeliveryByAdminModel;
 
   static String? adminType = "admin";
@@ -338,8 +372,10 @@ class Constant {
   static Widget showEmptyView({required String message}) {
     return Center(
       child: TranslatedText(message,
-          style:
-              const TextStyle(fontFamily: 'Urbanist', fontWeight: FontWeight.w500, fontSize: 18)),
+          style: const TextStyle(
+              fontFamily: 'Urbanist',
+              fontWeight: FontWeight.w500,
+              fontSize: 18)),
     );
   }
 
@@ -1011,8 +1047,17 @@ class Constant {
   }
 
   static DateTime? getNextOpeningDateTime(VendorModel vendor, DateTime now) {
-    final daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-    int todayIndex = daysOfWeek.indexOf(DateFormat('EEEE', 'en_US').format(now));
+    final daysOfWeek = [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday"
+    ];
+    int todayIndex =
+        daysOfWeek.indexOf(DateFormat('EEEE', 'en_US').format(now));
 
     for (int i = 0; i < 7; i++) {
       int dayIndex = (todayIndex + i) % 7;
@@ -1021,12 +1066,16 @@ class Constant {
         (d) => d.day?.toLowerCase() == dayName.toLowerCase(),
         orElse: () => WorkingHours(day: "", timeslot: []),
       );
-      if (daySchedule != null && daySchedule.day != null && daySchedule.day!.isNotEmpty
-          && daySchedule.timeslot != null && daySchedule.timeslot!.isNotEmpty) {
+      if (daySchedule != null &&
+          daySchedule.day != null &&
+          daySchedule.day!.isNotEmpty &&
+          daySchedule.timeslot != null &&
+          daySchedule.timeslot!.isNotEmpty) {
         for (var slot in daySchedule.timeslot!) {
           if (slot.from == null) continue;
           DateTime fromTime = DateFormat("HH:mm").parse(slot.from!);
-          fromTime = DateTime(now.year, now.month, now.day + i, fromTime.hour, fromTime.minute);
+          fromTime = DateTime(
+              now.year, now.month, now.day + i, fromTime.hour, fromTime.minute);
           if (fromTime.isAfter(now)) return fromTime;
         }
       }
@@ -1045,12 +1094,16 @@ class Constant {
       return "Opens in $mins ${mins == 1 ? 'min' : 'mins'}";
     }
 
-    if (nextOpen.year == now.year && nextOpen.month == now.month && nextOpen.day == now.day) {
+    if (nextOpen.year == now.year &&
+        nextOpen.month == now.month &&
+        nextOpen.day == now.day) {
       return "Opens at ${DateFormat.jm().format(nextOpen)}";
     }
 
     final tomorrow = DateTime(now.year, now.month, now.day + 1);
-    if (nextOpen.year == tomorrow.year && nextOpen.month == tomorrow.month && nextOpen.day == tomorrow.day) {
+    if (nextOpen.year == tomorrow.year &&
+        nextOpen.month == tomorrow.month &&
+        nextOpen.day == tomorrow.day) {
       return "Opens tomorrow";
     }
 

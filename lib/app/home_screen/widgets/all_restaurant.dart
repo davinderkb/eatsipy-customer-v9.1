@@ -11,8 +11,14 @@ class AllRestaurant extends StatelessWidget {
   final HomeController controller;
   final List<VendorModel> restaurants;
   final bool isMuted;
+  final bool isLastSection;
 
-  const AllRestaurant({super.key, required this.controller, required this.restaurants, this.isMuted = false});
+  const AllRestaurant(
+      {super.key,
+      required this.controller,
+      required this.restaurants,
+      this.isMuted = false,
+      this.isLastSection = false});
 
   @override
   Widget build(BuildContext context) {
@@ -23,14 +29,20 @@ class AllRestaurant extends StatelessWidget {
         VendorModel vendorModel = restaurants[index];
         return Padding(
           key: ValueKey(vendorModel.id),
-          padding: EdgeInsets.only(bottom: restaurants.length - 1 == index ? 60 : AppThemeData.space16),
+          padding: EdgeInsets.only(
+              bottom: (restaurants.length - 1 == index && isLastSection)
+                  ? 60
+                  : AppThemeData.space16),
           child: RestaurantCard(
             vendorModel: vendorModel,
             isMuted: isMuted,
             favouriteList: controller.favouriteList,
             offerText: _getOfferText(vendorModel),
+            fallbackImageUrl:
+                controller.fallbackImageAssignments[vendorModel.id],
             onTap: () {
-              Get.to(const RestaurantDetailsScreen(), arguments: {"vendorModel": vendorModel})?.then((v) {
+              Get.to(const RestaurantDetailsScreen(),
+                  arguments: {"vendorModel": vendorModel})?.then((v) {
                 controller.getFavouriteRestaurant();
               });
             },
@@ -41,9 +53,12 @@ class AllRestaurant extends StatelessWidget {
   }
 
   String? _getOfferText(VendorModel vendor) {
-    final idx = controller.couponRestaurantList.indexWhere((v) => v.id == vendor.id);
+    final idx =
+        controller.couponRestaurantList.indexWhere((v) => v.id == vendor.id);
     if (idx == -1) return null;
     final coupon = controller.couponList[idx];
-    return coupon.discountType == "Percentage" ? "${coupon.discount}% OFF" : "${Constant.currencyModel?.symbol ?? ''}${coupon.discount} OFF";
+    return coupon.discountType == "Percentage"
+        ? "${coupon.discount}% OFF"
+        : "${Constant.currencyModel?.symbol ?? ''}${coupon.discount} OFF";
   }
 }

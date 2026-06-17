@@ -88,6 +88,37 @@ class AppThemeData {
     0,
   ]);
 
+  static const desatHeavy = ColorFilter.matrix(<double>[
+    0.3086,
+    0.6094,
+    0.0820,
+    0,
+    0,
+    0.3086,
+    0.6094,
+    0.0820,
+    0,
+    0,
+    0.3086,
+    0.6094,
+    0.0820,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+  ]);
+
+  static List<BoxShadow> shadowXs(bool isDark) => [
+        BoxShadow(
+          color: Colors.black.withValues(alpha: isDark ? 0.1 : 0.03),
+          blurRadius: 2,
+          offset: const Offset(0, 1),
+        ),
+      ];
+
   // ── Card dimension constants ──
   static const double restaurantImageHeight = 200;
   static const double categoryIconSize = 85;

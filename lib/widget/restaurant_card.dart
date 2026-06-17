@@ -17,6 +17,7 @@ class RestaurantCard extends StatelessWidget {
   final RxList<FavouriteModel>? favouriteList;
   final VoidCallback? onFavouriteRemoved;
   final String? offerText;
+  final String? fallbackImageUrl;
 
   const RestaurantCard({
     super.key,
@@ -26,33 +27,41 @@ class RestaurantCard extends StatelessWidget {
     this.favouriteList,
     this.onFavouriteRemoved,
     this.offerText,
+    this.fallbackImageUrl,
   });
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final isOpen = Constant.statusCheckOpenORClose(vendorModel: vendorModel);
-    final showGreyscale = isMuted || !isOpen;
-    final showClosedPill = !isOpen && !isMuted;
+    final isUnavailable = isMuted || !isOpen;
     final showBadges = !isMuted && isOpen;
 
     return InkWell(
-      onTap: onTap ?? () {
-        Get.to(const RestaurantDetailsScreen(), arguments: {"vendorModel": vendorModel});
-      },
-      child: Opacity(
-        opacity: isMuted ? 0.85 : 1.0,
-        child: Container(
+      onTap: onTap ??
+          () {
+            Get.to(const RestaurantDetailsScreen(),
+                arguments: {"vendorModel": vendorModel});
+          },
+      child: AnimatedOpacity(
+        duration: const Duration(milliseconds: 400),
+        opacity: isUnavailable ? 0.85 : 1.0,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.easeInOut,
           decoration: BoxDecoration(
             color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
             borderRadius: BorderRadius.circular(AppThemeData.radius16),
-            boxShadow: AppThemeData.shadowSm(isDark),
+            boxShadow: isUnavailable
+                ? AppThemeData.shadowXs(isDark)
+                : AppThemeData.shadowSm(isDark),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(AppThemeData.radius16)),
+                borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(AppThemeData.radius16)),
                 child: SizedBox(
                   height: AppThemeData.restaurantImageHeight,
                   width: double.infinity,
@@ -60,24 +69,42 @@ class RestaurantCard extends StatelessWidget {
                     fit: StackFit.expand,
                     children: [
                       ColorFiltered(
-                        colorFilter: showGreyscale
-                            ? (isMuted ? AppThemeData.desatMuted : AppThemeData.desatLight)
-                            : const ColorFilter.mode(Colors.transparent, BlendMode.multiply),
-                        child: RestaurantImageView(vendorModel: vendorModel, height: AppThemeData.restaurantImageHeight),
+                        colorFilter: isUnavailable
+                            ? AppThemeData.desatHeavy
+                            : const ColorFilter.mode(
+                                Colors.transparent, BlendMode.multiply),
+                        child: RestaurantImageView(
+                            vendorModel: vendorModel,
+                            height: AppThemeData.restaurantImageHeight,
+                            fallbackImageUrl: fallbackImageUrl),
                       ),
-                      if (showClosedPill)
+                      if (isUnavailable)
+                        Positioned.fill(
+                          child: Container(
+                              color: Colors.black.withValues(alpha: 0.08)),
+                        ),
+                      if (isUnavailable)
                         Positioned(
-                          top: AppThemeData.space12,
+                          bottom: AppThemeData.space12,
                           left: AppThemeData.space12,
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
-                              color: AppThemeData.grey900.withValues(alpha: 0.75),
-                              borderRadius: BorderRadius.circular(AppThemeData.radius8),
+                              color: Colors.black.withValues(alpha: 0.6),
+                              borderRadius: BorderRadius.circular(6),
                             ),
-                            child: const TranslatedText(
-                              "Closed",
-                              style: TextStyle(color: AppThemeData.grey50, fontSize: 11, fontFamily: 'Urbanist', fontWeight: FontWeight.w600),
+                            child: TranslatedText(
+                              Constant.getNextOpeningTime(
+                                  vendorModel, DateTime.now()),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: Color(0xFFFFCB39),
+                                fontSize: 11,
+                                fontFamily: 'Urbanist',
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
                         ),
@@ -94,61 +121,104 @@ class RestaurantCard extends StatelessWidget {
                             ),
                             child: InkWell(
                               onTap: () async {
-                                if (favouriteList!.where((p0) => p0.restaurantId == vendorModel.id).isNotEmpty) {
-                                  FavouriteModel favouriteModel = FavouriteModel(restaurantId: vendorModel.id, userId: FireStoreUtils.getCurrentUid());
-                                  favouriteList!.removeWhere((item) => item.restaurantId == vendorModel.id);
-                                  await FireStoreUtils.removeFavouriteRestaurant(favouriteModel);
+                                if (favouriteList!
+                                    .where((p0) =>
+                                        p0.restaurantId == vendorModel.id)
+                                    .isNotEmpty) {
+                                  FavouriteModel favouriteModel =
+                                      FavouriteModel(
+                                          restaurantId: vendorModel.id,
+                                          userId:
+                                              FireStoreUtils.getCurrentUid());
+                                  favouriteList!.removeWhere((item) =>
+                                      item.restaurantId == vendorModel.id);
+                                  await FireStoreUtils
+                                      .removeFavouriteRestaurant(
+                                          favouriteModel);
                                   onFavouriteRemoved?.call();
                                 } else {
-                                  FavouriteModel favouriteModel = FavouriteModel(restaurantId: vendorModel.id, userId: FireStoreUtils.getCurrentUid());
+                                  FavouriteModel favouriteModel =
+                                      FavouriteModel(
+                                          restaurantId: vendorModel.id,
+                                          userId:
+                                              FireStoreUtils.getCurrentUid());
                                   favouriteList!.add(favouriteModel);
-                                  await FireStoreUtils.setFavouriteRestaurant(favouriteModel);
+                                  await FireStoreUtils.setFavouriteRestaurant(
+                                      favouriteModel);
                                 }
                               },
                               child: Obx(
                                 () => Center(
-                                  child: favouriteList!.where((p0) => p0.restaurantId == vendorModel.id).isNotEmpty
-                                      ? SvgPicture.asset("assets/icons/ic_like_fill.svg", width: 20, height: 20)
-                                      : SvgPicture.asset("assets/icons/ic_like.svg", width: 20, height: 20),
+                                  child: favouriteList!
+                                          .where((p0) =>
+                                              p0.restaurantId == vendorModel.id)
+                                          .isNotEmpty
+                                      ? SvgPicture.asset(
+                                          "assets/icons/ic_like_fill.svg",
+                                          width: 20,
+                                          height: 20)
+                                      : SvgPicture.asset(
+                                          "assets/icons/ic_like.svg",
+                                          width: 20,
+                                          height: 20),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      if (showBadges && offerText != null && offerText!.isNotEmpty)
+                      if (showBadges &&
+                          offerText != null &&
+                          offerText!.isNotEmpty)
                         Positioned(
-                          top: showClosedPill ? 44 : AppThemeData.space12,
+                          top: AppThemeData.space12,
                           left: AppThemeData.space12,
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 4),
                             decoration: BoxDecoration(
                               color: AppThemeData.primary300,
-                              borderRadius: BorderRadius.circular(AppThemeData.radius8),
+                              borderRadius:
+                                  BorderRadius.circular(AppThemeData.radius8),
                             ),
                             child: Text(
                               offerText!,
-                              style: const TextStyle(color: AppThemeData.grey50, fontSize: 12, fontFamily: 'Urbanist', fontWeight: FontWeight.w700),
+                              style: const TextStyle(
+                                  color: AppThemeData.grey50,
+                                  fontSize: 12,
+                                  fontFamily: 'Urbanist',
+                                  fontWeight: FontWeight.w700),
                             ),
                           ),
                         ),
-                      if (showBadges && vendorModel.isSelfDelivery == true && Constant.isSelfDeliveryFeature == true)
+                      if (showBadges &&
+                          vendorModel.isSelfDelivery == true &&
+                          Constant.isSelfDeliveryFeature == true)
                         Positioned(
                           left: AppThemeData.space12,
                           bottom: AppThemeData.space12,
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
                             decoration: BoxDecoration(
                               color: AppThemeData.lightGreen,
-                              borderRadius: BorderRadius.circular(AppThemeData.radius8),
+                              borderRadius:
+                                  BorderRadius.circular(AppThemeData.radius8),
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                SvgPicture.asset("assets/icons/ic_free_delivery.svg", width: 14, height: 14),
+                                SvgPicture.asset(
+                                    "assets/icons/ic_free_delivery.svg",
+                                    width: 14,
+                                    height: 14),
                                 const SizedBox(width: 4),
                                 const Text(
                                   "Free Delivery",
-                                  style: TextStyle(fontSize: 12, color: AppThemeData.darkGreen, fontFamily: 'Urbanist', fontWeight: FontWeight.w600),
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      color: AppThemeData.darkGreen,
+                                      fontFamily: 'Urbanist',
+                                      fontWeight: FontWeight.w600),
                                 ),
                               ],
                             ),
@@ -169,87 +239,113 @@ class RestaurantCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 16,
                         overflow: TextOverflow.ellipsis,
-                        fontFamily: 'Urbanist', fontWeight: FontWeight.w700,
-                        color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                        fontFamily: 'Urbanist',
+                        fontWeight: FontWeight.w700,
+                        color:
+                            isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                       ),
                     ),
-                    if (vendorModel.categoryTitle != null && vendorModel.categoryTitle!.isNotEmpty)
+                    if (vendorModel.categoryTitle != null &&
+                        vendorModel.categoryTitle!.isNotEmpty)
                       Padding(
-                        padding: const EdgeInsets.only(top: AppThemeData.space4),
+                        padding:
+                            const EdgeInsets.only(top: AppThemeData.space4),
                         child: Text(
                           vendorModel.categoryTitle!.join(', '),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 13,
-                            fontFamily: 'Urbanist', fontWeight: FontWeight.w400,
-                            color: isDark ? AppThemeData.grey400 : AppThemeData.grey500,
+                            fontFamily: 'Urbanist',
+                            fontWeight: FontWeight.w400,
+                            color: isUnavailable
+                                ? (isDark
+                                    ? AppThemeData.grey500
+                                    : AppThemeData.grey400)
+                                : (isDark
+                                    ? AppThemeData.grey400
+                                    : AppThemeData.grey500),
                           ),
                         ),
                       ),
                     const SizedBox(height: AppThemeData.space8),
-                    Row(
-                      children: [
-                        SvgPicture.asset(
-                          "assets/icons/ic_star.svg",
-                          width: 14,
-                          height: 14,
-                          colorFilter: ColorFilter.mode(AppThemeData.primary300, BlendMode.srcIn),
-                        ),
-                        const SizedBox(width: 4),
-                        Flexible(
-                          child: Text(
-                            "${Constant.calculateReview(reviewCount: vendorModel.reviewsCount.toString(), reviewSum: vendorModel.reviewsSum.toString())} (${vendorModel.reviewsCount!.toStringAsFixed(0)})",
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
-                              color: isDark ? AppThemeData.grey200 : AppThemeData.grey700,
+                    Opacity(
+                      opacity: isUnavailable ? 0.5 : 1.0,
+                      child: Row(
+                        children: [
+                          SvgPicture.asset(
+                            "assets/icons/ic_star.svg",
+                            width: 14,
+                            height: 14,
+                            colorFilter: ColorFilter.mode(
+                              isUnavailable
+                                  ? AppThemeData.grey400
+                                  : AppThemeData.primary300,
+                              BlendMode.srcIn,
                             ),
                           ),
-                        ),
-                        const SizedBox(width: AppThemeData.space12),
-                        Container(width: 4, height: 4, decoration: BoxDecoration(shape: BoxShape.circle, color: isDark ? AppThemeData.grey500 : AppThemeData.grey400)),
-                        const SizedBox(width: AppThemeData.space12),
-                        SvgPicture.asset(
-                          "assets/icons/ic_map_distance.svg",
-                          width: 14,
-                          height: 14,
-                          colorFilter: ColorFilter.mode(isDark ? AppThemeData.grey400 : AppThemeData.grey500, BlendMode.srcIn),
-                        ),
-                        const SizedBox(width: 4),
-                        Flexible(
-                          child: Text(
-                            "${Constant.getDistance(
-                              lat1: vendorModel.latitude.toString(),
-                              lng1: vendorModel.longitude.toString(),
-                              lat2: Constant.selectedLocation.location!.latitude.toString(),
-                              lng2: Constant.selectedLocation.location!.longitude.toString(),
-                            )} ${Constant.distanceType}",
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
-                              color: isDark ? AppThemeData.grey400 : AppThemeData.grey500,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: AppThemeData.space8),
-                      child: SizedBox(
-                        height: 16,
-                        child: isOpen
-                            ? const SizedBox.shrink()
-                            : TranslatedText(
-                                Constant.getNextOpeningTime(vendorModel, DateTime.now()),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(color: AppThemeData.danger300, fontSize: 12, fontFamily: 'Urbanist', fontWeight: FontWeight.w500),
+                          const SizedBox(width: 4),
+                          Flexible(
+                            child: Text(
+                              "${Constant.calculateReview(reviewCount: vendorModel.reviewsCount.toString(), reviewSum: vendorModel.reviewsSum.toString())} (${vendorModel.reviewsCount!.toStringAsFixed(0)})",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontFamily: 'Urbanist',
+                                fontWeight: FontWeight.w600,
+                                color: isDark
+                                    ? AppThemeData.grey200
+                                    : AppThemeData.grey700,
                               ),
+                            ),
+                          ),
+                          const SizedBox(width: AppThemeData.space12),
+                          Container(
+                              width: 4,
+                              height: 4,
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: isDark
+                                      ? AppThemeData.grey500
+                                      : AppThemeData.grey400)),
+                          const SizedBox(width: AppThemeData.space12),
+                          SvgPicture.asset(
+                            "assets/icons/ic_map_distance.svg",
+                            width: 14,
+                            height: 14,
+                            colorFilter: ColorFilter.mode(
+                                isDark
+                                    ? AppThemeData.grey400
+                                    : AppThemeData.grey500,
+                                BlendMode.srcIn),
+                          ),
+                          const SizedBox(width: 4),
+                          Flexible(
+                            child: Text(
+                              "${Constant.getDistance(
+                                lat1: vendorModel.latitude.toString(),
+                                lng1: vendorModel.longitude.toString(),
+                                lat2: Constant
+                                    .selectedLocation.location!.latitude
+                                    .toString(),
+                                lng2: Constant
+                                    .selectedLocation.location!.longitude
+                                    .toString(),
+                              )} ${Constant.distanceType}",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontFamily: 'Urbanist',
+                                fontWeight: FontWeight.w500,
+                                color: isDark
+                                    ? AppThemeData.grey400
+                                    : AppThemeData.grey500,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
