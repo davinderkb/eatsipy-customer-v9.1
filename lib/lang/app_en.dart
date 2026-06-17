@@ -234,7 +234,7 @@ const Map<String, String> enUS = {
   "Favourite Restaurants not found.": "Favourite Restaurants not found.",
   "Favourite Foods not found": "Favourite Foods not found",
   "Non Veg.": "Non Veg.",
-  "Pure veg.": "Pure veg.",
+  "Pure veg.": "Veg",
   'Foods': 'Foods',
   'Veg': 'Veg',
   'Non Veg': 'Non Veg',
@@ -353,8 +353,8 @@ const Map<String, String> enUS = {
   'Ok': 'Ok',
   'Copied': 'Copied',
   "Invite Friends & Businesses": "Invite Friends & Businesses",
-   "Invite your friends to sign up with Eatsipy using your code, and you'll earn after their Success the first order! 💸🍔":
-       "Invite your friends to sign up with Eatsipy using your code, and you'll earn after their Success the first order! 💸🍔",
+  "Invite your friends to sign up with Eatsipy using your code, and you'll earn after their Success the first order! 💸🍔":
+      "Invite your friends to sign up with Eatsipy using your code, and you'll earn after their Success the first order! 💸🍔",
   'after their Success the first order! 💸🍔': 'after their Success the first order! 💸🍔',
   "Share Code": "Share Code",
   'Invite your friends to sign up with Eatsipy using your code, and you’ll earn': 'Invite your friends to sign up with Eatsipy using your code, and you’ll earn',
@@ -403,7 +403,7 @@ const Map<String, String> enUS = {
   "Dine-In": "Dine-In",
   "Dine-In Booking": "Dine-In Booking",
   "Share app": "Share app",
-   'Check out Eatsipy, your ultimate food delivery application!': 'Check out Eatsipy, your ultimate food delivery application!',
+  'Check out Eatsipy, your ultimate food delivery application!': 'Check out Eatsipy, your ultimate food delivery application!',
   "Legal": "Legal",
   'App Store:': 'App Store:',
   'Google Play:': 'Google Play:',

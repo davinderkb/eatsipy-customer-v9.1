@@ -13,12 +13,20 @@ Flutter food delivery customer app. Firebase/Firestore backend. GetX state manag
 - **Images**: `RestaurantImageView` (wraps `CachedNetworkImage` with shimmer), `NetworkImageWidget` for general images
 
 ## Critical Rules
-- Only modify `home_screen.dart` (theme_1), NOT `home_screen_two.dart` (theme_2)
+- Theme-specific home screens both exist: `home_screen.dart` (theme_1) and `home_screen_two.dart` (theme_2). Keep shared behavior consistent when a feature appears in both themes.
 - Do NOT rebuild from scratch — modify existing files
 - Do NOT replace existing business logic
 - Do NOT create duplicate screens
 - Reuse existing controllers, models, APIs, navigation
 - No `closed.PNG` overlays — use desaturation matrices + pill badges for closed restaurants
+- Restaurant details must render the basic header immediately from passed `VendorModel`; menu/items load separately with skeleton/retry states. Do not reintroduce a blocking full-page spinner for menu loading.
+- Restaurant detail menu navigation uses a floating bottom-right Menu pill with a static menu icon + draggable category sheet backed by cached `MenuCategoryMeta`; category rows show name and count without guessed icons, and category taps must land with the section heading visible.
+- Cart count badges use `AppThemeData.cartBadge`; the restaurant-detail cart strip uses `AppThemeData.cartBar`.
+- Bottom navigation is Home, Favourites, Orders, Profile. Wallet is a separate Profile section when `Constant.walletSetting == true`.
+- Vegetarian item labels should display `Veg`, not `Pure veg.`.
+- Restaurant menu item descriptions fade at the edge in list previews. Product image taps open the existing detail bottom sheet with larger image and full description while preserving current add/cart behavior.
+- Restaurant menu items without photos still reserve the trailing action column so text and ADD/quantity placement aligns with photo items.
+- Restaurant menu search uses a local in-memory index; never query Firebase per keystroke. Search mode hides the floating menu navigator/cart strip, scrolls the search section into view, and adds keyboard-aware bottom spacing for reachable results.
 
 ## Context Files
 Detailed architecture documentation is in `.claude/context/`:

@@ -1,4 +1,3 @@
-import 'package:badges/badges.dart' as badges;
 import 'package:eatsipy_customer/app/address_screens/address_list_screen.dart';
 import 'package:eatsipy_customer/app/advertisement_screens/all_advertisement_screen.dart';
 import 'package:eatsipy_customer/app/cart_screen/cart_screen.dart';
@@ -157,8 +156,7 @@ class HomeScreen extends StatelessWidget {
                                                             ShippingAddress addressModel = ShippingAddress();
                                                             addressModel.addressAs = "Home";
                                                             addressModel.locality = Constant.formatAddress(selectedLocation: selectedLocationModel);
-                                                            addressModel.location =
-                                                                UserLocation(latitude: selectedLocationModel.latLng!.latitude, longitude: selectedLocationModel.latLng!.longitude);
+                                                            addressModel.location = UserLocation(latitude: selectedLocationModel.latLng!.latitude, longitude: selectedLocationModel.latLng!.longitude);
                                                             Constant.selectedLocation = addressModel;
                                                             controller.getData();
                                                             Get.back();
@@ -264,44 +262,67 @@ class HomeScreen extends StatelessWidget {
                                             ),
                                             const SizedBox(width: AppThemeData.space12),
                                             Obx(
-                                              () => badges.Badge(
-                                                showBadge: cartItem.isEmpty ? false : true,
-                                                position: badges.BadgePosition.topEnd(top: -4, end: -4),
-                                                badgeContent: Text(
-                                                  "${cartItem.length}",
-                                                  style: const TextStyle(
-                                                    fontSize: 11,
-                                                    overflow: TextOverflow.ellipsis,
-                                                    fontFamily: 'Urbanist',
-                                                    fontWeight: FontWeight.w600,
-                                                    color: AppThemeData.grey50,
-                                                  ),
-                                                ),
-                                                badgeStyle: const badges.BadgeStyle(
-                                                  shape: badges.BadgeShape.circle,
-                                                  badgeColor: AppThemeData.secondary300,
-                                                  padding: EdgeInsets.all(5),
-                                                ),
-                                                child: InkWell(
-                                                  onTap: () async {
-                                                    (await Get.to(const CartScreen()));
-                                                    controller.getCartData();
-                                                  },
-                                                  child: Container(
-                                                    width: 48,
-                                                    height: 48,
-                                                    decoration: BoxDecoration(
-                                                      color: isDark ? AppThemeData.grey800 : AppThemeData.grey100,
-                                                      borderRadius: BorderRadius.circular(AppThemeData.radius12),
-                                                    ),
-                                                    child: Padding(
-                                                      padding: const EdgeInsets.all(12),
-                                                      child: SvgPicture.asset(
-                                                        "assets/icons/ic_shoping_cart.svg",
-                                                        colorFilter: ColorFilter.mode(isDark ? AppThemeData.grey50 : AppThemeData.grey900, BlendMode.srcIn),
+                                              () => SizedBox(
+                                                width: 48,
+                                                height: 48,
+                                                child: Stack(
+                                                  clipBehavior: Clip.none,
+                                                  children: [
+                                                    InkWell(
+                                                      onTap: () async {
+                                                        (await Get.to(const CartScreen()));
+                                                        controller.getCartData();
+                                                      },
+                                                      child: Container(
+                                                        width: 48,
+                                                        height: 48,
+                                                        decoration: BoxDecoration(
+                                                          color: isDark ? AppThemeData.grey800 : AppThemeData.grey100,
+                                                          borderRadius: BorderRadius.circular(AppThemeData.radius12),
+                                                        ),
+                                                        child: Padding(
+                                                          padding: const EdgeInsets.all(12),
+                                                          child: SvgPicture.asset(
+                                                            "assets/icons/ic_shoping_cart.svg",
+                                                            colorFilter: ColorFilter.mode(isDark ? AppThemeData.grey50 : AppThemeData.grey900, BlendMode.srcIn),
+                                                          ),
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
+                                                    if (cartItem.isNotEmpty)
+                                                      Positioned(
+                                                        top: -5,
+                                                        right: -5,
+                                                        child: Container(
+                                                          constraints: const BoxConstraints(
+                                                            minWidth: 18,
+                                                            minHeight: 18,
+                                                          ),
+                                                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                                                          alignment: Alignment.center,
+                                                          decoration: BoxDecoration(
+                                                            color: AppThemeData.cartBadge,
+                                                            borderRadius: BorderRadius.circular(99),
+                                                            border: Border.all(
+                                                              color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
+                                                              width: 1.5,
+                                                            ),
+                                                          ),
+                                                          child: Text(
+                                                            "${cartItem.length}",
+                                                            maxLines: 1,
+                                                            overflow: TextOverflow.ellipsis,
+                                                            style: const TextStyle(
+                                                              fontSize: 10,
+                                                              height: 1,
+                                                              fontFamily: 'Urbanist',
+                                                              fontWeight: FontWeight.w700,
+                                                              color: AppThemeData.grey50,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                  ],
                                                 ),
                                               ),
                                             ),
@@ -325,12 +346,13 @@ class HomeScreen extends StatelessWidget {
                                           padding: const EdgeInsets.only(right: AppThemeData.space8),
                                           child: FilterChip(
                                             selected: isSelected,
-                                            label: TranslatedText(filter, style: TextStyle(
-                                              fontFamily: 'Urbanist', fontWeight: FontWeight.w600, fontSize: 13,
-                                              color: isSelected
-                                                  ? AppThemeData.grey50
-                                                  : (isDark ? AppThemeData.grey300 : AppThemeData.grey600),
-                                            )),
+                                            label: TranslatedText(filter,
+                                                style: TextStyle(
+                                                  fontFamily: 'Urbanist',
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 13,
+                                                  color: isSelected ? AppThemeData.grey50 : (isDark ? AppThemeData.grey300 : AppThemeData.grey600),
+                                                )),
                                             selectedColor: AppThemeData.primary300,
                                             backgroundColor: isDark ? AppThemeData.grey800 : AppThemeData.grey50,
                                             side: BorderSide(
@@ -414,7 +436,8 @@ class HomeScreen extends StatelessWidget {
                                                           "Featured & Trending",
                                                           textAlign: TextAlign.start,
                                                           style: TextStyle(
-                                                            fontFamily: 'Urbanist', fontWeight: FontWeight.w700,
+                                                            fontFamily: 'Urbanist',
+                                                            fontWeight: FontWeight.w700,
                                                             color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                                           ),
                                                         ),
@@ -452,7 +475,8 @@ class HomeScreen extends StatelessWidget {
                                                                   "Highlights for you",
                                                                   textAlign: TextAlign.start,
                                                                   style: TextStyle(
-                                                                    fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                                                    fontFamily: 'Urbanist',
+                                                                    fontWeight: FontWeight.w600,
                                                                     fontSize: 16,
                                                                     color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                                                   ),
@@ -521,7 +545,8 @@ class HomeScreen extends StatelessWidget {
                                                             "No restaurants are accepting orders right now.",
                                                             style: TextStyle(
                                                               fontSize: 14,
-                                                              fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                                              fontFamily: 'Urbanist',
+                                                              fontWeight: FontWeight.w600,
                                                               color: isDark ? AppThemeData.grey100 : AppThemeData.grey800,
                                                             ),
                                                           ),
@@ -530,7 +555,8 @@ class HomeScreen extends StatelessWidget {
                                                             "${controller.closedRestaurantList.length} restaurants will be opening soon.",
                                                             style: TextStyle(
                                                               fontSize: 13,
-                                                              fontFamily: 'Urbanist', fontWeight: FontWeight.w400,
+                                                              fontFamily: 'Urbanist',
+                                                              fontWeight: FontWeight.w400,
                                                               color: isDark ? AppThemeData.grey400 : AppThemeData.grey500,
                                                             ),
                                                           ),
@@ -586,140 +612,143 @@ class HomeScreen extends StatelessWidget {
                       ),
           ),
           floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-          floatingActionButton: !Constant.showHomeQuickActions ? null : Container(
-            decoration: BoxDecoration(color: isDark ? AppThemeData.grey800 : AppThemeData.grey100, borderRadius: const BorderRadius.all(Radius.circular(30))),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(30),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      child: Row(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              controller.isListView.value = true;
-                            },
-                            child: ClipOval(
-                              child: Container(
-                                  decoration: BoxDecoration(color: controller.isListView.value ? AppThemeData.primary300 : null),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: SvgPicture.asset(
-                                      "assets/icons/ic_view_grid_list.svg",
-                                      colorFilter: ColorFilter.mode(controller.isListView.value ? AppThemeData.grey50 : AppThemeData.grey500, BlendMode.srcIn),
-                                    ),
-                                  )),
+          floatingActionButton: !Constant.showHomeQuickActions
+              ? null
+              : Container(
+                  decoration: BoxDecoration(color: isDark ? AppThemeData.grey800 : AppThemeData.grey100, borderRadius: const BorderRadius.all(Radius.circular(30))),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(30),
                             ),
                           ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          InkWell(
-                            onTap: () {
-                              controller.isListView.value = false;
-                              controller.update();
-                            },
-                            child: ClipOval(
-                              child: Container(
-                                  decoration: BoxDecoration(color: controller.isListView.value == false ? AppThemeData.primary300 : null),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: SvgPicture.asset(
-                                      "assets/icons/ic_map_draw.svg",
-                                      colorFilter: ColorFilter.mode(controller.isListView.value == false ? AppThemeData.grey50 : AppThemeData.grey500, BlendMode.srcIn),
-                                    ),
-                                  )),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Get.to(const ScanQrCodeScreen());
-                    },
-                    child: ClipOval(
-                      child: Container(
-                          decoration: BoxDecoration(color: isDark ? AppThemeData.grey900 : AppThemeData.grey50),
                           child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: SvgPicture.asset(
-                              "assets/icons/ic_scan_code.svg",
-                              colorFilter: ColorFilter.mode(isDark ? AppThemeData.grey400 : AppThemeData.grey500, BlendMode.srcIn),
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            child: Row(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    controller.isListView.value = true;
+                                  },
+                                  child: ClipOval(
+                                    child: Container(
+                                        decoration: BoxDecoration(color: controller.isListView.value ? AppThemeData.primary300 : null),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: SvgPicture.asset(
+                                            "assets/icons/ic_view_grid_list.svg",
+                                            colorFilter: ColorFilter.mode(controller.isListView.value ? AppThemeData.grey50 : AppThemeData.grey500, BlendMode.srcIn),
+                                          ),
+                                        )),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    controller.isListView.value = false;
+                                    controller.update();
+                                  },
+                                  child: ClipOval(
+                                    child: Container(
+                                        decoration: BoxDecoration(color: controller.isListView.value == false ? AppThemeData.primary300 : null),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: SvgPicture.asset(
+                                            "assets/icons/ic_map_draw.svg",
+                                            colorFilter: ColorFilter.mode(controller.isListView.value == false ? AppThemeData.grey50 : AppThemeData.grey500, BlendMode.srcIn),
+                                          ),
+                                        )),
+                                  ),
+                                ),
+                              ],
                             ),
-                          )),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 14,
-                  ),
-                  DropdownButton<String>(
-                    isDense: false,
-                    underline: const SizedBox(),
-                    value: controller.selectedOrderTypeValue.value,
-                    icon: const Icon(Icons.keyboard_arrow_down),
-                    items: <String>['Delivery', if (Constant.takeawayEnabled) 'TakeAway'.tr].map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: TranslatedText(
-                          value,
-                          style: TextStyle(
-                            fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                            color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                           ),
                         ),
-                      );
-                    }).toList(),
-                    onChanged: (value) async {
-                      if (cartItem.isEmpty) {
-                        await Preferences.setString(Preferences.foodDeliveryType, value!);
-                        controller.selectedOrderTypeValue.value = value;
-                        controller.getData();
-                      } else {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return CustomDialogBox(
-                                title: "Alert",
-                                descriptions: "Do you really want to change the delivery option? Your cart will be empty.",
-                                positiveString: "Ok",
-                                negativeString: "Cancel",
-                                positiveClick: () async {
-                                  await Preferences.setString(Preferences.foodDeliveryType, value!);
-                                  controller.selectedOrderTypeValue.value = value;
-                                  controller.getData();
-                                  DatabaseHelper.instance.deleteAllCartProducts();
-                                  controller.cartProvider.clearDatabase();
-                                  controller.getCartData();
-                                  Get.back();
-                                },
-                                negativeClick: () {
-                                  Get.back();
-                                },
-                                img: null,
-                              );
-                            });
-                      }
-                    },
-                  )
-                ],
-              ),
-            ),
-          ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Get.to(const ScanQrCodeScreen());
+                          },
+                          child: ClipOval(
+                            child: Container(
+                                decoration: BoxDecoration(color: isDark ? AppThemeData.grey900 : AppThemeData.grey50),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: SvgPicture.asset(
+                                    "assets/icons/ic_scan_code.svg",
+                                    colorFilter: ColorFilter.mode(isDark ? AppThemeData.grey400 : AppThemeData.grey500, BlendMode.srcIn),
+                                  ),
+                                )),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 14,
+                        ),
+                        DropdownButton<String>(
+                          isDense: false,
+                          underline: const SizedBox(),
+                          value: controller.selectedOrderTypeValue.value,
+                          icon: const Icon(Icons.keyboard_arrow_down),
+                          items: <String>['Delivery', if (Constant.takeawayEnabled) 'TakeAway'.tr].map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: TranslatedText(
+                                value,
+                                style: TextStyle(
+                                  fontFamily: 'Urbanist',
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16,
+                                  color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (value) async {
+                            if (cartItem.isEmpty) {
+                              await Preferences.setString(Preferences.foodDeliveryType, value!);
+                              controller.selectedOrderTypeValue.value = value;
+                              controller.getData();
+                            } else {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return CustomDialogBox(
+                                      title: "Alert",
+                                      descriptions: "Do you really want to change the delivery option? Your cart will be empty.",
+                                      positiveString: "Ok",
+                                      negativeString: "Cancel",
+                                      positiveClick: () async {
+                                        await Preferences.setString(Preferences.foodDeliveryType, value!);
+                                        controller.selectedOrderTypeValue.value = value;
+                                        controller.getData();
+                                        DatabaseHelper.instance.deleteAllCartProducts();
+                                        controller.cartProvider.clearDatabase();
+                                        controller.getCartData();
+                                        Get.back();
+                                      },
+                                      negativeClick: () {
+                                        Get.back();
+                                      },
+                                      img: null,
+                                    );
+                                  });
+                            }
+                          },
+                        )
+                      ],
+                    ),
+                  ),
+                ),
         );
       },
     );
@@ -737,7 +766,8 @@ class HomeScreen extends StatelessWidget {
                 title,
                 style: TextStyle(
                   fontSize: 15,
-                  fontFamily: 'Urbanist', fontWeight: FontWeight.w700,
+                  fontFamily: 'Urbanist',
+                  fontWeight: FontWeight.w700,
                   color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                 ),
               ),
@@ -746,7 +776,8 @@ class HomeScreen extends StatelessWidget {
                 "($count)",
                 style: TextStyle(
                   fontSize: 14,
-                  fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
+                  fontFamily: 'Urbanist',
+                  fontWeight: FontWeight.w500,
                   color: isDark ? AppThemeData.grey400 : AppThemeData.grey500,
                 ),
               ),
@@ -759,7 +790,8 @@ class HomeScreen extends StatelessWidget {
                 subtitle,
                 style: TextStyle(
                   fontSize: 12,
-                  fontFamily: 'Urbanist', fontWeight: FontWeight.w400,
+                  fontFamily: 'Urbanist',
+                  fontWeight: FontWeight.w400,
                   color: isDark ? AppThemeData.grey500 : AppThemeData.grey400,
                 ),
               ),
@@ -807,25 +839,29 @@ class HomeScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: AppThemeData.space16),
                 Row(
-                  children: List.generate(4, (i) => Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.only(right: i < 3 ? AppThemeData.space8 : 0),
-                      child: _shimmerBox(double.infinity, 36, baseColor, borderRadius: AppThemeData.radius20),
-                    ),
-                  )),
+                  children: List.generate(
+                      4,
+                      (i) => Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(right: i < 3 ? AppThemeData.space8 : 0),
+                              child: _shimmerBox(double.infinity, 36, baseColor, borderRadius: AppThemeData.radius20),
+                            ),
+                          )),
                 ),
                 const SizedBox(height: AppThemeData.space24),
                 _shimmerBox(120, 16, baseColor, borderRadius: 4),
                 const SizedBox(height: AppThemeData.space12),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: List.generate(4, (_) => Column(
-                    children: [
-                      _shimmerBox(60, 60, baseColor, isCircle: true),
-                      const SizedBox(height: 6),
-                      _shimmerBox(48, 10, baseColor, borderRadius: 4),
-                    ],
-                  )),
+                  children: List.generate(
+                      4,
+                      (_) => Column(
+                            children: [
+                              _shimmerBox(60, 60, baseColor, isCircle: true),
+                              const SizedBox(height: 6),
+                              _shimmerBox(48, 10, baseColor, borderRadius: 4),
+                            ],
+                          )),
                 ),
                 const SizedBox(height: AppThemeData.space24),
                 _shimmerBox(double.infinity, 140, baseColor, borderRadius: AppThemeData.radius16),
@@ -867,7 +903,8 @@ class HomeScreen extends StatelessWidget {
             name,
             textAlign: TextAlign.start,
             style: TextStyle(
-              fontFamily: 'Urbanist', fontWeight: FontWeight.w700,
+              fontFamily: 'Urbanist',
+              fontWeight: FontWeight.w700,
               color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
             ),
           ),

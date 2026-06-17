@@ -153,7 +153,8 @@ class HomeScreenTwo extends StatelessWidget {
                                                           "Login",
                                                           textAlign: TextAlign.center,
                                                           style: TextStyle(
-                                                            fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
+                                                            fontFamily: 'Urbanist',
+                                                            fontWeight: FontWeight.w500,
                                                             color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                                             fontSize: 12,
                                                           ),
@@ -163,7 +164,8 @@ class HomeScreenTwo extends StatelessWidget {
                                                         "${Constant.userModel!.fullName()}",
                                                         textAlign: TextAlign.center,
                                                         style: TextStyle(
-                                                          fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
+                                                          fontFamily: 'Urbanist',
+                                                          fontWeight: FontWeight.w500,
                                                           color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                                           fontSize: 12,
                                                         ),
@@ -249,7 +251,8 @@ class HomeScreenTwo extends StatelessWidget {
                                                               TextSpan(
                                                                 text: Constant.selectedLocation.getFullAddress(),
                                                                 style: TextStyle(
-                                                                  fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
+                                                                  fontFamily: 'Urbanist',
+                                                                  fontWeight: FontWeight.w500,
                                                                   overflow: TextOverflow.ellipsis,
                                                                   color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                                                   fontSize: 14,
@@ -285,7 +288,7 @@ class HomeScreenTwo extends StatelessWidget {
                                               ),
                                               badgeStyle: const badges.BadgeStyle(
                                                 shape: badges.BadgeShape.circle,
-                                                badgeColor: AppThemeData.secondary300,
+                                                badgeColor: AppThemeData.cartBadge,
                                                 padding: EdgeInsets.all(5),
                                               ),
                                               child: InkWell(
@@ -400,7 +403,8 @@ class HomeScreenTwo extends StatelessWidget {
                                                                   "Highlights for you",
                                                                   textAlign: TextAlign.start,
                                                                   style: TextStyle(
-                                                                    fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                                                    fontFamily: 'Urbanist',
+                                                                    fontWeight: FontWeight.w600,
                                                                     fontSize: 16,
                                                                     color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                                                   ),
@@ -464,139 +468,142 @@ class HomeScreenTwo extends StatelessWidget {
                             ),
                     ),
           floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-          floatingActionButton: !Constant.showHomeQuickActions ? null : Container(
-            decoration: BoxDecoration(color: isDark ? AppThemeData.grey800 : AppThemeData.grey100, borderRadius: const BorderRadius.all(Radius.circular(30))),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(30),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      child: Row(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              controller.isListView.value = true;
-                            },
-                            child: ClipOval(
-                              child: Container(
-                                  decoration: BoxDecoration(color: controller.isListView.value ? AppThemeData.primary300 : null),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: SvgPicture.asset(
-                                      "assets/icons/ic_view_grid_list.svg",
-                                      colorFilter: ColorFilter.mode(controller.isListView.value ? AppThemeData.grey50 : AppThemeData.grey500, BlendMode.srcIn),
-                                    ),
-                                  )),
+          floatingActionButton: !Constant.showHomeQuickActions
+              ? null
+              : Container(
+                  decoration: BoxDecoration(color: isDark ? AppThemeData.grey800 : AppThemeData.grey100, borderRadius: const BorderRadius.all(Radius.circular(30))),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(30),
                             ),
                           ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          InkWell(
-                            onTap: () {
-                              controller.isListView.value = false;
-                            },
-                            child: ClipOval(
-                              child: Container(
-                                  decoration: BoxDecoration(color: controller.isListView.value == false ? AppThemeData.primary300 : null),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: SvgPicture.asset(
-                                      "assets/icons/ic_map_draw.svg",
-                                      colorFilter: ColorFilter.mode(controller.isListView.value == false ? AppThemeData.grey50 : AppThemeData.grey500, BlendMode.srcIn),
-                                    ),
-                                  )),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Get.to(const ScanQrCodeScreen());
-                    },
-                    child: ClipOval(
-                      child: Container(
-                          decoration: BoxDecoration(color: isDark ? AppThemeData.grey900 : AppThemeData.grey50),
                           child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: SvgPicture.asset(
-                              "assets/icons/ic_scan_code.svg",
-                              colorFilter: ColorFilter.mode(isDark ? AppThemeData.grey400 : AppThemeData.grey500, BlendMode.srcIn),
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            child: Row(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    controller.isListView.value = true;
+                                  },
+                                  child: ClipOval(
+                                    child: Container(
+                                        decoration: BoxDecoration(color: controller.isListView.value ? AppThemeData.primary300 : null),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: SvgPicture.asset(
+                                            "assets/icons/ic_view_grid_list.svg",
+                                            colorFilter: ColorFilter.mode(controller.isListView.value ? AppThemeData.grey50 : AppThemeData.grey500, BlendMode.srcIn),
+                                          ),
+                                        )),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    controller.isListView.value = false;
+                                  },
+                                  child: ClipOval(
+                                    child: Container(
+                                        decoration: BoxDecoration(color: controller.isListView.value == false ? AppThemeData.primary300 : null),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: SvgPicture.asset(
+                                            "assets/icons/ic_map_draw.svg",
+                                            colorFilter: ColorFilter.mode(controller.isListView.value == false ? AppThemeData.grey50 : AppThemeData.grey500, BlendMode.srcIn),
+                                          ),
+                                        )),
+                                  ),
+                                ),
+                              ],
                             ),
-                          )),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 14,
-                  ),
-                  DropdownButton<String>(
-                    isDense: false,
-                    underline: const SizedBox(),
-                    value: controller.selectedOrderTypeValue.value,
-                    icon: const Icon(Icons.keyboard_arrow_down),
-                    items: <String>['Delivery', if (Constant.takeawayEnabled) 'TakeAway'].map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: TranslatedText(
-                          value,
-                          style: TextStyle(
-                            fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                            color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                           ),
                         ),
-                      );
-                    }).toList(),
-                    onChanged: (value) async {
-                      if (cartItem.isEmpty) {
-                        await Preferences.setString(Preferences.foodDeliveryType, value!);
-                        controller.selectedOrderTypeValue.value = value;
-                        controller.getData();
-                      } else {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return CustomDialogBox(
-                                title: "Alert",
-                                descriptions: "Do you really want to change the delivery option? Your cart will be empty.",
-                                positiveString: "Ok",
-                                negativeString: "Cancel",
-                                positiveClick: () async {
-                                  await Preferences.setString(Preferences.foodDeliveryType, value!);
-                                  controller.selectedOrderTypeValue.value = value;
-                                  controller.getData();
-                                  DatabaseHelper.instance.deleteAllCartProducts();
-                                  controller.cartProvider.clearDatabase();
-                                  controller.getCartData();
-                                  Get.back();
-                                },
-                                negativeClick: () {
-                                  Get.back();
-                                },
-                                img: null,
-                              );
-                            });
-                      }
-                    },
-                  )
-                ],
-              ),
-            ),
-          ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Get.to(const ScanQrCodeScreen());
+                          },
+                          child: ClipOval(
+                            child: Container(
+                                decoration: BoxDecoration(color: isDark ? AppThemeData.grey900 : AppThemeData.grey50),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: SvgPicture.asset(
+                                    "assets/icons/ic_scan_code.svg",
+                                    colorFilter: ColorFilter.mode(isDark ? AppThemeData.grey400 : AppThemeData.grey500, BlendMode.srcIn),
+                                  ),
+                                )),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 14,
+                        ),
+                        DropdownButton<String>(
+                          isDense: false,
+                          underline: const SizedBox(),
+                          value: controller.selectedOrderTypeValue.value,
+                          icon: const Icon(Icons.keyboard_arrow_down),
+                          items: <String>['Delivery', if (Constant.takeawayEnabled) 'TakeAway'].map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: TranslatedText(
+                                value,
+                                style: TextStyle(
+                                  fontFamily: 'Urbanist',
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16,
+                                  color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (value) async {
+                            if (cartItem.isEmpty) {
+                              await Preferences.setString(Preferences.foodDeliveryType, value!);
+                              controller.selectedOrderTypeValue.value = value;
+                              controller.getData();
+                            } else {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return CustomDialogBox(
+                                      title: "Alert",
+                                      descriptions: "Do you really want to change the delivery option? Your cart will be empty.",
+                                      positiveString: "Ok",
+                                      negativeString: "Cancel",
+                                      positiveClick: () async {
+                                        await Preferences.setString(Preferences.foodDeliveryType, value!);
+                                        controller.selectedOrderTypeValue.value = value;
+                                        controller.getData();
+                                        DatabaseHelper.instance.deleteAllCartProducts();
+                                        controller.cartProvider.clearDatabase();
+                                        controller.getCartData();
+                                        Get.back();
+                                      },
+                                      negativeClick: () {
+                                        Get.back();
+                                      },
+                                      img: null,
+                                    );
+                                  });
+                            }
+                          },
+                        )
+                      ],
+                    ),
+                  ),
+                ),
         );
       },
     );
@@ -637,7 +644,8 @@ class CategoryView extends StatelessWidget {
                         child: TranslatedText(
                           "Our Categories",
                           style: TextStyle(
-                            fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                            fontFamily: 'Urbanist',
+                            fontWeight: FontWeight.w600,
                             color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                             fontSize: 18,
                           ),
@@ -651,7 +659,8 @@ class CategoryView extends StatelessWidget {
                           "See all",
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
+                            fontFamily: 'Urbanist',
+                            fontWeight: FontWeight.w500,
                             color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
                             fontSize: 14,
                           ),
@@ -702,7 +711,8 @@ class CategoryView extends StatelessWidget {
                         "${vendorCategoryModel.title}",
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
+                          fontFamily: 'Urbanist',
+                          fontWeight: FontWeight.w500,
                           color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                           fontSize: 12,
                         ),
@@ -753,7 +763,8 @@ class OfferView extends StatelessWidget {
                         child: TranslatedText(
                           "Large Discounts",
                           style: TextStyle(
-                            fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                            fontFamily: 'Urbanist',
+                            fontWeight: FontWeight.w600,
                             color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                             fontSize: 18,
                           ),
@@ -768,7 +779,8 @@ class OfferView extends StatelessWidget {
                           "See all",
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
+                            fontFamily: 'Urbanist',
+                            fontWeight: FontWeight.w500,
                             color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
                             fontSize: 14,
                           ),
@@ -847,7 +859,8 @@ class OfferView extends StatelessWidget {
                                             style: TextStyle(
                                               fontSize: 18,
                                               overflow: TextOverflow.ellipsis,
-                                              fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                              fontFamily: 'Urbanist',
+                                              fontWeight: FontWeight.w600,
                                               color: isDark ? AppThemeData.grey50 : AppThemeData.grey50,
                                             ),
                                           ),
@@ -981,7 +994,8 @@ class StoryView extends StatelessWidget {
                       child: TranslatedText(
                         "Stories",
                         style: TextStyle(
-                          fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                          fontFamily: 'Urbanist',
+                          fontWeight: FontWeight.w600,
                           color: isDark ? AppThemeData.grey50 : AppThemeData.grey50,
                           fontSize: 18,
                         ),
@@ -1156,7 +1170,8 @@ class RestaurantView extends StatelessWidget {
                     child: TranslatedText(
                       "Best Restaurants",
                       style: TextStyle(
-                        fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                        fontFamily: 'Urbanist',
+                        fontWeight: FontWeight.w600,
                         color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                         fontSize: 18,
                       ),
@@ -1170,7 +1185,8 @@ class RestaurantView extends StatelessWidget {
                       "See all",
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
+                        fontFamily: 'Urbanist',
+                        fontWeight: FontWeight.w500,
                         color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
                         fontSize: 14,
                       ),
@@ -1266,7 +1282,8 @@ class RestaurantView extends StatelessWidget {
                                                   style: TextStyle(
                                                     fontSize: 18,
                                                     overflow: TextOverflow.ellipsis,
-                                                    fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                                    fontFamily: 'Urbanist',
+                                                    fontWeight: FontWeight.w600,
                                                     color: isDark ? AppThemeData.grey50 : AppThemeData.grey50,
                                                   ),
                                                 ),
@@ -1292,7 +1309,8 @@ class RestaurantView extends StatelessWidget {
                                     style: TextStyle(
                                       fontSize: 18,
                                       overflow: TextOverflow.ellipsis,
-                                      fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                      fontFamily: 'Urbanist',
+                                      fontWeight: FontWeight.w600,
                                       color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                     ),
                                   ),

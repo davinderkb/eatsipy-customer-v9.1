@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class AppThemeData {
   // ── Spacing scale ──
   static const double space4 = 4;
@@ -45,16 +44,48 @@ class AppThemeData {
 
   // ── Desaturation filters for closed restaurants ──
   static const desatLight = ColorFilter.matrix(<double>[
-    0.8032, 0.1788, 0.0181, 0, 0,
-    0.0532, 0.9288, 0.0181, 0, 0,
-    0.0532, 0.1788, 0.7681, 0, 0,
-    0, 0, 0, 1, 0,
+    0.8032,
+    0.1788,
+    0.0181,
+    0,
+    0,
+    0.0532,
+    0.9288,
+    0.0181,
+    0,
+    0,
+    0.0532,
+    0.1788,
+    0.7681,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
   ]);
   static const desatMuted = ColorFilter.matrix(<double>[
-    0.7244, 0.2503, 0.0253, 0, 0,
-    0.0744, 0.9003, 0.0253, 0, 0,
-    0.0744, 0.2503, 0.6753, 0, 0,
-    0, 0, 0, 1, 0,
+    0.7244,
+    0.2503,
+    0.0253,
+    0,
+    0,
+    0.0744,
+    0.9003,
+    0.0253,
+    0,
+    0,
+    0.0744,
+    0.2503,
+    0.6753,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
   ]);
 
   // ── Card dimension constants ──
@@ -89,6 +120,9 @@ class AppThemeData {
   static const Color danger400 = Color(0xFFB2262B);
   static const Color danger500 = Color(0xFF661316);
   static const Color danger600 = Color(0xFF1A0001);
+
+  static const Color cartBadge = Color(0xFFE11D48);
+  static const Color cartBar = Color(0xFF047857);
 
   static const Color secondary50 = Color(0xFFEBE5FF);
   static const Color secondary100 = Color(0xFFC0ABFF);

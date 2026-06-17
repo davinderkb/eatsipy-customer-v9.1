@@ -32,7 +32,8 @@ class SearchScreen extends StatelessWidget {
                 "Search Food & Restaurant",
                 textAlign: TextAlign.start,
                 style: TextStyle(
-                  fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
+                  fontFamily: 'Urbanist',
+                  fontWeight: FontWeight.w500,
                   fontSize: 16,
                   color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                 ),
@@ -84,7 +85,8 @@ class SearchScreen extends StatelessWidget {
                                           "Restaurants",
                                           textAlign: TextAlign.start,
                                           style: TextStyle(
-                                            fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                            fontFamily: 'Urbanist',
+                                            fontWeight: FontWeight.w600,
                                             fontSize: 16,
                                             color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                           ),
@@ -121,7 +123,8 @@ class SearchScreen extends StatelessWidget {
                                           "Foods",
                                           textAlign: TextAlign.start,
                                           style: TextStyle(
-                                            fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                            fontFamily: 'Urbanist',
+                                            fontWeight: FontWeight.w600,
                                             fontSize: 16,
                                             color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                           ),
@@ -180,7 +183,7 @@ class SearchScreen extends StatelessWidget {
                                                                 width: 5,
                                                               ),
                                                               TranslatedText(
-                                                                productModel.nonveg == true ? "Non Veg." : "Pure veg.",
+                                                                productModel.nonveg == true ? "Non Veg." : "Veg",
                                                                 style: TextStyle(
                                                                   color: productModel.nonveg == true ? AppThemeData.danger300 : AppThemeData.success400,
                                                                   fontFamily: 'Urbanist',

@@ -134,7 +134,8 @@ class FavouriteScreen extends StatelessWidget {
                                                         "Favourite Restaurants",
                                                         textAlign: TextAlign.center,
                                                         style: TextStyle(
-                                                          fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                                          fontFamily: 'Urbanist',
+                                                          fontWeight: FontWeight.w600,
                                                           color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
                                                         ),
                                                       ),
@@ -162,7 +163,8 @@ class FavouriteScreen extends StatelessWidget {
                                                         "Favourite Foods",
                                                         textAlign: TextAlign.center,
                                                         style: TextStyle(
-                                                          fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                                          fontFamily: 'Urbanist',
+                                                          fontWeight: FontWeight.w600,
                                                           color: controller.favouriteRestaurant.value == true
                                                               ? isDark
                                                                   ? AppThemeData.grey400
@@ -287,7 +289,7 @@ class FavouriteScreen extends StatelessWidget {
                                                                                       width: 5,
                                                                                     ),
                                                                                     TranslatedText(
-                                                                                      productModel.nonveg == true ? "Non Veg." : "Pure veg.",
+                                                                                      productModel.nonveg == true ? "Non Veg." : "Veg",
                                                                                       style: TextStyle(
                                                                                         color: productModel.nonveg == true ? AppThemeData.danger300 : AppThemeData.success400,
                                                                                         fontFamily: 'Urbanist',

@@ -75,6 +75,16 @@ Companion method `Constant.getNextOpeningDateTime(vendor, now)` returns `DateTim
 | Category | `home_screen/category_restaurant_screen.dart` | null | null | simple navigation |
 | Favourites | `favourite_screens/favourite_screen.dart` | controller.favouriteList | null | zone check + onFavouriteRemoved |
 
+### Restaurant Detail Navigation Contract
+- Card taps pass the available `VendorModel` immediately: `Get.to(const RestaurantDetailsScreen(), arguments: {"vendorModel": vendorModel})`.
+- Do not prefetch menu/products before navigating from cards. The detail screen is responsible for staged loading.
+- `RestaurantDetailsScreen` must render the basic text header immediately from the passed model, then load menu/categories with skeleton and retry states.
+- Detail screen category navigation is a floating bottom-right Menu pill + draggable sheet, not an inline horizontal chip row.
+- Detail screen menu search is local/indexed after menu load; do not query Firebase per keystroke. Search mode hides the floating Menu navigator/cart strip, keeps results keyboard-aware, and avoids scroll animation on every typed character.
+- Detail screen item cards use faded two-line descriptions. Product image taps open the existing product detail bottom sheet with larger image and full description.
+- Menu items without photos must keep the same left text width and right ADD/quantity action slot as photo items; only omit the image surface.
+- If adding new card-sourced metadata such as offer text, keep it optional and do not change Firestore/vendor models unless explicitly required.
+
 ### Vendor Working Hours Model
 ```
 vendorModel.workingHours: List<WorkingHours>?

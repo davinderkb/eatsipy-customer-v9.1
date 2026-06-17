@@ -9,7 +9,7 @@ Scaffold with GetX<HomeController>. Gradient background (secondary colors fading
 **Fixed header** (Column, 16px horizontal padding):
 1. Location bar — InkWell Row: `[pin icon] [address text] [down arrow]`. Taps navigate to AddressListScreen (logged in) or LocationPickerScreen (guest).
 2. SizedBox(12)
-3. Search bar (48px height, radius12) + Cart button (48x48, badge with count)
+3. Search bar (48px height, radius12) + Cart button (48x48, manual `Stack` badge with count)
 4. SizedBox(8) → Quick Filters (40px height horizontal ListView of FilterChips)
 5. SizedBox(4)
 
@@ -33,8 +33,18 @@ Scaffold with GetX<HomeController>. Gradient background (secondary colors fading
 - `titleView(isDark, title, onTap)` — Row with title + "View all" link
 - `_buildShimmerSkeleton()` — loading placeholder
 
+### Cart Count Badge
+- Theme 1 uses a manual `Stack` badge over the 48x48 cart button for exact positioning.
+- Badge color: `AppThemeData.cartBadge` (#E11D48), white text, 18px minimum size, white/dark border for contrast.
+- Avoid `badges.Badge` package defaults for this home cart count because default offsets can look misaligned.
+- Theme 2 cart count should use the same red `cartBadge` token when present.
+
 ### FAB (Floating Toolbar)
 Pill-shaped bar at bottom center with: List/Map toggle, QR scan, Order type dropdown (Delivery/TakeAway).
+
+## Theme 2 Parity Notes
+
+`lib/app/home_screen/home_screen_two.dart` has its own header/cart UI. When cart count behavior, profile tab index, or shared home navigation behavior changes in theme 1, check theme 2 as well.
 
 ## File: `lib/controllers/home_controller.dart`
 

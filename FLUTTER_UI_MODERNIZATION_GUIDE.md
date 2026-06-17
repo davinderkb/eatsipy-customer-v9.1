@@ -208,12 +208,12 @@ Look at the main container/shell screen. Is it using a `Drawer` for primary navi
 ### Apply
 For food delivery / e-commerce apps, the standard is:
 
-**Bottom NavigationBar with 5 tabs:**
+**Typical Bottom NavigationBar with 4-5 tabs:**
 - Home
 - Search / Explore
 - Orders
-- Cart (with item count badge)
 - Profile / Account
+- Optional Cart tab only when the product explicitly uses cart as primary navigation
 
 Use M3 `NavigationBar` widget (not the older `BottomNavigationBar`):
 
@@ -225,17 +225,12 @@ NavigationBar(
     NavigationDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home), label: 'Home'),
     NavigationDestination(icon: Icon(Icons.search), label: 'Search'),
     NavigationDestination(icon: Icon(Icons.receipt_long_outlined), selectedIcon: Icon(Icons.receipt_long), label: 'Orders'),
-    NavigationDestination(
-      icon: Badge(label: Text('$cartCount'), child: Icon(Icons.shopping_cart_outlined)),
-      selectedIcon: Badge(label: Text('$cartCount'), child: Icon(Icons.shopping_cart)),
-      label: 'Cart',
-    ),
     NavigationDestination(icon: Icon(Icons.person_outline), selectedIcon: Icon(Icons.person), label: 'Profile'),
   ],
 )
 ```
 
-Keep the Drawer for secondary items (Wallet, Settings, Referral, etc.) if the app has them.
+For Eatsipy customer, current primary nav is Home, Favourites, Orders, Profile. Wallet is a Profile section, not a bottom tab. Cart access is contextual from home/detail/cart flows; cart-count badges use the app's red `cartBadge` token, not the purple/secondary palette.
 
 ### Also
 - Replace any `WillPopScope` with `PopScope`
@@ -401,6 +396,20 @@ Use a horizontal `Row` layout:
 - Labels: `theme.colorScheme.primary`
 - Empty widgets: `SizedBox.shrink()` not `Container()`
 - Sticky bottom button for "Place Order" / "Proceed"
+- Restaurant-detail "items added / View Cart" should be a floating island panel with side/bottom margins, radius 16, emerald `cartBar`, shadow, pluralized item text, and right chevron CTA.
+- Restaurant-detail menu item descriptions should fade at the clipped edge instead of using ellipsis; tapping an item image opens the product detail sheet with the larger image, full description, pricing, customization, and add controls.
+- For menu items without photos, keep the same two-column card geometry as photo items: text remains aligned on the left and ADD/quantity remains in the right action slot; only the photo is omitted.
+- Restaurant-detail menu search must be local, indexed, and keyboard-aware. Do not query Firebase per keystroke; search the in-memory menu index, hide the cart strip during search, scroll the search section into view, and add enough bottom inset for results/ADD buttons while typing.
+
+### Restaurant Detail Menu Navigation
+- Avoid inline horizontal category strips for long menus.
+- Use a floating bottom-right Menu pill with a static menu icon that opens a draggable bottom sheet.
+- Keep category rows clean: category name, item count, and active highlight only. Do not use guessed emoji/category icons.
+- Hide when there are fewer than 10 visible items or one/no visible category.
+- Cache category metadata and counts in the controller; update on search/filter changes.
+- Hide the floating Menu navigator while menu search is active.
+- Tapping a category should smooth-scroll to the section, not jump.
+- Category navigation must land with the category heading visible below the app bar so users can confirm the selected section.
 
 ### Order Details
 - Status chips with semantic colors
@@ -491,6 +500,7 @@ If the app fetches entire Firestore collections without limits:
 - **Preserve all navigation logic** — onTap handlers, routes, arguments stay unchanged
 - **No new packages** unless absolutely necessary
 - **Always use `Theme.of(context)`** — never hardcode colors
+- **Keep project-specific tokens current** — cart badges use `AppThemeData.cartBadge`; restaurant detail cart island uses `AppThemeData.cartBar`.
 - **Run `flutter analyze`** after each batch of changes to catch errors early
 - **Test the golden path** after each major phase
 - **Be efficient** — use sed/bulk scripts for repetitive patterns, manual edits for unique screens
