@@ -6,38 +6,35 @@ import 'package:eatsipy_customer/models/vendor_model.dart';
 import 'package:eatsipy_customer/themes/app_them_data.dart';
 import 'package:eatsipy_customer/themes/responsive.dart';
 import 'package:eatsipy_customer/themes/text_field_widget.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:eatsipy_customer/utils/fire_store_utils.dart';
 import 'package:eatsipy_customer/utils/network_image_widget.dart';
-import 'package:eatsipy_customer/widget/restaurant_image_view.dart';
+import 'package:eatsipy_customer/widget/restaurant_card.dart';
 import 'package:flutter/material.dart';
 import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
-    final isRTL = Directionality.of(context) == TextDirection.rtl;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GetX(
         init: SearchScreenController(),
         builder: (controller) {
           return Scaffold(
             appBar: AppBar(
-              backgroundColor: themeChange.getThem() ? AppThemeData.surfaceDark : AppThemeData.surface,
+              backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
               centerTitle: false,
               titleSpacing: 0,
               title: TranslatedText(
                 "Search Food & Restaurant",
                 textAlign: TextAlign.start,
                 style: TextStyle(
-                  fontFamily: AppThemeData.medium,
+                  fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
                   fontSize: 16,
-                  color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                  color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                 ),
               ),
               bottom: PreferredSize(
@@ -87,9 +84,9 @@ class SearchScreen extends StatelessWidget {
                                           "Restaurants",
                                           textAlign: TextAlign.start,
                                           style: TextStyle(
-                                            fontFamily: AppThemeData.semiBold,
+                                            fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
                                             fontSize: 16,
-                                            color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                            color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                           ),
                                         ),
                                         const Padding(
@@ -104,253 +101,13 @@ class SearchScreen extends StatelessWidget {
                                 itemCount: controller.vendorSearchList.length,
                                 itemBuilder: (context, index) {
                                   VendorModel vendorModel = controller.vendorSearchList[index];
-                                  bool isOpen = Constant.statusCheckOpenORClose(vendorModel: vendorModel);
-                                  return InkWell(
-                                    onTap: () {
-                                      Get.to(const RestaurantDetailsScreen(), arguments: {"vendorModel": vendorModel});
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(bottom: 20),
-                                      child: Container(
-                                        decoration: ShapeDecoration(
-                                          color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
-                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Stack(
-                                              children: [
-                                                ClipRRect(
-                                                  borderRadius: const BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
-                                                  child: Stack(
-                                                    children: [
-                                                      ColorFiltered(
-                                                        colorFilter: isOpen
-                                                            ? const ColorFilter.mode(
-                                                                Colors.transparent,
-                                                                BlendMode.multiply,
-                                                              )
-                                                            : const ColorFilter.matrix(<double>[
-                                                                0.2126,
-                                                                0.7152,
-                                                                0.0722,
-                                                                0,
-                                                                0,
-                                                                0.2126,
-                                                                0.7152,
-                                                                0.0722,
-                                                                0,
-                                                                0,
-                                                                0.2126,
-                                                                0.7152,
-                                                                0.0722,
-                                                                0,
-                                                                0,
-                                                                0,
-                                                                0,
-                                                                0,
-                                                                1,
-                                                                0,
-                                                              ]),
-                                                        child: RestaurantImageView(
-                                                          vendorModel: vendorModel,
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        height: Responsive.height(20, context),
-                                                        width: Responsive.width(100, context),
-                                                        decoration: BoxDecoration(
-                                                          color: (isOpen) ? null : Colors.black38,
-                                                          gradient: (isOpen)
-                                                              ? LinearGradient(
-                                                                  begin: const Alignment(-0.00, -1.00),
-                                                                  end: const Alignment(0, 1),
-                                                                  colors: [Colors.black.withOpacity(0), const Color(0xFF111827)],
-                                                                )
-                                                              : null,
-                                                        ),
-                                                        child: (isOpen)
-                                                            ? SizedBox()
-                                                            : Center(
-                                                                child: Image.asset(
-                                                                  "assets/images/closed.PNG",
-                                                                  height: Responsive.height(16, context),
-                                                                  fit: BoxFit.fill,
-                                                                ),
-                                                              ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                Transform.translate(
-                                                  offset: Offset(Responsive.width(isRTL == true ? 3 : -3, context), Responsive.height(17.5, context)),
-                                                  child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
-                                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                                    children: [
-                                                      Visibility(
-                                                        visible: (vendorModel.isSelfDelivery == true && Constant.isSelfDeliveryFeature == true),
-                                                        child: Row(
-                                                          children: [
-                                                            Container(
-                                                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-                                                              decoration: BoxDecoration(
-                                                                color: AppThemeData.lightGreen,
-                                                                borderRadius: BorderRadius.circular(120), // Optional
-                                                              ),
-                                                              child: Row(
-                                                                children: [
-                                                                  SvgPicture.asset(
-                                                                    "assets/icons/ic_free_delivery.svg",
-                                                                  ),
-                                                                  const SizedBox(
-                                                                    width: 5,
-                                                                  ),
-                                                                  TranslatedText(
-                                                                    "Free Delivery",
-                                                                    style: TextStyle(
-                                                                      fontSize: 14,
-                                                                      color: AppThemeData.darkGreen,
-                                                                      fontFamily: AppThemeData.semiBold,
-                                                                      fontWeight: FontWeight.w600,
-                                                                    ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            const SizedBox(
-                                                              width: 6,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-                                                        decoration: ShapeDecoration(
-                                                          color: themeChange.getThem() ? AppThemeData.primary600 : AppThemeData.primary50,
-                                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(120)),
-                                                        ),
-                                                        child: Row(
-                                                          children: [
-                                                            SvgPicture.asset(
-                                                              "assets/icons/ic_star.svg",
-                                                              colorFilter: ColorFilter.mode(AppThemeData.primary300, BlendMode.srcIn),
-                                                            ),
-                                                            const SizedBox(
-                                                              width: 5,
-                                                            ),
-                                                            Text(
-                                                              "${Constant.calculateReview(reviewCount: vendorModel.reviewsCount!.toStringAsFixed(0), reviewSum: vendorModel.reviewsSum.toString())} (${vendorModel.reviewsCount!.toStringAsFixed(0)})",
-                                                              style: TextStyle(
-                                                                fontSize: 14,
-                                                                color: themeChange.getThem() ? AppThemeData.primary300 : AppThemeData.primary300,
-                                                                fontFamily: AppThemeData.semiBold,
-                                                                fontWeight: FontWeight.w600,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      const SizedBox(
-                                                        width: 6,
-                                                      ),
-                                                      Container(
-                                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-                                                        decoration: ShapeDecoration(
-                                                          color: themeChange.getThem() ? AppThemeData.secondary600 : AppThemeData.secondary50,
-                                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(120)),
-                                                        ),
-                                                        child: Row(
-                                                          children: [
-                                                            SvgPicture.asset(
-                                                              "assets/icons/ic_map_distance.svg",
-                                                              colorFilter: const ColorFilter.mode(AppThemeData.secondary300, BlendMode.srcIn),
-                                                            ),
-                                                            const SizedBox(
-                                                              width: 5,
-                                                            ),
-                                                            TranslatedText(
-                                                              "${Constant.getDistance(
-                                                                lat1: vendorModel.latitude.toString(),
-                                                                lng1: vendorModel.longitude.toString(),
-                                                                lat2: Constant.selectedLocation.location!.latitude.toString(),
-                                                                lng2: Constant.selectedLocation.location!.longitude.toString(),
-                                                              )} ${Constant.distanceType}",
-                                                              style: TextStyle(
-                                                                fontSize: 14,
-                                                                color: themeChange.getThem() ? AppThemeData.secondary300 : AppThemeData.secondary300,
-                                                                fontFamily: AppThemeData.semiBold,
-                                                                fontWeight: FontWeight.w600,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                            const SizedBox(
-                                              height: 15,
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 16),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  TranslatedText(
-                                                    vendorModel.title.toString(),
-                                                    textAlign: TextAlign.start,
-                                                    maxLines: 1,
-                                                    style: TextStyle(
-                                                      fontSize: 18,
-                                                      overflow: TextOverflow.ellipsis,
-                                                      fontFamily: AppThemeData.semiBold,
-                                                      color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                                    ),
-                                                  ),
-                                                  TranslatedText(
-                                                    vendorModel.location.toString(),
-                                                    textAlign: TextAlign.start,
-                                                    maxLines: 1,
-                                                    style: TextStyle(
-                                                      overflow: TextOverflow.ellipsis,
-                                                      fontFamily: AppThemeData.medium,
-                                                      fontWeight: FontWeight.w500,
-                                                      color: themeChange.getThem() ? AppThemeData.grey400 : AppThemeData.grey400,
-                                                    ),
-                                                  ),
-                                                  (isOpen == false)
-                                                      ? Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            // DottedLine(
-                                                            //   dashColor: AppThemeData.grey400,
-                                                            //   dashLength: 6,   // dash ni lambai
-                                                            //   dashGapLength: 4, // gap vachche
-                                                            //   lineThickness: 1,
-                                                            // ),
-
-                                                            TranslatedText(
-                                                              Constant.getNextOpeningTime(vendorModel, DateTime.now()),
-                                                              maxLines: 1,
-                                                              overflow: TextOverflow.ellipsis,
-                                                              style: TextStyle(color: AppThemeData.danger300, fontFamily: AppThemeData.medium),
-                                                            )
-                                                          ],
-                                                        )
-                                                      : SizedBox()
-                                                ],
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
+                                  return Padding(
+                                    padding: const EdgeInsets.only(bottom: 16),
+                                    child: RestaurantCard(
+                                      vendorModel: vendorModel,
+                                      onTap: () {
+                                        Get.to(const RestaurantDetailsScreen(), arguments: {"vendorModel": vendorModel});
+                                      },
                                     ),
                                   );
                                 },
@@ -364,9 +121,9 @@ class SearchScreen extends StatelessWidget {
                                           "Foods",
                                           textAlign: TextAlign.start,
                                           style: TextStyle(
-                                            fontFamily: AppThemeData.semiBold,
+                                            fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
                                             fontSize: 16,
-                                            color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                            color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                           ),
                                         ),
                                         const Padding(
@@ -426,7 +183,7 @@ class SearchScreen extends StatelessWidget {
                                                                 productModel.nonveg == true ? "Non Veg." : "Pure veg.",
                                                                 style: TextStyle(
                                                                   color: productModel.nonveg == true ? AppThemeData.danger300 : AppThemeData.success400,
-                                                                  fontFamily: AppThemeData.semiBold,
+                                                                  fontFamily: 'Urbanist',
                                                                   fontWeight: FontWeight.w600,
                                                                 ),
                                                               ),
@@ -439,8 +196,8 @@ class SearchScreen extends StatelessWidget {
                                                             productModel.name.toString(),
                                                             style: TextStyle(
                                                               fontSize: 18,
-                                                              color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                                              fontFamily: AppThemeData.semiBold,
+                                                              color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                              fontFamily: 'Urbanist',
                                                               fontWeight: FontWeight.w600,
                                                             ),
                                                           ),
@@ -449,8 +206,8 @@ class SearchScreen extends StatelessWidget {
                                                                   Constant.amountShow(amount: price),
                                                                   style: TextStyle(
                                                                     fontSize: 16,
-                                                                    color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                                                    fontFamily: AppThemeData.semiBold,
+                                                                    color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                                    fontFamily: 'Urbanist',
                                                                     fontWeight: FontWeight.w600,
                                                                   ),
                                                                 )
@@ -460,8 +217,8 @@ class SearchScreen extends StatelessWidget {
                                                                       Constant.amountShow(amount: disPrice),
                                                                       style: TextStyle(
                                                                         fontSize: 16,
-                                                                        color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                                                        fontFamily: AppThemeData.semiBold,
+                                                                        color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                                        fontFamily: 'Urbanist',
                                                                         fontWeight: FontWeight.w600,
                                                                       ),
                                                                     ),
@@ -473,9 +230,9 @@ class SearchScreen extends StatelessWidget {
                                                                       style: TextStyle(
                                                                         fontSize: 14,
                                                                         decoration: TextDecoration.lineThrough,
-                                                                        decorationColor: themeChange.getThem() ? AppThemeData.grey500 : AppThemeData.grey400,
-                                                                        color: themeChange.getThem() ? AppThemeData.grey500 : AppThemeData.grey400,
-                                                                        fontFamily: AppThemeData.semiBold,
+                                                                        decorationColor: isDark ? AppThemeData.grey500 : AppThemeData.grey400,
+                                                                        color: isDark ? AppThemeData.grey500 : AppThemeData.grey400,
+                                                                        fontFamily: 'Urbanist',
                                                                         fontWeight: FontWeight.w600,
                                                                       ),
                                                                     ),
@@ -493,8 +250,8 @@ class SearchScreen extends StatelessWidget {
                                                               Text(
                                                                 "${Constant.calculateReview(reviewCount: productModel.reviewsCount!.toStringAsFixed(0), reviewSum: productModel.reviewsSum.toString())} (${productModel.reviewsCount!.toStringAsFixed(0)})",
                                                                 style: TextStyle(
-                                                                  color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                                                  fontFamily: AppThemeData.regular,
+                                                                  color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                                  fontFamily: 'Urbanist',
                                                                   fontWeight: FontWeight.w500,
                                                                 ),
                                                               ),
@@ -505,8 +262,8 @@ class SearchScreen extends StatelessWidget {
                                                             maxLines: 2,
                                                             style: TextStyle(
                                                               overflow: TextOverflow.ellipsis,
-                                                              color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                                              fontFamily: AppThemeData.regular,
+                                                              color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                              fontFamily: 'Urbanist',
                                                               fontWeight: FontWeight.w400,
                                                             ),
                                                           ),
@@ -530,7 +287,7 @@ class SearchScreen extends StatelessWidget {
                                                               gradient: LinearGradient(
                                                                 begin: const Alignment(-0.00, -1.00),
                                                                 end: const Alignment(0, 1),
-                                                                colors: [Colors.black.withOpacity(0), const Color(0xFF111827)],
+                                                                colors: [Colors.black.withValues(alpha: 0), AppThemeData.grey900],
                                                               ),
                                                             ),
                                                           ),

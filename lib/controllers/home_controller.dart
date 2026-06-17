@@ -23,7 +23,6 @@ class HomeController extends GetxController {
 
   RxBool isLoading = true.obs;
   RxBool isListView = true.obs;
-  RxBool isPopular = true.obs;
   RxString selectedOrderTypeValue = "Delivery".tr.obs;
 
   final Rx<PageController> pageController = PageController(viewportFraction: 0.877).obs;
@@ -37,7 +36,6 @@ class HomeController extends GetxController {
   final RxList<VendorCategoryModel> vendorCategoryModel = <VendorCategoryModel>[].obs;
   final RxList<VendorModel> allNearestRestaurant = <VendorModel>[].obs;
   final RxList<VendorModel> newArrivalRestaurantList = <VendorModel>[].obs;
-  final RxList<VendorModel> popularRestaurantList = <VendorModel>[].obs;
   final RxList<VendorModel> couponRestaurantList = <VendorModel>[].obs;
   final RxList<AdvertisementModel> advertisementList = <AdvertisementModel>[].obs;
   final RxList<CouponModel> couponList = <CouponModel>[].obs;
@@ -58,6 +56,10 @@ class HomeController extends GetxController {
   Future<void> getData() async {
     isLoading.value = true;
     selectedOrderTypeValue.value = Preferences.getString(Preferences.foodDeliveryType, defaultValue: "Delivery");
+    if (!Constant.takeawayEnabled && selectedOrderTypeValue.value == 'TakeAway') {
+      selectedOrderTypeValue.value = 'Delivery';
+      Preferences.setString(Preferences.foodDeliveryType, 'Delivery');
+    }
     await Future.wait([
       getTaxList(),
       getVendorCategory(),
@@ -121,14 +123,18 @@ class HomeController extends GetxController {
       // Batch update data lists (reduces rebuilds)
       allNearestRestaurant.assignAll(restaurants);
       newArrivalRestaurantList.assignAll(restaurants);
-      newArrivalRestaurantList.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
-      //:: ${Constant.timestampToDate(vendorModel.createdAt!)}
-      popularRestaurantList.assignAll(restaurants.take(10)); // only top 10
+      final nowMs = DateTime.now().millisecondsSinceEpoch;
+      newArrivalRestaurantList.sort((a, b) {
+        final ratingA = double.tryParse(Constant.calculateReview(reviewCount: a.reviewsCount.toString(), reviewSum: a.reviewsSum.toString())) ?? 0;
+        final ratingB = double.tryParse(Constant.calculateReview(reviewCount: b.reviewsCount.toString(), reviewSum: b.reviewsSum.toString())) ?? 0;
+        final ageA = (nowMs - (a.createdAt?.millisecondsSinceEpoch ?? 0)) / 86400000;
+        final ageB = (nowMs - (b.createdAt?.millisecondsSinceEpoch ?? 0)) / 86400000;
+        final scoreA = (ratingA * 0.7) + (1.0 / (1.0 + ageA / 30) * 5.0 * 0.3);
+        final scoreB = (ratingB * 0.7) + (1.0 / (1.0 + ageB / 30) * 5.0 * 0.3);
+        return scoreB.compareTo(scoreA);
+      });
       Constant.restaurantList = allNearestRestaurant;
-
-      // Filter categories used by restaurants
-      final usedCategoryIds = restaurants.expand((v) => v.categoryID ?? []).toSet();
-      vendorCategoryModel.retainWhere((cat) => usedCategoryIds.contains(cat.id));
+      _applyFilters();
 
       await _loadAdditionalData(restaurants);
       isLoading.value = false;
@@ -213,6 +219,87 @@ class HomeController extends GetxController {
       Constant.isZoneAvailable = inside;
       if (inside) break;
     }
+  }
+
+  // ── Quick Filter State ──
+  final RxSet<String> selectedFilters = <String>{}.obs;
+  final RxList<VendorModel> filteredAllList = <VendorModel>[].obs;
+  final RxList<VendorModel> openRestaurantList = <VendorModel>[].obs;
+  final RxList<VendorModel> closedRestaurantList = <VendorModel>[].obs;
+
+  static const List<String> filterKeys = ['Nearest', 'Rating 4.0+', 'Free Delivery', 'Offers'];
+
+  void toggleFilter(String filter) {
+    if (selectedFilters.contains(filter)) {
+      selectedFilters.remove(filter);
+    } else {
+      selectedFilters.add(filter);
+    }
+    _applyFilters();
+  }
+
+  void _applyFilters() {
+    if (selectedFilters.isEmpty) {
+      filteredAllList.assignAll(allNearestRestaurant);
+    } else {
+      filteredAllList.assignAll(_filterList(allNearestRestaurant));
+    }
+    _splitByStatus();
+  }
+
+  void _splitByStatus() {
+    openRestaurantList.assignAll(
+      filteredAllList.where((v) => Constant.statusCheckOpenORClose(vendorModel: v)),
+    );
+    final closed = filteredAllList.where((v) => !Constant.statusCheckOpenORClose(vendorModel: v)).toList();
+    final now = DateTime.now();
+    closed.sort((a, b) {
+      final aTime = Constant.getNextOpeningDateTime(a, now);
+      final bTime = Constant.getNextOpeningDateTime(b, now);
+      if (aTime == null && bTime == null) return 0;
+      if (aTime == null) return 1;
+      if (bTime == null) return -1;
+      return aTime.compareTo(bTime);
+    });
+    closedRestaurantList.assignAll(closed);
+  }
+
+  List<VendorModel> _filterList(List<VendorModel> source) {
+    var result = source.toList();
+
+    if (selectedFilters.contains('Rating 4.0+')) {
+      result = result.where((v) {
+        final rating = double.tryParse(Constant.calculateReview(
+                reviewCount: v.reviewsCount.toString(), reviewSum: v.reviewsSum.toString())) ??
+            0;
+        return rating >= 4.0;
+      }).toList();
+    }
+    if (selectedFilters.contains('Free Delivery')) {
+      result = result.where((v) => v.isSelfDelivery == true && Constant.isSelfDeliveryFeature == true).toList();
+    }
+    if (selectedFilters.contains('Offers')) {
+      final couponVendorIds = couponRestaurantList.map((v) => v.id).toSet();
+      result = result.where((v) => couponVendorIds.contains(v.id)).toList();
+    }
+    if (selectedFilters.contains('Nearest')) {
+      result.sort((a, b) {
+        final distA = double.tryParse(Constant.getDistance(
+                lat1: a.latitude.toString(),
+                lng1: a.longitude.toString(),
+                lat2: Constant.selectedLocation.location!.latitude.toString(),
+                lng2: Constant.selectedLocation.location!.longitude.toString())) ??
+            0;
+        final distB = double.tryParse(Constant.getDistance(
+                lat1: b.latitude.toString(),
+                lng1: b.longitude.toString(),
+                lat2: Constant.selectedLocation.location!.latitude.toString(),
+                lng2: Constant.selectedLocation.location!.longitude.toString())) ??
+            0;
+        return distA.compareTo(distB);
+      });
+    }
+    return result;
   }
 
   @override

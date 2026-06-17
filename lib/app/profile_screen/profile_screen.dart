@@ -35,9 +35,10 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final themeChange = Provider.of<DarkThemeProvider>(context, listen: false);
     return Scaffold(
-      backgroundColor: themeChange.getThem() ? AppThemeData.surfaceDark : AppThemeData.surface,
+      backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
       body: GetX(
           init: MyProfileController(),
           builder: (controller) {
@@ -55,17 +56,17 @@ class ProfileScreen extends StatelessWidget {
                               "My Profile",
                               style: TextStyle(
                                 fontSize: 24,
-                                color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                fontFamily: AppThemeData.semiBold,
-                                fontWeight: FontWeight.w500,
+                                color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                fontFamily: 'Urbanist',
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                             TranslatedText(
                               "Manage your personal information, preferences, and settings all in one place.",
                               style: TextStyle(
                                 fontSize: 16,
-                                color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                fontFamily: AppThemeData.regular,
+                                color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                fontFamily: 'Urbanist',
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
@@ -76,9 +77,9 @@ class ProfileScreen extends StatelessWidget {
                               "General Information",
                               style: TextStyle(
                                 fontSize: 12,
-                                color: themeChange.getThem() ? AppThemeData.grey400 : AppThemeData.grey500,
-                                fontFamily: AppThemeData.semiBold,
-                                fontWeight: FontWeight.w500,
+                                color: isDark ? AppThemeData.grey400 : AppThemeData.grey500,
+                                fontFamily: 'Urbanist',
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                             const SizedBox(
@@ -87,7 +88,7 @@ class ProfileScreen extends StatelessWidget {
                             Container(
                               width: Responsive.width(100, context),
                               decoration: ShapeDecoration(
-                                color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                                color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                               ),
                               child: Padding(
@@ -96,18 +97,18 @@ class ProfileScreen extends StatelessWidget {
                                   children: [
                                     Constant.userModel == null
                                         ? const SizedBox()
-                                        : cardDecoration(themeChange, controller, "assets/images/ic_profile.svg", "Profile Information", () {
+                                        : cardDecoration(isDark, themeChange, controller, "assets/images/ic_profile.svg", "Profile Information", () {
                                             Get.to(const EditProfileScreen());
                                           }),
                                     if (Constant.isEnabledForCustomer == true)
-                                      cardDecoration(themeChange, controller, "assets/images/ic_dinin.svg", "Dine-In", () {
+                                      cardDecoration(isDark, themeChange, controller, "assets/images/ic_dinin.svg", "Dine-In", () {
                                         Get.to(const DineInScreen());
                                       }),
-                                    cardDecoration(themeChange, controller, "assets/images/ic_gift.svg", "Gift Card", () {
+                                    cardDecoration(isDark, themeChange, controller, "assets/images/ic_gift.svg", "Gift Card", () {
                                       Get.to(const GiftCardScreen());
                                     }),
                                     if (Constant.isCashbackActive == true)
-                                      cardDecoration(themeChange, controller, "assets/icons/ic_cashback_Offer.svg", "Cashback Offers", () {
+                                      cardDecoration(isDark, themeChange, controller, "assets/icons/ic_cashback_Offer.svg", "Cashback Offers", () {
                                         Get.to(const CashbackOffersListScreen());
                                       }),
                                   ],
@@ -125,9 +126,9 @@ class ProfileScreen extends StatelessWidget {
                                         "Bookings Information",
                                         style: TextStyle(
                                           fontSize: 12,
-                                          color: themeChange.getThem() ? AppThemeData.grey400 : AppThemeData.grey500,
-                                          fontFamily: AppThemeData.semiBold,
-                                          fontWeight: FontWeight.w500,
+                                          color: isDark ? AppThemeData.grey400 : AppThemeData.grey500,
+                                          fontFamily: 'Urbanist',
+                                          fontWeight: FontWeight.w600,
                                         ),
                                       ),
                                       const SizedBox(
@@ -136,14 +137,14 @@ class ProfileScreen extends StatelessWidget {
                                       Container(
                                         width: Responsive.width(100, context),
                                         decoration: ShapeDecoration(
-                                          color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                                          color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                         ),
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                                           child: Column(
                                             children: [
-                                              cardDecoration(themeChange, controller, "assets/icons/ic_dinin_order.svg", "Dine-In Booking", () {
+                                              cardDecoration(isDark, themeChange, controller, "assets/icons/ic_dinin_order.svg", "Dine-In Booking", () {
                                                 Get.to(const DineInBookingScreen());
                                               }),
                                             ],
@@ -160,9 +161,9 @@ class ProfileScreen extends StatelessWidget {
                               "Preferences",
                               style: TextStyle(
                                 fontSize: 12,
-                                color: themeChange.getThem() ? AppThemeData.grey400 : AppThemeData.grey500,
-                                fontFamily: AppThemeData.semiBold,
-                                fontWeight: FontWeight.w500,
+                                color: isDark ? AppThemeData.grey400 : AppThemeData.grey500,
+                                fontFamily: 'Urbanist',
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                             const SizedBox(
@@ -171,17 +172,17 @@ class ProfileScreen extends StatelessWidget {
                             Container(
                               width: Responsive.width(100, context),
                               decoration: ShapeDecoration(
-                                color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                                color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                               ),
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                                 child: Column(
                                   children: [
-                                    cardDecoration(themeChange, controller, "assets/icons/ic_change_language.svg", "Change Language", () {
+                                    cardDecoration(isDark, themeChange, controller, "assets/icons/ic_change_language.svg", "Change Language", () {
                                       Get.to(const ChangeLanguageScreen());
                                     }),
-                                    cardDecoration(themeChange, controller, "assets/icons/ic_light_dark.svg", "Dark Mode", () {}),
+                                    cardDecoration(isDark, themeChange, controller, "assets/icons/ic_light_dark.svg", "Dark Mode", () {}),
                                   ],
                                 ),
                               ),
@@ -193,9 +194,9 @@ class ProfileScreen extends StatelessWidget {
                               "Social",
                               style: TextStyle(
                                 fontSize: 12,
-                                color: themeChange.getThem() ? AppThemeData.grey400 : AppThemeData.grey500,
-                                fontFamily: AppThemeData.semiBold,
-                                fontWeight: FontWeight.w500,
+                                color: isDark ? AppThemeData.grey400 : AppThemeData.grey500,
+                                fontFamily: 'Urbanist',
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                             const SizedBox(
@@ -204,7 +205,7 @@ class ProfileScreen extends StatelessWidget {
                             Container(
                               width: Responsive.width(100, context),
                               decoration: ShapeDecoration(
-                                color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                                color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                               ),
                               child: Padding(
@@ -213,15 +214,15 @@ class ProfileScreen extends StatelessWidget {
                                   children: [
                                     Constant.userModel == null
                                         ? const SizedBox()
-                                        : cardDecoration(themeChange, controller, "assets/icons/ic_refer.svg", "Refer a Friend", () {
+                                        : cardDecoration(isDark, themeChange, controller, "assets/icons/ic_refer.svg", "Refer a Friend", () {
                                             Get.to(const ReferFriendScreen());
                                           }),
-                                    cardDecoration(themeChange, controller, "assets/icons/ic_share.svg", "Share app", () {
+                                    cardDecoration(isDark, themeChange, controller, "assets/icons/ic_share.svg", "Share app", () {
                                       Share.share(
                                           '${'Check out Eatsipy, your ultimate food delivery application!'} \n\n${'Google Play:'} ${Constant.googlePlayLink} \n\n${'App Store:'} ${Constant.appStoreLink}',
                                           subject: 'Look what I made!');
                                     }),
-                                    cardDecoration(themeChange, controller, "assets/icons/ic_rate.svg", "Rate the app", () {
+                                    cardDecoration(isDark, themeChange, controller, "assets/icons/ic_rate.svg", "Rate the app", () {
                                       final InAppReview inAppReview = InAppReview.instance;
                                       inAppReview.requestReview();
                                     }),
@@ -241,9 +242,9 @@ class ProfileScreen extends StatelessWidget {
                                         "Communication",
                                         style: TextStyle(
                                           fontSize: 12,
-                                          color: themeChange.getThem() ? AppThemeData.grey400 : AppThemeData.grey500,
-                                          fontFamily: AppThemeData.semiBold,
-                                          fontWeight: FontWeight.w500,
+                                          color: isDark ? AppThemeData.grey400 : AppThemeData.grey500,
+                                          fontFamily: 'Urbanist',
+                                          fontWeight: FontWeight.w600,
                                         ),
                                       ),
                                       const SizedBox(
@@ -252,17 +253,17 @@ class ProfileScreen extends StatelessWidget {
                                       Container(
                                         width: Responsive.width(100, context),
                                         decoration: ShapeDecoration(
-                                          color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                                          color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                         ),
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                                           child: Column(
                                             children: [
-                                              cardDecoration(themeChange, controller, "assets/icons/ic_restaurant_chat.svg", "Restaurant Inbox", () {
+                                              cardDecoration(isDark, themeChange, controller, "assets/icons/ic_restaurant_chat.svg", "Restaurant Inbox", () {
                                                 Get.to(const RestaurantInboxScreen());
                                               }),
-                                              cardDecoration(themeChange, controller, "assets/icons/ic_restaurant_driver.svg", "Driver Inbox", () {
+                                              cardDecoration(isDark, themeChange, controller, "assets/icons/ic_restaurant_driver.svg", "Driver Inbox", () {
                                                 Get.to(const DriverInboxScreen());
                                               }),
                                             ],
@@ -278,9 +279,9 @@ class ProfileScreen extends StatelessWidget {
                               "Legal",
                               style: TextStyle(
                                 fontSize: 12,
-                                color: themeChange.getThem() ? AppThemeData.grey400 : AppThemeData.grey500,
-                                fontFamily: AppThemeData.semiBold,
-                                fontWeight: FontWeight.w500,
+                                color: isDark ? AppThemeData.grey400 : AppThemeData.grey500,
+                                fontFamily: 'Urbanist',
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                             const SizedBox(
@@ -289,7 +290,7 @@ class ProfileScreen extends StatelessWidget {
                             Container(
                               width: Responsive.width(100, context),
                               decoration: ShapeDecoration(
-                                color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                                color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                               ),
                               child: Padding(
@@ -297,15 +298,15 @@ class ProfileScreen extends StatelessWidget {
                                 child: Column(
                                   children: [
                                     if (Constant.userModel?.id != null)
-                                      cardDecoration(themeChange, controller, "assets/icons/ic_help_support.svg", "Help & Support", () {
+                                      cardDecoration(isDark, themeChange, controller, "assets/icons/ic_help_support.svg", "Help & Support", () {
                                         Get.to(HelpSupportScreen(isNavigateViaNotification: false));
                                       }),
-                                    cardDecoration(themeChange, controller, "assets/icons/ic_privacy_policy.svg", "Privacy Policy", () {
+                                    cardDecoration(isDark, themeChange, controller, "assets/icons/ic_privacy_policy.svg", "Privacy Policy", () {
                                       Get.to(const TermsAndConditionScreen(
                                         type: "privacy",
                                       ));
                                     }),
-                                    cardDecoration(themeChange, controller, "assets/icons/ic_tearm_condition.svg", "Terms and Conditions", () {
+                                    cardDecoration(isDark, themeChange, controller, "assets/icons/ic_tearm_condition.svg", "Terms and Conditions", () {
                                       Get.to(const TermsAndConditionScreen(
                                         type: "termAndCondition",
                                       ));
@@ -320,7 +321,7 @@ class ProfileScreen extends StatelessWidget {
                             Container(
                               width: Responsive.width(100, context),
                               decoration: ShapeDecoration(
-                                color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                                color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                               ),
                               child: Padding(
@@ -328,14 +329,14 @@ class ProfileScreen extends StatelessWidget {
                                 child: Column(
                                   children: [
                                     if (Constant.userModel?.provider == 'email')
-                                      cardDecoration(themeChange, controller, "assets/icons/ic_lock.svg", "Change Password", () {
+                                      cardDecoration(isDark, themeChange, controller, "assets/icons/ic_lock.svg", "Change Password", () {
                                         Get.to(const ChangePasswordScreen());
                                       }),
                                     Constant.userModel == null
-                                        ? cardDecoration(themeChange, controller, "assets/icons/ic_logout.svg", "Log In", () {
+                                        ? cardDecoration(isDark, themeChange, controller, "assets/icons/ic_logout.svg", "Log In", () {
                                             Get.offAll(const LoginScreen());
                                           })
-                                        : cardDecoration(themeChange, controller, "assets/icons/ic_logout.svg", "Log out", () {
+                                        : cardDecoration(isDark, themeChange, controller, "assets/icons/ic_logout.svg", "Log out", () {
                                             showDialog(
                                                 context: context,
                                                 builder: (BuildContext context) {
@@ -419,9 +420,9 @@ class ProfileScreen extends StatelessWidget {
                                             "Delete Account",
                                             textAlign: TextAlign.start,
                                             style: TextStyle(
-                                              fontFamily: AppThemeData.medium,
+                                              fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
                                               fontSize: 16,
-                                              color: themeChange.getThem() ? AppThemeData.danger300 : AppThemeData.danger300,
+                                              color: isDark ? AppThemeData.danger300 : AppThemeData.danger300,
                                             ),
                                           )
                                         ],
@@ -433,9 +434,9 @@ class ProfileScreen extends StatelessWidget {
                                 "V : ${Constant.appVersion}",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontFamily: AppThemeData.medium,
+                                  fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
                                   fontSize: 14,
-                                  color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                  color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                 ),
                               ),
                             ),
@@ -449,7 +450,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Padding cardDecoration(DarkThemeProvider themeChange, MyProfileController controller, String image, String title, Function()? onPress) {
+  Padding cardDecoration(bool isDark, DarkThemeProvider themeChange, MyProfileController controller, String image, String title, Function()? onPress) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: InkWell(
@@ -462,7 +463,7 @@ class ProfileScreen extends StatelessWidget {
             SvgPicture.asset(
               image,
               colorFilter: title == 'Change Password'
-                  ? themeChange.getThem()
+                  ? isDark
                       ? ColorFilter.mode(AppThemeData.info50, BlendMode.srcIn)
                       : ColorFilter.mode(AppThemeData.primary600, BlendMode.srcIn)
                   : title == 'Help & Support'
@@ -482,13 +483,13 @@ class ProfileScreen extends StatelessWidget {
                 title,
                 textAlign: TextAlign.start,
                 style: TextStyle(
-                  fontFamily: AppThemeData.medium,
+                  fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
                   fontSize: 16,
                   color: title == "Log out"
                       ? AppThemeData.danger300
                       : title == "Log In"
                           ? AppThemeData.success500
-                          : themeChange.getThem()
+                          : isDark
                               ? AppThemeData.grey100
                               : AppThemeData.grey800,
                 ),

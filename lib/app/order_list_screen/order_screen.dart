@@ -10,7 +10,6 @@ import 'package:eatsipy_customer/models/vendor_model.dart';
 import 'package:eatsipy_customer/themes/app_them_data.dart';
 import 'package:eatsipy_customer/themes/responsive.dart';
 import 'package:eatsipy_customer/themes/round_button_fill.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:eatsipy_customer/utils/dynamic_traslator.dart';
 import 'package:eatsipy_customer/utils/fire_store_utils.dart';
 import 'package:eatsipy_customer/utils/network_image_widget.dart';
@@ -19,14 +18,13 @@ import 'package:eatsipy_customer/widget/my_separator.dart';
 import 'package:flutter/material.dart';
 import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 class OrderScreen extends StatelessWidget {
   const OrderScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GetX(
         init: OrderController(),
         builder: (controller) {
@@ -51,7 +49,7 @@ class OrderScreen extends StatelessWidget {
                               ),
                               TranslatedText(
                                 "Please Log In to Continue",
-                                style: TextStyle(color: themeChange.getThem() ? AppThemeData.grey100 : AppThemeData.grey800, fontSize: 22, fontFamily: AppThemeData.semiBold),
+                                style: TextStyle(color: isDark ? AppThemeData.grey100 : AppThemeData.grey800, fontSize: 22, fontFamily: 'Urbanist', fontWeight: FontWeight.w600),
                               ),
                               const SizedBox(
                                 height: 5,
@@ -59,7 +57,7 @@ class OrderScreen extends StatelessWidget {
                               TranslatedText(
                                 "You’re not logged in. Please sign in to access your account and explore all features.",
                                 textAlign: TextAlign.center,
-                                style: TextStyle(color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey500, fontSize: 16, fontFamily: AppThemeData.bold),
+                                style: TextStyle(color: isDark ? AppThemeData.grey50 : AppThemeData.grey500, fontSize: 16, fontFamily: 'Urbanist', fontWeight: FontWeight.w700),
                               ),
                               const SizedBox(
                                 height: 20,
@@ -93,16 +91,16 @@ class OrderScreen extends StatelessWidget {
                                             "My Order",
                                             style: TextStyle(
                                               fontSize: 24,
-                                              color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                              fontFamily: AppThemeData.semiBold,
-                                              fontWeight: FontWeight.w500,
+                                              color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                              fontFamily: 'Urbanist',
+                                              fontWeight: FontWeight.w600,
                                             ),
                                           ),
                                           TranslatedText(
                                             "Keep track your delivered, In Progress and Rejected food all in just one place.",
                                             style: TextStyle(
-                                              color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                              fontFamily: AppThemeData.regular,
+                                              color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                              fontFamily: 'Urbanist',
                                               fontWeight: FontWeight.w400,
                                             ),
                                           ),
@@ -126,7 +124,7 @@ class OrderScreen extends StatelessWidget {
                                               Container(
                                                 padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
                                                 decoration: ShapeDecoration(
-                                                  color: themeChange.getThem() ? AppThemeData.grey800 : AppThemeData.grey100,
+                                                  color: isDark ? AppThemeData.grey800 : AppThemeData.grey100,
                                                   shape: RoundedRectangleBorder(
                                                     borderRadius: BorderRadius.circular(120),
                                                   ),
@@ -139,7 +137,7 @@ class OrderScreen extends StatelessWidget {
                                                   isScrollable: true,
                                                   tabAlignment: TabAlignment.start,
                                                   indicatorWeight: 0.5,
-                                                  unselectedLabelColor: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                  unselectedLabelColor: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                                   dividerColor: Colors.transparent,
                                                   indicatorSize: TabBarIndicatorSize.tab,
                                                   tabs: [
@@ -172,14 +170,27 @@ class OrderScreen extends StatelessWidget {
                                                         ? Constant.showEmptyView(message: "Order Not Found")
                                                         : RefreshIndicator(
                                                             onRefresh: () => controller.getOrder(),
-                                                            child: ListView.builder(
-                                                              itemCount: controller.allList.length,
-                                                              shrinkWrap: true,
-                                                              padding: EdgeInsets.zero,
-                                                              itemBuilder: (context, index) {
-                                                                OrderModel orderModel = controller.allList[index];
-                                                                return itemView(themeChange, context, orderModel, controller);
+                                                            child: NotificationListener<ScrollNotification>(
+                                                              onNotification: (notification) {
+                                                                if (notification.metrics.pixels >= notification.metrics.maxScrollExtent - 200) {
+                                                                  controller.loadMoreOrders();
+                                                                }
+                                                                return false;
                                                               },
+                                                              child: ListView.builder(
+                                                                itemCount: controller.allList.length + (controller.hasMore.value ? 1 : 0),
+                                                                padding: EdgeInsets.zero,
+                                                                itemBuilder: (context, index) {
+                                                                  if (index >= controller.allList.length) {
+                                                                    return Padding(
+                                                                      padding: const EdgeInsets.all(16),
+                                                                      child: Center(child: controller.isLoadingMore.value ? const CircularProgressIndicator() : const SizedBox()),
+                                                                    );
+                                                                  }
+                                                                  OrderModel orderModel = controller.allList[index];
+                                                                  return itemView(isDark, context, orderModel, controller);
+                                                                },
+                                                              ),
                                                             ),
                                                           ),
                                                     controller.inProgressList.isEmpty
@@ -188,11 +199,10 @@ class OrderScreen extends StatelessWidget {
                                                             onRefresh: () => controller.getOrder(),
                                                             child: ListView.builder(
                                                               itemCount: controller.inProgressList.length,
-                                                              shrinkWrap: true,
                                                               padding: EdgeInsets.zero,
                                                               itemBuilder: (context, index) {
                                                                 OrderModel orderModel = controller.inProgressList[index];
-                                                                return itemView(themeChange, context, orderModel, controller);
+                                                                return itemView(isDark, context, orderModel, controller);
                                                               },
                                                             ),
                                                           ),
@@ -202,11 +212,10 @@ class OrderScreen extends StatelessWidget {
                                                             onRefresh: () => controller.getOrder(),
                                                             child: ListView.builder(
                                                               itemCount: controller.deliveredList.length,
-                                                              shrinkWrap: true,
                                                               padding: EdgeInsets.zero,
                                                               itemBuilder: (context, index) {
                                                                 OrderModel orderModel = controller.deliveredList[index];
-                                                                return itemView(themeChange, context, orderModel, controller);
+                                                                return itemView(isDark, context, orderModel, controller);
                                                               },
                                                             ),
                                                           ),
@@ -216,11 +225,10 @@ class OrderScreen extends StatelessWidget {
                                                             onRefresh: () => controller.getOrder(),
                                                             child: ListView.builder(
                                                               itemCount: controller.cancelledList.length,
-                                                              shrinkWrap: true,
                                                               padding: EdgeInsets.zero,
                                                               itemBuilder: (context, index) {
                                                                 OrderModel orderModel = controller.cancelledList[index];
-                                                                return itemView(themeChange, context, orderModel, controller);
+                                                                return itemView(isDark, context, orderModel, controller);
                                                               },
                                                             ),
                                                           ),
@@ -230,11 +238,10 @@ class OrderScreen extends StatelessWidget {
                                                             onRefresh: () => controller.getOrder(),
                                                             child: ListView.builder(
                                                               itemCount: controller.rejectedList.length,
-                                                              shrinkWrap: true,
                                                               padding: EdgeInsets.zero,
                                                               itemBuilder: (context, index) {
                                                                 OrderModel orderModel = controller.rejectedList[index];
-                                                                return itemView(themeChange, context, orderModel, controller);
+                                                                return itemView(isDark, context, orderModel, controller);
                                                               },
                                                             ),
                                                           ),
@@ -253,12 +260,12 @@ class OrderScreen extends StatelessWidget {
         });
   }
 
-  Padding itemView(DarkThemeProvider themeChange, BuildContext context, OrderModel orderModel, OrderController controller) {
+  Padding itemView(bool isDark, BuildContext context, OrderModel orderModel, OrderController controller) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: Container(
         decoration: ShapeDecoration(
-          color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+          color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -286,7 +293,7 @@ class OrderScreen extends StatelessWidget {
                             gradient: LinearGradient(
                               begin: const Alignment(0.00, 1.00),
                               end: const Alignment(0, -1),
-                              colors: [Colors.black.withOpacity(0), AppThemeData.grey900],
+                              colors: [Colors.black.withValues(alpha: 0), AppThemeData.grey900],
                             ),
                           ),
                         ),
@@ -305,8 +312,8 @@ class OrderScreen extends StatelessWidget {
                           textAlign: TextAlign.right,
                           style: TextStyle(
                             color: Constant.statusColor(status: orderModel.status.toString()),
-                            fontFamily: AppThemeData.semiBold,
-                            fontWeight: FontWeight.w500,
+                            fontFamily: 'Urbanist',
+                            fontWeight: FontWeight.w600,
                             fontSize: 12,
                           ),
                         ),
@@ -317,9 +324,9 @@ class OrderScreen extends StatelessWidget {
                           orderModel.vendor!.title.toString(),
                           style: TextStyle(
                             fontSize: 16,
-                            color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                            fontFamily: AppThemeData.medium,
-                            fontWeight: FontWeight.w400,
+                            color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                            fontFamily: 'Urbanist',
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                         const SizedBox(
@@ -328,8 +335,8 @@ class OrderScreen extends StatelessWidget {
                         TranslatedText(
                           Constant.timestampToDateTime(orderModel.createdAt!),
                           style: TextStyle(
-                            color: themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
-                            fontFamily: AppThemeData.medium,
+                            color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
+                            fontFamily: 'Urbanist',
                             fontWeight: FontWeight.w500,
                           ),
                         )
@@ -354,8 +361,8 @@ class OrderScreen extends StatelessWidget {
                         child: TranslatedText(
                           "${cartProduct.quantity} x ${cartProduct.name.toString()}",
                           style: TextStyle(
-                            color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                            fontFamily: AppThemeData.regular,
+                            color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                            fontFamily: 'Urbanist',
                             fontWeight: FontWeight.w400,
                           ),
                         ),
@@ -366,9 +373,9 @@ class OrderScreen extends StatelessWidget {
                                 ? (double.parse('${cartProduct.price ?? 0}') * double.parse('${cartProduct.quantity ?? 0}')).toString()
                                 : (double.parse('${cartProduct.discountPrice ?? 0}') * double.parse('${cartProduct.quantity ?? 0}')).toString()),
                         style: TextStyle(
-                          color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                          fontFamily: AppThemeData.semiBold,
-                          fontWeight: FontWeight.w500,
+                          color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                          fontFamily: 'Urbanist',
+                          fontWeight: FontWeight.w600,
                         ),
                       )
                     ],
@@ -377,7 +384,7 @@ class OrderScreen extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 14),
-                child: MySeparator(color: themeChange.getThem() ? AppThemeData.grey700 : AppThemeData.grey200),
+                child: MySeparator(color: isDark ? AppThemeData.grey700 : AppThemeData.grey200),
               ),
               Row(
                 children: [
@@ -422,8 +429,8 @@ class OrderScreen extends StatelessWidget {
                                                       "Reorder",
                                                       textAlign: TextAlign.center,
                                                       style: TextStyle(
-                                                          color: themeChange.getThem() ? AppThemeData.primary300 : AppThemeData.primary300,
-                                                          fontFamily: AppThemeData.semiBold,
+                                                          color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
+                                                          fontFamily: 'Urbanist',
                                                           fontWeight: FontWeight.w600,
                                                           fontSize: 16),
                                                     ),
@@ -445,8 +452,8 @@ class OrderScreen extends StatelessWidget {
                                                           "Reorder",
                                                           textAlign: TextAlign.center,
                                                           style: TextStyle(
-                                                              color: themeChange.getThem() ? AppThemeData.primary300 : AppThemeData.primary300,
-                                                              fontFamily: AppThemeData.semiBold,
+                                                              color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
+                                                              fontFamily: 'Urbanist',
                                                               fontWeight: FontWeight.w600,
                                                               fontSize: 16),
                                                         ),
@@ -472,8 +479,8 @@ class OrderScreen extends StatelessWidget {
                                                     "Reorder",
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
-                                                        color: themeChange.getThem() ? AppThemeData.primary300 : AppThemeData.primary300,
-                                                        fontFamily: AppThemeData.semiBold,
+                                                        color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
+                                                        fontFamily: 'Urbanist',
                                                         fontWeight: FontWeight.w600,
                                                         fontSize: 16),
                                                   ),
@@ -497,7 +504,7 @@ class OrderScreen extends StatelessWidget {
                                   "Track Order",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                      color: themeChange.getThem() ? AppThemeData.primary300 : AppThemeData.primary300, fontFamily: AppThemeData.semiBold, fontWeight: FontWeight.w600, fontSize: 16),
+                                      color: isDark ? AppThemeData.primary300 : AppThemeData.primary300, fontFamily: 'Urbanist', fontWeight: FontWeight.w600, fontSize: 16),
                                 ),
                               ),
                             )
@@ -515,7 +522,7 @@ class OrderScreen extends StatelessWidget {
                       child: TranslatedText(
                         "View Details",
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900, fontFamily: AppThemeData.semiBold, fontWeight: FontWeight.w600, fontSize: 16),
+                        style: TextStyle(color: isDark ? AppThemeData.grey50 : AppThemeData.grey900, fontFamily: 'Urbanist', fontWeight: FontWeight.w600, fontSize: 16),
                       ),
                     ),
                   ),

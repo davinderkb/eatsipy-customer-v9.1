@@ -3,11 +3,9 @@ import 'package:eatsipy_customer/constant/show_toast_dialog.dart';
 import 'package:eatsipy_customer/controllers/scan_qr_code_controller.dart';
 import 'package:eatsipy_customer/models/vendor_model.dart';
 import 'package:eatsipy_customer/themes/app_them_data.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 import 'package:qr_code_dart_scan/qr_code_dart_scan.dart';
 
 class ScanQrCodeScreen extends StatelessWidget {
@@ -15,7 +13,7 @@ class ScanQrCodeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GetBuilder(
       init: ScanQrCodeController(),
       builder: (controller) {
@@ -23,13 +21,13 @@ class ScanQrCodeScreen extends StatelessWidget {
           appBar: AppBar(
             centerTitle: false,
             titleSpacing: 0,
-            backgroundColor: themeChange.getThem() ? AppThemeData.surfaceDark : AppThemeData.surface,
+            backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
             title: TranslatedText(
               "Scan QRcode",
               style: TextStyle(
                 fontSize: 16,
-                color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                fontFamily: AppThemeData.medium,
+                color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                fontFamily: 'Urbanist',
                 fontWeight: FontWeight.w500,
               ),
             ),

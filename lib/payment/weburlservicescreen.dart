@@ -1,11 +1,9 @@
 import 'package:eatsipy_customer/constant/constant.dart';
 import 'package:eatsipy_customer/constant/show_toast_dialog.dart';
 import 'package:eatsipy_customer/themes/app_them_data.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebUrlServiceScreen extends StatefulWidget {
@@ -60,11 +58,12 @@ class _WebUrlServiceScreenState extends State<WebUrlServiceScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
-    return WillPopScope(
-      onWillPop: () async {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
         _showMyDialog();
-        return false;
       },
       child: Scaffold(
         appBar: AppBar(
@@ -76,7 +75,7 @@ class _WebUrlServiceScreenState extends State<WebUrlServiceScreen> {
               },
               child: Icon(
                 Icons.arrow_back,
-                color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey800,
+                color: isDark ? AppThemeData.grey50 : AppThemeData.grey800,
               ),
             )),
         body: WebViewWidget(controller: controller),

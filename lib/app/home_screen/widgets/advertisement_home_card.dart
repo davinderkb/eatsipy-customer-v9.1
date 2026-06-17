@@ -1,7 +1,7 @@
 import 'package:eatsipy_customer/app/restaurant_details_screen/restaurant_details_screen.dart';
 import 'package:eatsipy_customer/constant/constant.dart';
 import 'package:eatsipy_customer/constant/show_toast_dialog.dart';
-import 'package:eatsipy_customer/controllers/advertisement_list_controller.dart';
+import 'package:eatsipy_customer/controllers/home_controller.dart';
 import 'package:eatsipy_customer/models/advertisement_model.dart';
 import 'package:eatsipy_customer/models/favourite_model.dart';
 import 'package:eatsipy_customer/models/vendor_model.dart';
@@ -9,59 +9,17 @@ import 'package:eatsipy_customer/themes/app_them_data.dart';
 import 'package:eatsipy_customer/themes/responsive.dart';
 import 'package:eatsipy_customer/utils/fire_store_utils.dart';
 import 'package:eatsipy_customer/utils/network_image_widget.dart';
+import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:eatsipy_customer/widget/video_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:eatsipy_customer/widget/translated_text.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
-class AllAdvertisementScreen extends StatelessWidget {
-  const AllAdvertisementScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return GetX(
-        init: AdvertisementListController(),
-        builder: (controller) {
-          return Scaffold(
-              appBar: AppBar(
-                backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
-                centerTitle: false,
-                titleSpacing: 0,
-                title: TranslatedText(
-                  "Highlights for you",
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
-                    fontSize: 16,
-                    color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
-                  ),
-                ),
-              ),
-              body: controller.isLoading.value
-                  ? Constant.loader()
-                  : controller.advertisementList.isEmpty
-                      ? Constant.showEmptyView(message: "Highlights for you not found.")
-                      : Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: ListView.builder(
-                            physics: const BouncingScrollPhysics(),
-                            itemCount: controller.advertisementList.length,
-                            padding: EdgeInsets.all(0),
-                            itemBuilder: (BuildContext context, int index) {
-                              return AdvertisementCard(controller: controller, model: controller.advertisementList[index]);
-                            },
-                          )));
-        });
-  }
-}
-
-class AdvertisementCard extends StatelessWidget {
+class AdvertisementHomeCard extends StatelessWidget {
   final AdvertisementModel model;
-  final AdvertisementListController controller;
+  final HomeController controller;
 
-  const AdvertisementCard({super.key, required this.controller, required this.model});
+  const AdvertisementHomeCard({super.key, required this.controller, required this.model});
 
   @override
   Widget build(BuildContext context) {
@@ -74,8 +32,8 @@ class AdvertisementCard extends StatelessWidget {
         Get.to(const RestaurantDetailsScreen(), arguments: {"vendorModel": vendorModel});
       },
       child: Container(
-        margin: EdgeInsets.only(bottom: 16),
-        width: Responsive.width(80, context),
+        margin: EdgeInsets.only(right: 16),
+        width: Responsive.width(70, context),
         decoration: BoxDecoration(
           color: isDark ? AppThemeData.info600 : AppThemeData.surface,
           borderRadius: BorderRadius.circular(16),
@@ -98,14 +56,14 @@ class AdvertisementCard extends StatelessWidget {
                         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
                         child: NetworkImageWidget(
                           imageUrl: model.coverImage ?? '',
-                          height: 150,
+                          height: 135,
                           width: double.infinity,
                           fit: BoxFit.cover,
                         ),
                       )
                     : VideoAdvWidget(
                         url: model.video ?? '',
-                        height: 150,
+                        height: 135,
                         width: double.infinity,
                       ),
                 if (model.type != 'video_promotion' && model.vendorId != null && (model.showRating == true || model.showReview == true))
@@ -143,8 +101,9 @@ class AdvertisementCard extends StatelessWidget {
                                           width: 5,
                                         ),
                                       Text(
-                                        "${model.showRating == true ? Constant.calculateReview(reviewCount: vendorModel.reviewsCount!.toStringAsFixed(0), reviewSum: vendorModel.reviewsSum.toString()) : ''}${model.showRating == true && model.showReview == true ? ' ' : ''}${model.showReview == true ? '(${vendorModel.reviewsCount!.toStringAsFixed(0)})' : ''}",
+                                        "${model.showRating == true ? Constant.calculateReview(reviewCount: vendorModel.reviewsCount!.toStringAsFixed(0), reviewSum: vendorModel.reviewsSum.toString()) : ''} ${model.showReview == true ? '(${vendorModel.reviewsCount!.toStringAsFixed(0)})' : ''}",
                                         style: TextStyle(
+                                          fontSize: 14,
                                           color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
                                           fontFamily: 'Urbanist',
                                           fontWeight: FontWeight.w600,
@@ -184,14 +143,14 @@ class AdvertisementCard extends StatelessWidget {
                           model.title ?? '',
                           style: TextStyle(
                             color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
-                            fontSize: 16,
+                            fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),
                         TranslatedText(
                           model.description ?? '',
-                          style: TextStyle(fontSize: 14, fontFamily: 'Urbanist', fontWeight: FontWeight.w500, color: isDark ? AppThemeData.grey400 : AppThemeData.grey600),
+                          style: TextStyle(fontSize: 12, fontFamily: 'Urbanist', fontWeight: FontWeight.w500, color: isDark ? AppThemeData.grey400 : AppThemeData.grey600),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
                         ),
@@ -199,9 +158,9 @@ class AdvertisementCard extends StatelessWidget {
                     ),
                   ),
                   model.type == 'restaurant_promotion'
-                      ? Obx(
-                          () => IconButton(
-                            icon: controller.favouriteList.where((p0) => p0.restaurantId == model.vendorId).isNotEmpty
+                      ? IconButton(
+                          icon: Obx(
+                            () => controller.favouriteList.where((p0) => p0.restaurantId == model.vendorId).isNotEmpty
                                 ? SvgPicture.asset(
                                     "assets/icons/ic_like_fill.svg",
                                   )
@@ -209,25 +168,26 @@ class AdvertisementCard extends StatelessWidget {
                                     "assets/icons/ic_like.svg",
                                     colorFilter: ColorFilter.mode(isDark ? AppThemeData.grey400 : AppThemeData.grey600, BlendMode.srcIn),
                                   ),
-                            onPressed: () async {
-                              if (controller.favouriteList.where((p0) => p0.restaurantId == model.vendorId).isNotEmpty) {
-                                FavouriteModel favouriteModel = FavouriteModel(restaurantId: model.vendorId, userId: FireStoreUtils.getCurrentUid());
-                                controller.favouriteList.removeWhere((item) => item.restaurantId == model.vendorId);
-                                await FireStoreUtils.removeFavouriteRestaurant(favouriteModel);
-                              } else {
-                                FavouriteModel favouriteModel = FavouriteModel(restaurantId: model.vendorId, userId: FireStoreUtils.getCurrentUid());
-                                controller.favouriteList.add(favouriteModel);
-                                await FireStoreUtils.setFavouriteRestaurant(favouriteModel);
-                              }
-                            },
                           ),
+                          onPressed: () async {
+                            if (controller.favouriteList.where((p0) => p0.restaurantId == model.vendorId).isNotEmpty) {
+                              FavouriteModel favouriteModel = FavouriteModel(restaurantId: model.vendorId, userId: FireStoreUtils.getCurrentUid());
+                              controller.favouriteList.removeWhere((item) => item.restaurantId == model.vendorId);
+                              await FireStoreUtils.removeFavouriteRestaurant(favouriteModel);
+                            } else {
+                              FavouriteModel favouriteModel = FavouriteModel(restaurantId: model.vendorId, userId: FireStoreUtils.getCurrentUid());
+                              controller.favouriteList.add(favouriteModel);
+                              await FireStoreUtils.setFavouriteRestaurant(favouriteModel);
+                            }
+                            controller.update();
+                          },
                         )
                       : Container(
                           decoration: ShapeDecoration(
                             color: isDark ? AppThemeData.primary600 : AppThemeData.primary50,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                           ),
-                          child: Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4), child: Icon(Icons.arrow_forward, size: 20, color: AppThemeData.primary300))),
+                          child: Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4), child: Icon(Icons.arrow_forward, size: 20, color: AppThemeData.primary300)))
                 ],
               ),
             ),

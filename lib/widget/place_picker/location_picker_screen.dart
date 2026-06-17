@@ -2,7 +2,6 @@ import 'package:eatsipy_customer/constant/constant.dart';
 import 'package:eatsipy_customer/themes/app_them_data.dart';
 import 'package:eatsipy_customer/themes/responsive.dart';
 import 'package:eatsipy_customer/themes/round_button_fill.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:eatsipy_customer/widget/place_picker/location_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:eatsipy_customer/widget/translated_text.dart';
@@ -10,7 +9,6 @@ import 'package:flutter_google_places_hoc081098/flutter_google_places_hoc081098.
 import 'package:flutter_google_places_hoc081098/google_maps_webservice_places.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:provider/provider.dart';
 
 final GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: Constant.mapAPIKey);
 
@@ -19,7 +17,7 @@ class LocationPickerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return GetX<LocationController>(
         init: LocationController(),
@@ -72,14 +70,14 @@ class LocationPickerScreen extends StatelessWidget {
                         },
                         child: Container(
                           decoration: BoxDecoration(
-                            color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                            color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                             borderRadius: BorderRadius.circular(30),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(10),
                             child: Icon(
                               Icons.arrow_back_ios_new_outlined,
-                              color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey900,
+                              color: isDark ? AppThemeData.grey900 : AppThemeData.grey900,
                             ),
                           ),
                         ),

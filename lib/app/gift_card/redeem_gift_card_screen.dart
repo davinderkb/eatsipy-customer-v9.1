@@ -9,26 +9,24 @@ import 'package:eatsipy_customer/models/wallet_transaction_model.dart';
 import 'package:eatsipy_customer/themes/app_them_data.dart';
 import 'package:eatsipy_customer/themes/round_button_fill.dart';
 import 'package:eatsipy_customer/themes/text_field_widget.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:eatsipy_customer/utils/fire_store_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 class RedeemGiftCardScreen extends StatelessWidget {
   const RedeemGiftCardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GetX(
         init: RedeemGiftCardController(),
         builder: (controller) {
           return Scaffold(
             appBar: AppBar(
-              backgroundColor: themeChange.getThem() ? AppThemeData.surfaceDark : AppThemeData.surface,
+              backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
               centerTitle: false,
               titleSpacing: 0,
             ),
@@ -45,17 +43,17 @@ class RedeemGiftCardScreen extends StatelessWidget {
                       "Redeem Gift Card",
                       style: TextStyle(
                         fontSize: 24,
-                        color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                        fontFamily: AppThemeData.semiBold,
-                        fontWeight: FontWeight.w500,
+                        color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                        fontFamily: 'Urbanist',
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     TranslatedText(
                       "Enter your gift card code to enjoy discounts and special offers on your orders.",
                       style: TextStyle(
                         fontSize: 16,
-                        color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                        fontFamily: AppThemeData.regular,
+                        color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                        fontFamily: 'Urbanist',
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -87,7 +85,7 @@ class RedeemGiftCardScreen extends StatelessWidget {
               ),
             ),
             bottomNavigationBar: Container(
-              color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+              color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 20),

@@ -4,27 +4,25 @@ import 'package:eatsipy_customer/constant/constant.dart';
 import 'package:eatsipy_customer/controllers/change_language_controller.dart';
 import 'package:eatsipy_customer/services/localization_service.dart';
 import 'package:eatsipy_customer/themes/app_them_data.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:eatsipy_customer/utils/dynamic_traslator.dart';
 import 'package:eatsipy_customer/utils/network_image_widget.dart';
 import 'package:eatsipy_customer/utils/preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 class ChangeLanguageScreen extends StatelessWidget {
   const ChangeLanguageScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GetX(
         init: ChangeLanguageController(),
         builder: (controller) {
           return Scaffold(
             appBar: AppBar(
-              backgroundColor: themeChange.getThem() ? AppThemeData.surfaceDark : AppThemeData.surface,
+              backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
               centerTitle: false,
               titleSpacing: 0,
             ),
@@ -39,17 +37,17 @@ class ChangeLanguageScreen extends StatelessWidget {
                           "Change Language",
                           style: TextStyle(
                             fontSize: 24,
-                            color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                            fontFamily: AppThemeData.semiBold,
-                            fontWeight: FontWeight.w500,
+                            color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                            fontFamily: 'Urbanist',
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                         TranslatedText(
                           "Select your preferred language for a personalized app experience.",
                           style: TextStyle(
                             fontSize: 16,
-                            color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                            fontFamily: AppThemeData.regular,
+                            color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                            fontFamily: 'Urbanist',
                             fontWeight: FontWeight.w400,
                           ),
                         ),
@@ -89,11 +87,11 @@ class ChangeLanguageScreen extends StatelessWidget {
                                                 fontSize: 16,
                                                 color: controller.selectedLanguage.value.slug == data.slug
                                                     ? AppThemeData.primary300
-                                                    : themeChange.getThem()
+                                                    : isDark
                                                         ? AppThemeData.grey400
                                                         : AppThemeData.grey500,
-                                                fontFamily: AppThemeData.medium,
-                                                fontWeight: FontWeight.w400,
+                                                fontFamily: 'Urbanist',
+                                                fontWeight: FontWeight.w500,
                                               ),
                                             ),
                                           ],

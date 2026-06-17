@@ -2,13 +2,11 @@ import 'package:eatsipy_customer/app/auth_screen/login_screen.dart';
 import 'package:eatsipy_customer/controllers/on_boarding_controller.dart';
 import 'package:eatsipy_customer/themes/app_them_data.dart';
 import 'package:eatsipy_customer/themes/round_button_fill.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:eatsipy_customer/utils/preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 import '../../constant/constant.dart';
 
@@ -17,7 +15,7 @@ class OnBoardingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GetX<OnBoardingController>(
       init: OnBoardingController(),
       builder: (controller) {
@@ -59,7 +57,7 @@ class OnBoardingScreen extends StatelessWidget {
                                       ),
                                       TranslatedText(
                                         "Eatsipy",
-                                        style: TextStyle(color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey50, fontSize: 24, fontFamily: AppThemeData.bold),
+                                        style: TextStyle(color: isDark ? AppThemeData.grey50 : AppThemeData.grey50, fontSize: 24, fontFamily: 'Urbanist', fontWeight: FontWeight.w700),
                                       ),
                                       const SizedBox(
                                         height: 30,
@@ -68,19 +66,19 @@ class OnBoardingScreen extends StatelessWidget {
                                         controller.onBoardingList[index].title.toString(),
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
-                                          color: themeChange.getThem() ? AppThemeData.primary300 : AppThemeData.primary300,
+                                          color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
                                           fontSize: 28,
-                                          fontFamily: AppThemeData.bold,
-                                          fontWeight: FontWeight.w400,
+                                          fontFamily: 'Urbanist',
+                                          fontWeight: FontWeight.w700,
                                         ),
                                       ),
                                       TranslatedText(
                                         controller.onBoardingList[index].description.toString(),
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
-                                          color: themeChange.getThem() ? AppThemeData.grey600 : AppThemeData.grey300,
+                                          color: isDark ? AppThemeData.grey600 : AppThemeData.grey300,
                                           fontSize: 16,
-                                          fontFamily: AppThemeData.regular,
+                                          fontFamily: 'Urbanist',
                                           fontWeight: FontWeight.w400,
                                         ),
                                       ),

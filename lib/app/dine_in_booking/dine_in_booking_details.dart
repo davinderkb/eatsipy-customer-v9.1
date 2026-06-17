@@ -1,12 +1,10 @@
 import 'package:eatsipy_customer/constant/constant.dart';
 import 'package:eatsipy_customer/controllers/dine_in_booking_details_controller.dart';
 import 'package:eatsipy_customer/themes/app_them_data.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DineInBookingDetails extends StatelessWidget {
@@ -14,7 +12,7 @@ class DineInBookingDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GetX(
         init: DineInBookingDetailsController(),
         builder: (controller) {
@@ -22,13 +20,13 @@ class DineInBookingDetails extends StatelessWidget {
             appBar: AppBar(
               centerTitle: false,
               titleSpacing: 0,
-              backgroundColor: themeChange.getThem() ? AppThemeData.surfaceDark : AppThemeData.surface,
+              backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
               title: TranslatedText(
                 "Dine in Bookings",
                 style: TextStyle(
                   fontSize: 16,
-                  color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                  fontFamily: AppThemeData.medium,
+                  color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                  fontFamily: 'Urbanist',
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -50,8 +48,8 @@ class DineInBookingDetails extends StatelessWidget {
                                     "${'Order'} ${Constant.orderId(orderId: controller.bookingModel.value.id.toString())}",
                                     style: TextStyle(
                                       fontSize: 18,
-                                      color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                      fontFamily: AppThemeData.semiBold,
+                                      color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                      fontFamily: 'Urbanist',
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
@@ -59,8 +57,8 @@ class DineInBookingDetails extends StatelessWidget {
                                     "${controller.bookingModel.value.totalGuest} ${'Peoples'}",
                                     style: TextStyle(
                                       fontSize: 14,
-                                      color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                      fontFamily: AppThemeData.regular,
+                                      color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                      fontFamily: 'Urbanist',
                                       fontWeight: FontWeight.w400,
                                     ),
                                   )
@@ -77,8 +75,8 @@ class DineInBookingDetails extends StatelessWidget {
                                 child: TranslatedText(
                                   "${controller.bookingModel.value.status}",
                                   style: TextStyle(
-                                    color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey50,
-                                    fontFamily: AppThemeData.medium,
+                                    color: isDark ? AppThemeData.grey50 : AppThemeData.grey50,
+                                    fontFamily: 'Urbanist',
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -91,7 +89,7 @@ class DineInBookingDetails extends StatelessWidget {
                         ),
                         Container(
                           decoration: ShapeDecoration(
-                            color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                            color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                           ),
                           child: Padding(
@@ -113,16 +111,16 @@ class DineInBookingDetails extends StatelessWidget {
                                             controller.bookingModel.value.vendor!.title.toString(),
                                             style: TextStyle(
                                               fontSize: 18,
-                                              color: themeChange.getThem() ? AppThemeData.grey100 : AppThemeData.grey800,
-                                              fontFamily: AppThemeData.medium,
+                                              color: isDark ? AppThemeData.grey100 : AppThemeData.grey800,
+                                              fontFamily: 'Urbanist',
                                               fontWeight: FontWeight.w500,
                                             ),
                                           ),
                                           TranslatedText(
                                             controller.bookingModel.value.vendor!.location.toString(),
                                             style: TextStyle(
-                                              color: themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
-                                              fontFamily: AppThemeData.medium,
+                                              color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
+                                              fontFamily: 'Urbanist',
                                               fontWeight: FontWeight.w500,
                                             ),
                                           ),
@@ -147,8 +145,8 @@ class DineInBookingDetails extends StatelessWidget {
                                         "View in Map",
                                         style: TextStyle(
                                             fontSize: 16,
-                                            color: themeChange.getThem() ? AppThemeData.primary300 : AppThemeData.primary300,
-                                            fontFamily: AppThemeData.medium,
+                                            color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
+                                            fontFamily: 'Urbanist',
                                             fontWeight: FontWeight.w500,
                                             decoration: TextDecoration.underline,
                                             decorationColor: AppThemeData.primary300),
@@ -177,8 +175,8 @@ class DineInBookingDetails extends StatelessWidget {
                                         "Call Now",
                                         style: TextStyle(
                                             fontSize: 16,
-                                            color: themeChange.getThem() ? AppThemeData.primary300 : AppThemeData.primary300,
-                                            fontFamily: AppThemeData.medium,
+                                            color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
+                                            fontFamily: 'Urbanist',
                                             fontWeight: FontWeight.w500,
                                             decoration: TextDecoration.underline,
                                             decorationColor: AppThemeData.primary300),
@@ -200,8 +198,8 @@ class DineInBookingDetails extends StatelessWidget {
                           "Booking Details",
                           textAlign: TextAlign.start,
                           style: TextStyle(
-                            fontFamily: AppThemeData.semiBold,
-                            color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                            fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                            color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                             fontSize: 16,
                           ),
                         ),
@@ -210,7 +208,7 @@ class DineInBookingDetails extends StatelessWidget {
                         ),
                         Container(
                           decoration: ShapeDecoration(
-                            color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                            color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                           ),
                           child: Padding(
@@ -224,8 +222,8 @@ class DineInBookingDetails extends StatelessWidget {
                                       child: TranslatedText(
                                         "Name",
                                         style: TextStyle(
-                                          color: themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
-                                          fontFamily: AppThemeData.regular,
+                                          color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
+                                          fontFamily: 'Urbanist',
                                           fontWeight: FontWeight.w400,
                                         ),
                                       ),
@@ -235,8 +233,8 @@ class DineInBookingDetails extends StatelessWidget {
                                         "${controller.bookingModel.value.guestFirstName} ${controller.bookingModel.value.guestLastName}",
                                         textAlign: TextAlign.end,
                                         style: TextStyle(
-                                          color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                          fontFamily: AppThemeData.semiBold,
+                                          color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                          fontFamily: 'Urbanist',
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
@@ -253,8 +251,8 @@ class DineInBookingDetails extends StatelessWidget {
                                       child: TranslatedText(
                                         "Phone number",
                                         style: TextStyle(
-                                          color: themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
-                                          fontFamily: AppThemeData.regular,
+                                          color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
+                                          fontFamily: 'Urbanist',
                                           fontWeight: FontWeight.w400,
                                         ),
                                       ),
@@ -264,8 +262,8 @@ class DineInBookingDetails extends StatelessWidget {
                                         "${controller.bookingModel.value.guestPhone}",
                                         textAlign: TextAlign.end,
                                         style: TextStyle(
-                                          color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                          fontFamily: AppThemeData.semiBold,
+                                          color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                          fontFamily: 'Urbanist',
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
@@ -282,8 +280,8 @@ class DineInBookingDetails extends StatelessWidget {
                                       child: TranslatedText(
                                         "Date and Time",
                                         style: TextStyle(
-                                          color: themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
-                                          fontFamily: AppThemeData.regular,
+                                          color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
+                                          fontFamily: 'Urbanist',
                                           fontWeight: FontWeight.w400,
                                         ),
                                       ),
@@ -293,8 +291,8 @@ class DineInBookingDetails extends StatelessWidget {
                                         Constant.timestampToDateTime(controller.bookingModel.value.date!),
                                         textAlign: TextAlign.end,
                                         style: TextStyle(
-                                          color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                          fontFamily: AppThemeData.semiBold,
+                                          color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                          fontFamily: 'Urbanist',
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
@@ -311,8 +309,8 @@ class DineInBookingDetails extends StatelessWidget {
                                       child: TranslatedText(
                                         "Guest",
                                         style: TextStyle(
-                                          color: themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
-                                          fontFamily: AppThemeData.regular,
+                                          color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
+                                          fontFamily: 'Urbanist',
                                           fontWeight: FontWeight.w400,
                                         ),
                                       ),
@@ -322,8 +320,8 @@ class DineInBookingDetails extends StatelessWidget {
                                         "${controller.bookingModel.value.totalGuest}",
                                         textAlign: TextAlign.end,
                                         style: TextStyle(
-                                          color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                          fontFamily: AppThemeData.semiBold,
+                                          color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                          fontFamily: 'Urbanist',
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
@@ -340,8 +338,8 @@ class DineInBookingDetails extends StatelessWidget {
                                       child: TranslatedText(
                                         "Discount",
                                         style: TextStyle(
-                                          color: themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
-                                          fontFamily: AppThemeData.regular,
+                                          color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
+                                          fontFamily: 'Urbanist',
                                           fontWeight: FontWeight.w400,
                                         ),
                                       ),
@@ -351,8 +349,8 @@ class DineInBookingDetails extends StatelessWidget {
                                         "${controller.bookingModel.value.discount} %",
                                         textAlign: TextAlign.end,
                                         style: TextStyle(
-                                          color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                          fontFamily: AppThemeData.semiBold,
+                                          color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                          fontFamily: 'Urbanist',
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),

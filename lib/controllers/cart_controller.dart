@@ -143,6 +143,9 @@ class CartController extends GetxController {
       },
     );
     selectedFoodType.value = Preferences.getString(Preferences.foodDeliveryType, defaultValue: "Delivery");
+    if (!Constant.takeawayEnabled && selectedFoodType.value == 'TakeAway') {
+      selectedFoodType.value = 'Delivery';
+    }
 
     await FireStoreUtils.getUserProfile(FireStoreUtils.getCurrentUid()).then(
       (value) {

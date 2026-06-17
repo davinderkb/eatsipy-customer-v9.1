@@ -6,7 +6,6 @@ import 'package:eatsipy_customer/models/inbox_model.dart';
 import 'package:eatsipy_customer/models/user_model.dart';
 import 'package:eatsipy_customer/themes/app_them_data.dart';
 import 'package:eatsipy_customer/themes/responsive.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:eatsipy_customer/utils/fire_store_utils.dart';
 import 'package:eatsipy_customer/utils/network_image_widget.dart';
 import 'package:eatsipy_customer/widget/firebase_pagination/src/firestore_pagination.dart';
@@ -14,26 +13,25 @@ import 'package:eatsipy_customer/widget/firebase_pagination/src/models/view_type
 import 'package:flutter/material.dart';
 import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 class DriverInboxScreen extends StatelessWidget {
   const DriverInboxScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: themeChange.getThem() ? AppThemeData.surfaceDark : AppThemeData.surface,
+        backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
         centerTitle: false,
         titleSpacing: 0,
         title: TranslatedText(
           "Driver Inbox",
           textAlign: TextAlign.start,
           style: TextStyle(
-            fontFamily: AppThemeData.medium,
+            fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
             fontSize: 16,
-            color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+            color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
           ),
         ),
       ),
@@ -80,7 +78,7 @@ class DriverInboxScreen extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
                       child: Container(
                         decoration: ShapeDecoration(
-                          color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                          color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                         ),
                         child: Padding(
@@ -110,9 +108,9 @@ class DriverInboxScreen extends StatelessWidget {
                                             "${driver?.fullName()}",
                                             textAlign: TextAlign.start,
                                             style: TextStyle(
-                                              fontFamily: AppThemeData.semiBold,
+                                              fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
                                               fontSize: 16,
-                                              color: themeChange.getThem() ? AppThemeData.grey100 : AppThemeData.grey800,
+                                              color: isDark ? AppThemeData.grey100 : AppThemeData.grey800,
                                             ),
                                           ),
                                         ),
@@ -120,9 +118,9 @@ class DriverInboxScreen extends StatelessWidget {
                                           Constant.timestampToDate(inboxModel.createdAt!),
                                           textAlign: TextAlign.start,
                                           style: TextStyle(
-                                            fontFamily: AppThemeData.regular,
+                                            fontFamily: 'Urbanist',
                                             fontSize: 16,
-                                            color: themeChange.getThem() ? AppThemeData.grey400 : AppThemeData.grey500,
+                                            color: isDark ? AppThemeData.grey400 : AppThemeData.grey500,
                                           ),
                                         ),
                                       ],
@@ -134,9 +132,9 @@ class DriverInboxScreen extends StatelessWidget {
                                       "${"Order"} ${Constant.orderId(orderId: inboxModel.orderId.toString())}",
                                       textAlign: TextAlign.start,
                                       style: TextStyle(
-                                        fontFamily: AppThemeData.medium,
+                                        fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
                                         fontSize: 14,
-                                        color: themeChange.getThem() ? AppThemeData.grey200 : AppThemeData.grey700,
+                                        color: isDark ? AppThemeData.grey200 : AppThemeData.grey700,
                                       ),
                                     )
                                   ],

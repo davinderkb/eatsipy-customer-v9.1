@@ -9,36 +9,34 @@ import 'package:eatsipy_customer/themes/app_them_data.dart';
 import 'package:eatsipy_customer/themes/responsive.dart';
 import 'package:eatsipy_customer/themes/round_button_fill.dart';
 import 'package:eatsipy_customer/themes/text_field_widget.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:eatsipy_customer/utils/network_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 class GiftCardScreen extends StatelessWidget {
   const GiftCardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GetX(
         init: GiftCardController(),
         builder: (controller) {
           return Scaffold(
             appBar: AppBar(
-              backgroundColor: themeChange.getThem() ? AppThemeData.surfaceDark : AppThemeData.surface,
+              backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
               centerTitle: false,
               titleSpacing: 0,
               title: TranslatedText(
                 "Customize Gift Card",
                 textAlign: TextAlign.start,
                 style: TextStyle(
-                  fontFamily: AppThemeData.medium,
+                  fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
                   fontSize: 16,
-                  color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                  color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                 ),
               ),
               actions: [
@@ -126,7 +124,7 @@ class GiftCardScreen extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                               child: Text(
                                 Constant.currencyModel?.symbol ?? '',
-                                style: TextStyle(color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900, fontFamily: AppThemeData.semiBold, fontSize: 18),
+                                style: TextStyle(color: isDark ? AppThemeData.grey50 : AppThemeData.grey900, fontFamily: 'Urbanist', fontWeight: FontWeight.w600, fontSize: 18),
                               ),
                             ),
                             onchange: (value) {
@@ -155,7 +153,7 @@ class GiftCardScreen extends StatelessWidget {
                                             border: Border.all(
                                                 color: controller.selectedAmount == controller.amountList[index]
                                                     ? AppThemeData.primary300
-                                                    : themeChange.getThem()
+                                                    : isDark
                                                         ? AppThemeData.grey400
                                                         : AppThemeData.grey200)),
                                         child: Padding(
@@ -164,9 +162,9 @@ class GiftCardScreen extends StatelessWidget {
                                               child: Text(
                                             Constant.amountShow(amount: controller.amountList[index]),
                                             style: TextStyle(
-                                              fontFamily: AppThemeData.medium,
+                                              fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
                                               fontSize: 14,
-                                              color: themeChange.getThem() ? AppThemeData.grey400 : AppThemeData.grey500,
+                                              color: isDark ? AppThemeData.grey400 : AppThemeData.grey500,
                                             ),
                                           )),
                                         ),
@@ -191,7 +189,7 @@ class GiftCardScreen extends StatelessWidget {
                     ),
                   ),
             bottomNavigationBar: Container(
-              color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+              color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 20),
@@ -233,7 +231,7 @@ class GiftCardScreen extends StatelessWidget {
         builder: (context) => FractionallySizedBox(
               heightFactor: 0.7,
               child: StatefulBuilder(builder: (context1, setState) {
-                final themeChange = Provider.of<DarkThemeProvider>(context);
+                final isDark = Theme.of(context).brightness == Brightness.dark;
                 return Obx(
                   () => Scaffold(
                     body: SingleChildScrollView(
@@ -272,7 +270,7 @@ class GiftCardScreen extends StatelessWidget {
                                   style: const TextStyle(
                                     color: AppThemeData.secondary300,
                                     fontSize: 14,
-                                    fontFamily: AppThemeData.medium,
+                                    fontFamily: 'Urbanist',
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -285,8 +283,8 @@ class GiftCardScreen extends StatelessWidget {
                                   "Bill Details",
                                   textAlign: TextAlign.start,
                                   style: TextStyle(
-                                    fontFamily: AppThemeData.semiBold,
-                                    color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                    fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                    color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                     fontSize: 16,
                                   ),
                                 ),
@@ -296,7 +294,7 @@ class GiftCardScreen extends StatelessWidget {
                                 Container(
                                   width: Responsive.width(100, context),
                                   decoration: ShapeDecoration(
-                                    color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                                    color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                   ),
                                   child: Padding(
@@ -311,8 +309,8 @@ class GiftCardScreen extends StatelessWidget {
                                                 "Sub Total",
                                                 textAlign: TextAlign.start,
                                                 style: TextStyle(
-                                                  fontFamily: AppThemeData.regular,
-                                                  color: themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
+                                                  fontFamily: 'Urbanist',
+                                                  color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
                                                   fontSize: 16,
                                                 ),
                                               ),
@@ -321,8 +319,8 @@ class GiftCardScreen extends StatelessWidget {
                                               Constant.amountShow(amount: controller.amountController.value.text),
                                               textAlign: TextAlign.start,
                                               style: TextStyle(
-                                                fontFamily: AppThemeData.regular,
-                                                color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                fontFamily: 'Urbanist',
+                                                color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                                 fontSize: 16,
                                               ),
                                             ),
@@ -339,8 +337,8 @@ class GiftCardScreen extends StatelessWidget {
                                                 "Grand Total",
                                                 textAlign: TextAlign.start,
                                                 style: TextStyle(
-                                                  fontFamily: AppThemeData.regular,
-                                                  color: themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
+                                                  fontFamily: 'Urbanist',
+                                                  color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
                                                   fontSize: 16,
                                                 ),
                                               ),
@@ -349,8 +347,8 @@ class GiftCardScreen extends StatelessWidget {
                                               Constant.amountShow(amount: controller.amountController.value.text),
                                               textAlign: TextAlign.start,
                                               style: TextStyle(
-                                                fontFamily: AppThemeData.regular,
-                                                color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                fontFamily: 'Urbanist',
+                                                color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                                 fontSize: 16,
                                               ),
                                             ),
@@ -370,9 +368,9 @@ class GiftCardScreen extends StatelessWidget {
                                 "${'Gift Card expire'} ${controller.selectedGiftCard.value.expiryDay} ${'days after purchase'}",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontFamily: AppThemeData.medium,
+                                  fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
                                   fontSize: 16,
-                                  color: themeChange.getThem() ? AppThemeData.grey500 : AppThemeData.grey400,
+                                  color: isDark ? AppThemeData.grey500 : AppThemeData.grey400,
                                 ),
                               ),
                             )
@@ -381,7 +379,7 @@ class GiftCardScreen extends StatelessWidget {
                       ),
                     ),
                     bottomNavigationBar: Container(
-                      color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                      color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 20),

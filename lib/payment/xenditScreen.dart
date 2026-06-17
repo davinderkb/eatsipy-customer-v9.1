@@ -310,10 +310,11 @@ class _XenditScreenState extends State<XenditScreen> {
   /// ---------------- UI ----------------
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
         _showCancelDialog();
-        return false;
       },
       child: Scaffold(
         appBar: AppBar(

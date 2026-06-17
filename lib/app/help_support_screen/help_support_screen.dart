@@ -11,7 +11,6 @@ import 'package:eatsipy_customer/controllers/help_support_controller.dart';
 import 'package:eatsipy_customer/models/conversation_model.dart';
 import 'package:eatsipy_customer/themes/app_them_data.dart';
 import 'package:eatsipy_customer/themes/responsive.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:eatsipy_customer/utils/dynamic_traslator.dart';
 import 'package:eatsipy_customer/utils/fire_store_utils.dart';
 import 'package:eatsipy_customer/utils/network_image_widget.dart';
@@ -24,7 +23,6 @@ import 'package:flutter/material.dart';
 import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 
 class HelpSupportScreen extends StatelessWidget {
   final bool? isNavigateViaNotification;
@@ -32,24 +30,25 @@ class HelpSupportScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
-    return WillPopScope(
-      onWillPop: () async {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) async {
+        if (didPop) return;
         if (isNavigateViaNotification == true) {
           await Preferences.setBoolean(Preferences.isClickOnNotification, false);
           Get.offAll(DashBoardScreen());
         } else {
           Get.back();
         }
-        return false;
       },
       child: GetX(
           init: HelpSupportController(),
           builder: (controller) {
             return Scaffold(
-              backgroundColor: themeChange.getThem() ? AppThemeData.grey800 : AppThemeData.grey50,
+              backgroundColor: isDark ? AppThemeData.grey800 : AppThemeData.grey50,
               appBar: AppBar(
-                backgroundColor: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                backgroundColor: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                 centerTitle: false,
                 automaticallyImplyLeading: false,
                 titleSpacing: 0,
@@ -64,18 +63,18 @@ class HelpSupportScreen extends StatelessWidget {
                   },
                   child: Icon(
                     Icons.chevron_left_outlined,
-                    color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                    color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                   ),
                 ),
                 title: TranslatedText(
                   'Help & Support',
-                  style: TextStyle(color: themeChange.getThem() ? AppThemeData.grey100 : AppThemeData.grey800, fontFamily: AppThemeData.bold, fontSize: 18),
+                  style: TextStyle(color: isDark ? AppThemeData.grey100 : AppThemeData.grey800, fontFamily: 'Urbanist', fontWeight: FontWeight.w700, fontSize: 18),
                 ),
                 elevation: 0,
                 bottom: PreferredSize(
                   preferredSize: const Size.fromHeight(4.0),
                   child: Container(
-                    color: themeChange.getThem() ? AppThemeData.grey700 : AppThemeData.grey200,
+                    color: isDark ? AppThemeData.grey700 : AppThemeData.grey200,
                     height: 4.0,
                   ),
                 ),
@@ -119,7 +118,7 @@ class HelpSupportScreen extends StatelessWidget {
                               valueListenable: TranslationNotifier.refresh,
                               builder: (_, __, ___) {
                                 return TextField(
-                                  style: TextStyle(color: themeChange.getThem() ? AppThemeData.primary50 : AppThemeData.secondary600, fontFamily: AppThemeData.medium, fontSize: 14),
+                                  style: TextStyle(color: isDark ? AppThemeData.primary50 : AppThemeData.secondary600, fontFamily: 'Urbanist', fontWeight: FontWeight.w500, fontSize: 14),
                                   textInputAction: TextInputAction.send,
                                   keyboardType: TextInputType.text,
                                   textCapitalization: TextCapitalization.sentences,
@@ -127,26 +126,26 @@ class HelpSupportScreen extends StatelessWidget {
                                   decoration: InputDecoration(
                                     contentPadding: const EdgeInsets.only(left: 10),
                                     filled: true,
-                                    fillColor: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey100,
+                                    fillColor: isDark ? AppThemeData.grey900 : AppThemeData.grey100,
                                     disabledBorder: OutlineInputBorder(
                                       borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                      borderSide: BorderSide(color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey100, width: 1),
+                                      borderSide: BorderSide(color: isDark ? AppThemeData.grey900 : AppThemeData.grey100, width: 1),
                                     ),
                                     focusedBorder: OutlineInputBorder(
                                       borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                      borderSide: BorderSide(color: themeChange.getThem() ? AppThemeData.primary300 : AppThemeData.primary300, width: 1),
+                                      borderSide: BorderSide(color: isDark ? AppThemeData.primary300 : AppThemeData.primary300, width: 1),
                                     ),
                                     enabledBorder: OutlineInputBorder(
                                       borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                      borderSide: BorderSide(color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey100, width: 1),
+                                      borderSide: BorderSide(color: isDark ? AppThemeData.grey900 : AppThemeData.grey100, width: 1),
                                     ),
                                     errorBorder: OutlineInputBorder(
                                       borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                      borderSide: BorderSide(color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey100, width: 1),
+                                      borderSide: BorderSide(color: isDark ? AppThemeData.grey900 : AppThemeData.grey100, width: 1),
                                     ),
                                     border: OutlineInputBorder(
                                       borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                      borderSide: BorderSide(color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey100, width: 1),
+                                      borderSide: BorderSide(color: isDark ? AppThemeData.grey900 : AppThemeData.grey100, width: 1),
                                     ),
                                     suffixIcon: IconButton(
                                       onPressed: () async {
@@ -157,16 +156,16 @@ class HelpSupportScreen extends StatelessWidget {
                                           ShowToastDialog.showToast("Please enter text");
                                         }
                                       },
-                                      icon: Icon(Icons.send_rounded, color: themeChange.getThem() ? AppThemeData.grey500 : AppThemeData.grey800),
+                                      icon: Icon(Icons.send_rounded, color: isDark ? AppThemeData.grey500 : AppThemeData.grey800),
                                     ),
                                     prefixIcon: IconButton(
                                       onPressed: () async {
-                                        _onCameraClick(themeChange: themeChange, controller: controller, context: context);
+                                        _onCameraClick(isDark: isDark, controller: controller, context: context);
                                       },
-                                      icon: Icon(Icons.camera_alt, color: themeChange.getThem() ? AppThemeData.grey500 : AppThemeData.grey800),
+                                      icon: Icon(Icons.camera_alt, color: isDark ? AppThemeData.grey500 : AppThemeData.grey800),
                                     ),
                                     hintText: 'Start typing with admin...'.tr,
-                                    hintStyle: TextStyle(color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey700, fontFamily: AppThemeData.medium, fontSize: 14),
+                                    hintStyle: TextStyle(color: isDark ? AppThemeData.grey50 : AppThemeData.grey700, fontFamily: 'Urbanist', fontWeight: FontWeight.w500, fontSize: 14),
                                   ),
                                   onSubmitted: (value) async {
                                     if (controller.messageController.value.text.isNotEmpty) {
@@ -189,7 +188,7 @@ class HelpSupportScreen extends StatelessWidget {
   }
 
   Widget chatItemView({required bool isMe, required ConversationModel data, required BuildContext context, required HelpSupportController controller}) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       padding: EdgeInsets.only(left: isMe ? 10 : 10, right: isMe ? 10 : 10, top: 10, bottom: 10),
@@ -209,7 +208,7 @@ class HelpSupportScreen extends StatelessWidget {
                                 maxWidth: MediaQuery.of(context).size.width * 0.75, // prevent overflow
                               ),
                               decoration: BoxDecoration(
-                                color: themeChange.getThem() ? AppThemeData.primary200 : AppThemeData.primary300,
+                                color: isDark ? AppThemeData.primary200 : AppThemeData.primary300,
                                 borderRadius: const BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10), bottomLeft: Radius.circular(10)),
                               ),
                               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -217,7 +216,7 @@ class HelpSupportScreen extends StatelessWidget {
                                 data.message.toString(),
                                 softWrap: true,
                                 maxLines: null,
-                                style: TextStyle(fontFamily: AppThemeData.semiBold, color: themeChange.getThem() ? Colors.black : Colors.white),
+                                style: TextStyle(fontFamily: 'Urbanist', fontWeight: FontWeight.w600, color: isDark ? Colors.black : Colors.white),
                               ),
                             )
                           : data.messageType == "image"
@@ -294,10 +293,10 @@ class HelpSupportScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       TranslatedText(Constant.dateAndTimeFormatTimestamp(data.createdAt),
-                          style: TextStyle(fontFamily: AppThemeData.regular, fontSize: 12, color: themeChange.getThem() ? AppThemeData.grey100 : AppThemeData.grey800)),
+                          style: TextStyle(fontFamily: 'Urbanist', fontSize: 12, color: isDark ? AppThemeData.grey100 : AppThemeData.grey800)),
                       data.seen == true
                           ? TranslatedText("✓✓", style: TextStyle(fontSize: 10, color: AppThemeData.primary300))
-                          : TranslatedText("✓", style: TextStyle(fontSize: 10, color: themeChange.getThem() ? AppThemeData.grey100 : AppThemeData.grey800))
+                          : TranslatedText("✓", style: TextStyle(fontSize: 10, color: isDark ? AppThemeData.grey100 : AppThemeData.grey800))
                     ],
                   ),
                 ],
@@ -316,14 +315,14 @@ class HelpSupportScreen extends StatelessWidget {
                             ),
                             decoration: BoxDecoration(
                               borderRadius: const BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10), bottomRight: Radius.circular(10)),
-                              color: themeChange.getThem() ? AppThemeData.grey900 : Colors.grey.shade300,
+                              color: isDark ? AppThemeData.grey900 : Colors.grey.shade300,
                             ),
                             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                             child: TranslatedText(
                               data.message.toString(),
                               softWrap: true,
                               maxLines: null,
-                              style: TextStyle(color: themeChange.getThem() ? AppThemeData.grey100 : AppThemeData.grey800, fontFamily: AppThemeData.regular, fontSize: 14),
+                              style: TextStyle(color: isDark ? AppThemeData.grey100 : AppThemeData.grey800, fontFamily: 'Urbanist', fontSize: 14),
                             ),
                           )
                         : data.messageType == "image"
@@ -388,12 +387,12 @@ class HelpSupportScreen extends StatelessWidget {
                     children: [
                       TranslatedText("Admin",
                           style: TextStyle(
-                            color: themeChange.getThem() ? AppThemeData.grey100 : AppThemeData.grey800,
-                            fontFamily: AppThemeData.semiBold,
+                            color: isDark ? AppThemeData.grey100 : AppThemeData.grey800,
+                            fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
                             fontSize: 12,
                           )),
                       TranslatedText(Constant.dateAndTimeFormatTimestamp(data.createdAt),
-                          style: TextStyle(fontFamily: AppThemeData.regular, fontSize: 12, color: themeChange.getThem() ? AppThemeData.grey100 : AppThemeData.grey800)),
+                          style: TextStyle(fontFamily: 'Urbanist', fontSize: 12, color: isDark ? AppThemeData.grey100 : AppThemeData.grey800)),
                     ],
                   ),
                 ],
@@ -404,12 +403,12 @@ class HelpSupportScreen extends StatelessWidget {
 
   final ImagePicker _imagePicker = ImagePicker();
 
-  void _onCameraClick({required DarkThemeProvider themeChange, required HelpSupportController controller, required BuildContext context}) {
+  void _onCameraClick({required bool isDark, required HelpSupportController controller, required BuildContext context}) {
     final action = CupertinoActionSheet(
       message: TranslatedText('Send Media',
           style: TextStyle(
-            color: themeChange.getThem() ? AppThemeData.grey100 : AppThemeData.grey800,
-            fontFamily: AppThemeData.semiBold,
+            color: isDark ? AppThemeData.grey100 : AppThemeData.grey800,
+            fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
             fontSize: 18,
           )),
       actions: <Widget>[

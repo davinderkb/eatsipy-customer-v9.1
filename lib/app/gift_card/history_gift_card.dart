@@ -2,25 +2,23 @@ import 'package:eatsipy_customer/constant/constant.dart';
 import 'package:eatsipy_customer/controllers/history_gift_card_controller.dart';
 import 'package:eatsipy_customer/models/gift_cards_order_model.dart';
 import 'package:eatsipy_customer/themes/app_them_data.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:eatsipy_customer/widget/my_separator.dart';
 import 'package:flutter/material.dart';
 import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 class HistoryGiftCard extends StatelessWidget {
   const HistoryGiftCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GetX(
         init: HistoryGiftCardController(),
         builder: (controller) {
           return Scaffold(
             appBar: AppBar(
-              backgroundColor: themeChange.getThem() ? AppThemeData.surfaceDark : AppThemeData.surface,
+              backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
               centerTitle: false,
               titleSpacing: 0,
             ),
@@ -38,7 +36,7 @@ class HistoryGiftCard extends StatelessWidget {
                               return Container(
                                 margin: const EdgeInsets.symmetric(vertical: 4),
                                 decoration: ShapeDecoration(
-                                  color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                                  color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                 ),
                                 child: Padding(
@@ -53,9 +51,9 @@ class HistoryGiftCard extends StatelessWidget {
                                               giftCardOrderModel.giftTitle.toString(),
                                               style: TextStyle(
                                                 fontSize: 16,
-                                                color: themeChange.getThem() ? AppThemeData.secondary300 : AppThemeData.secondary300,
-                                                fontFamily: AppThemeData.semiBold,
-                                                fontWeight: FontWeight.w500,
+                                                color: isDark ? AppThemeData.secondary300 : AppThemeData.secondary300,
+                                                fontFamily: 'Urbanist',
+                                                fontWeight: FontWeight.w600,
                                               ),
                                             ),
                                           ),
@@ -63,9 +61,9 @@ class HistoryGiftCard extends StatelessWidget {
                                             Constant.amountShow(amount: giftCardOrderModel.price.toString()),
                                             style: TextStyle(
                                               fontSize: 16,
-                                              color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                              fontFamily: AppThemeData.semiBold,
-                                              fontWeight: FontWeight.w500,
+                                              color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                              fontFamily: 'Urbanist',
+                                              fontWeight: FontWeight.w600,
                                             ),
                                           ),
                                         ],
@@ -73,7 +71,7 @@ class HistoryGiftCard extends StatelessWidget {
                                       const SizedBox(
                                         height: 10,
                                       ),
-                                      MySeparator(color: themeChange.getThem() ? AppThemeData.grey700 : AppThemeData.grey200),
+                                      MySeparator(color: isDark ? AppThemeData.grey700 : AppThemeData.grey200),
                                       const SizedBox(
                                         height: 10,
                                       ),
@@ -83,9 +81,9 @@ class HistoryGiftCard extends StatelessWidget {
                                             child: TranslatedText(
                                               "Gift Code",
                                               style: TextStyle(
-                                                color: themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
-                                                fontFamily: AppThemeData.semiBold,
-                                                fontWeight: FontWeight.w500,
+                                                color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
+                                                fontFamily: 'Urbanist',
+                                                fontWeight: FontWeight.w600,
                                               ),
                                             ),
                                           ),
@@ -93,9 +91,9 @@ class HistoryGiftCard extends StatelessWidget {
                                             giftCardOrderModel.giftCode.toString().replaceAllMapped(RegExp(r".{4}"), (match) => "${match.group(0)} "),
                                             style: TextStyle(
                                               fontSize: 16,
-                                              color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                              fontFamily: AppThemeData.semiBold,
-                                              fontWeight: FontWeight.w500,
+                                              color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                              fontFamily: 'Urbanist',
+                                              fontWeight: FontWeight.w600,
                                             ),
                                           ),
                                         ],
@@ -109,9 +107,9 @@ class HistoryGiftCard extends StatelessWidget {
                                             child: TranslatedText(
                                               "Gift Pin",
                                               style: TextStyle(
-                                                color: themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
-                                                fontFamily: AppThemeData.semiBold,
-                                                fontWeight: FontWeight.w500,
+                                                color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
+                                                fontFamily: 'Urbanist',
+                                                fontWeight: FontWeight.w600,
                                               ),
                                             ),
                                           ),
@@ -120,18 +118,18 @@ class HistoryGiftCard extends StatelessWidget {
                                                   giftCardOrderModel.giftPin.toString(),
                                                   style: TextStyle(
                                                     fontSize: 16,
-                                                    color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                                    fontFamily: AppThemeData.semiBold,
-                                                    fontWeight: FontWeight.w500,
+                                                    color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                    fontFamily: 'Urbanist',
+                                                    fontWeight: FontWeight.w600,
                                                   ),
                                                 )
                                               : Text(
                                                   "****",
                                                   style: TextStyle(
                                                     fontSize: 16,
-                                                    color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                                    fontFamily: AppThemeData.semiBold,
-                                                    fontWeight: FontWeight.w500,
+                                                    color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                    fontFamily: 'Urbanist',
+                                                    fontWeight: FontWeight.w600,
                                                   ),
                                                 ),
                                           const SizedBox(
@@ -155,7 +153,7 @@ class HistoryGiftCard extends StatelessWidget {
                                       const SizedBox(
                                         height: 10,
                                       ),
-                                      MySeparator(color: themeChange.getThem() ? AppThemeData.grey700 : AppThemeData.grey200),
+                                      MySeparator(color: isDark ? AppThemeData.grey700 : AppThemeData.grey200),
                                       const SizedBox(
                                         height: 10,
                                       ),
@@ -169,7 +167,7 @@ class HistoryGiftCard extends StatelessWidget {
                                             child: Container(
                                               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                                               decoration: ShapeDecoration(
-                                                color: themeChange.getThem() ? AppThemeData.grey700 : AppThemeData.grey200,
+                                                color: isDark ? AppThemeData.grey700 : AppThemeData.grey200,
                                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                               ),
                                               child: Row(
@@ -178,9 +176,9 @@ class HistoryGiftCard extends StatelessWidget {
                                                   TranslatedText(
                                                     'Share',
                                                     style: TextStyle(
-                                                      color: themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
+                                                      color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
                                                       fontSize: 14,
-                                                      fontFamily: AppThemeData.semiBold,
+                                                      fontFamily: 'Urbanist',
                                                       fontWeight: FontWeight.w600,
                                                       height: 0.11,
                                                     ),
@@ -197,8 +195,8 @@ class HistoryGiftCard extends StatelessWidget {
                                             style: TextStyle(
                                               fontSize: 16,
                                               color: giftCardOrderModel.redeem == true ? AppThemeData.success400 : AppThemeData.danger300,
-                                              fontFamily: AppThemeData.semiBold,
-                                              fontWeight: FontWeight.w500,
+                                              fontFamily: 'Urbanist',
+                                              fontWeight: FontWeight.w600,
                                             ),
                                           ),
                                         ],

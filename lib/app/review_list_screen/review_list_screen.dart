@@ -7,38 +7,36 @@ import 'package:eatsipy_customer/models/rating_model.dart';
 import 'package:eatsipy_customer/models/review_attribute_model.dart';
 import 'package:eatsipy_customer/themes/app_them_data.dart';
 import 'package:eatsipy_customer/themes/responsive.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:eatsipy_customer/utils/fire_store_utils.dart';
 import 'package:eatsipy_customer/utils/network_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 class ReviewListScreen extends StatelessWidget {
   const ReviewListScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return GetX(
         init: ReviewListController(),
         builder: (controller) {
           return Scaffold(
-            backgroundColor: themeChange.getThem() ? AppThemeData.surfaceDark : AppThemeData.surface,
+            backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
             appBar: AppBar(
-              backgroundColor: themeChange.getThem() ? AppThemeData.surfaceDark : AppThemeData.surface,
+              backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
               centerTitle: false,
               titleSpacing: 0,
               title: TranslatedText(
                 "Reviews",
                 textAlign: TextAlign.start,
                 style: TextStyle(
-                  fontFamily: AppThemeData.medium,
+                  fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
                   fontSize: 16,
-                  color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                  color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                 ),
               ),
             ),
@@ -56,9 +54,9 @@ class ReviewListScreen extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(vertical: 5),
                               child: Container(
                                 decoration: ShapeDecoration(
-                                  color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                                  color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                                   shape: RoundedRectangleBorder(
-                                    side: BorderSide(width: 1, color: themeChange.getThem() ? AppThemeData.grey700 : AppThemeData.grey200),
+                                    side: BorderSide(width: 1, color: isDark ? AppThemeData.grey700 : AppThemeData.grey200),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
@@ -69,7 +67,7 @@ class ReviewListScreen extends StatelessWidget {
                                     children: [
                                       TranslatedText(
                                         ratingModel.uname.toString(),
-                                        style: TextStyle(color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900, fontSize: 18, fontFamily: AppThemeData.semiBold),
+                                        style: TextStyle(color: isDark ? AppThemeData.grey50 : AppThemeData.grey900, fontSize: 18, fontFamily: 'Urbanist', fontWeight: FontWeight.w600),
                                       ),
                                       Visibility(
                                         visible: ratingModel.productId != null,
@@ -87,7 +85,7 @@ class ReviewListScreen extends StatelessWidget {
                                                   ProductModel model = ProductModel.fromJson(snapshot.data!.data()!);
                                                   return TranslatedText(
                                                     '${'Rate for'} - ${model.name ?? ''}',
-                                                    style: TextStyle(color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900, fontSize: 14, fontFamily: AppThemeData.semiBold),
+                                                    style: TextStyle(color: isDark ? AppThemeData.grey50 : AppThemeData.grey900, fontSize: 14, fontFamily: 'Urbanist', fontWeight: FontWeight.w600),
                                                   );
                                                 } else {
                                                   return const TranslatedText('');
@@ -119,7 +117,7 @@ class ReviewListScreen extends StatelessWidget {
                                         visible: ratingModel.comment != '' && ratingModel.comment != null,
                                         child: TranslatedText(
                                           ratingModel.comment.toString(),
-                                          style: TextStyle(color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900, fontSize: 16, fontFamily: AppThemeData.medium),
+                                          style: TextStyle(color: isDark ? AppThemeData.grey50 : AppThemeData.grey900, fontSize: 16, fontFamily: 'Urbanist', fontWeight: FontWeight.w500),
                                         ),
                                       ),
                                       const SizedBox(
@@ -155,9 +153,9 @@ class ReviewListScreen extends StatelessWidget {
                                                               child: TranslatedText(
                                                                 model.title.toString(),
                                                                 style: TextStyle(
-                                                                  color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                                  color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                                                   fontSize: 16,
-                                                                  fontFamily: AppThemeData.semiBold,
+                                                                  fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
                                                                 ),
                                                               ),
                                                             );
@@ -217,7 +215,7 @@ class ReviewListScreen extends StatelessWidget {
                                       ),
                                       TranslatedText(
                                         Constant.timestampToDateTime(ratingModel.createdAt!),
-                                        style: TextStyle(color: themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600, fontSize: 14, fontFamily: AppThemeData.medium),
+                                        style: TextStyle(color: isDark ? AppThemeData.grey300 : AppThemeData.grey600, fontSize: 14, fontFamily: 'Urbanist', fontWeight: FontWeight.w500),
                                       ),
                                     ],
                                   ),

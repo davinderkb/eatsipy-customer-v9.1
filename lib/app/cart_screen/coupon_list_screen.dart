@@ -5,36 +5,34 @@ import 'package:eatsipy_customer/models/coupon_model.dart';
 import 'package:eatsipy_customer/themes/app_them_data.dart';
 import 'package:eatsipy_customer/themes/responsive.dart';
 import 'package:eatsipy_customer/themes/text_field_widget.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:eatsipy_customer/widget/my_separator.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 class CouponListScreen extends StatelessWidget {
   const CouponListScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GetX(
         init: CartController(),
         builder: (controller) {
           return Scaffold(
-            backgroundColor: themeChange.getThem() ? AppThemeData.surfaceDark : AppThemeData.surface,
+            backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
             appBar: AppBar(
-              backgroundColor: themeChange.getThem() ? AppThemeData.surfaceDark : AppThemeData.surface,
+              backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
               centerTitle: false,
               titleSpacing: 0,
               title: TranslatedText(
                 "Coupon Code",
                 textAlign: TextAlign.start,
                 style: TextStyle(
-                  fontFamily: AppThemeData.medium,
+                  fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
                   fontSize: 16,
-                  color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                  color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                 ),
               ),
               bottom: PreferredSize(
@@ -61,9 +59,9 @@ class CouponListScreen extends StatelessWidget {
                           "Apply",
                           textAlign: TextAlign.start,
                           style: TextStyle(
-                            fontFamily: AppThemeData.semiBold,
+                            fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
                             fontSize: 16,
-                            color: themeChange.getThem() ? AppThemeData.primary300 : AppThemeData.primary300,
+                            color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
                           ),
                         ),
                       ),
@@ -82,7 +80,7 @@ class CouponListScreen extends StatelessWidget {
                   child: Container(
                     height: Responsive.height(16, context),
                     decoration: ShapeDecoration(
-                      color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                      color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     ),
                     child: Row(
@@ -106,9 +104,9 @@ class CouponListScreen extends StatelessWidget {
                                       "${couponModel.discountType == "Fix Price" ? Constant.amountShow(amount: couponModel.discount) : "${couponModel.discount}%"} ${'Off'}",
                                       textAlign: TextAlign.start,
                                       style: TextStyle(
-                                        fontFamily: AppThemeData.semiBold,
+                                        fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
                                         fontSize: 16,
-                                        color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey50,
+                                        color: isDark ? AppThemeData.grey50 : AppThemeData.grey50,
                                       ),
                                     ),
                                   ),
@@ -129,7 +127,7 @@ class CouponListScreen extends StatelessWidget {
                                       options: RoundedRectDottedBorderOptions(
                                         strokeWidth: 1,
                                         radius: const Radius.circular(6),
-                                        color: themeChange.getThem() ? AppThemeData.grey400 : AppThemeData.grey500,
+                                        color: isDark ? AppThemeData.grey400 : AppThemeData.grey500,
                                       ),
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -137,9 +135,9 @@ class CouponListScreen extends StatelessWidget {
                                           "${couponModel.code}",
                                           textAlign: TextAlign.start,
                                           style: TextStyle(
-                                            fontFamily: AppThemeData.semiBold,
+                                            fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
                                             fontSize: 16,
-                                            color: themeChange.getThem() ? AppThemeData.grey400 : AppThemeData.grey500,
+                                            color: isDark ? AppThemeData.grey400 : AppThemeData.grey500,
                                           ),
                                         ),
                                       ),
@@ -164,8 +162,8 @@ class CouponListScreen extends StatelessWidget {
                                         "Tap To Apply",
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
-                                          fontFamily: AppThemeData.medium,
-                                          color: themeChange.getThem() ? AppThemeData.primary300 : AppThemeData.primary300,
+                                          fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
+                                          color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
                                         ),
                                       ),
                                     ),
@@ -174,7 +172,7 @@ class CouponListScreen extends StatelessWidget {
                                 const SizedBox(
                                   height: 20,
                                 ),
-                                MySeparator(color: themeChange.getThem() ? AppThemeData.grey700 : AppThemeData.grey200),
+                                MySeparator(color: isDark ? AppThemeData.grey700 : AppThemeData.grey200),
                                 const SizedBox(
                                   height: 20,
                                 ),
@@ -182,9 +180,9 @@ class CouponListScreen extends StatelessWidget {
                                   "${couponModel.description}",
                                   textAlign: TextAlign.start,
                                   style: TextStyle(
-                                    fontFamily: AppThemeData.medium,
+                                    fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
                                     fontSize: 16,
-                                    color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                    color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                   ),
                                 )
                               ],

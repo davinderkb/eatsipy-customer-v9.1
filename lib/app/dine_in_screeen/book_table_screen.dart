@@ -4,20 +4,18 @@ import 'package:eatsipy_customer/themes/app_them_data.dart';
 import 'package:eatsipy_customer/themes/responsive.dart';
 import 'package:eatsipy_customer/themes/round_button_fill.dart';
 import 'package:eatsipy_customer/themes/text_field_widget.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:eatsipy_customer/utils/network_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 class BookTableScreen extends StatelessWidget {
   const BookTableScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GetX(
         init: DineInRestaurantDetailsController(),
         builder: (controller) {
@@ -25,13 +23,13 @@ class BookTableScreen extends StatelessWidget {
             appBar: AppBar(
               centerTitle: false,
               titleSpacing: 0,
-              backgroundColor: themeChange.getThem() ? AppThemeData.surfaceDark : AppThemeData.surface,
+              backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
               title: TranslatedText(
                 "Book Table",
                 style: TextStyle(
                   fontSize: 16,
-                  color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                  fontFamily: AppThemeData.medium,
+                  color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                  fontFamily: 'Urbanist',
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -44,7 +42,7 @@ class BookTableScreen extends StatelessWidget {
                   children: [
                     Container(
                       decoration: ShapeDecoration(
-                        color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                        color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                       ),
                       child: Padding(
@@ -56,8 +54,8 @@ class BookTableScreen extends StatelessWidget {
                                 "Numbers of Guests",
                                 style: TextStyle(
                                   fontSize: 16,
-                                  color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                  fontFamily: AppThemeData.medium,
+                                  color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                  fontFamily: 'Urbanist',
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -65,8 +63,8 @@ class BookTableScreen extends StatelessWidget {
                             Container(
                               height: Responsive.height(4, context),
                               decoration: ShapeDecoration(
-                                color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(200), side: BorderSide(color: themeChange.getThem() ? AppThemeData.grey600 : AppThemeData.grey300)),
+                                color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(200), side: BorderSide(color: isDark ? AppThemeData.grey600 : AppThemeData.grey300)),
                               ),
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -90,9 +88,9 @@ class BookTableScreen extends StatelessWidget {
                                         style: TextStyle(
                                           fontSize: 16,
                                           overflow: TextOverflow.ellipsis,
-                                          fontFamily: AppThemeData.medium,
+                                          fontFamily: 'Urbanist',
                                           fontWeight: FontWeight.w500,
-                                          color: themeChange.getThem() ? AppThemeData.grey100 : AppThemeData.grey800,
+                                          color: isDark ? AppThemeData.grey100 : AppThemeData.grey800,
                                         ),
                                       ),
                                     ),
@@ -118,7 +116,7 @@ class BookTableScreen extends StatelessWidget {
                     ),
                     Container(
                       decoration: ShapeDecoration(
-                        color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                        color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                       ),
                       child: Padding(
@@ -130,9 +128,9 @@ class BookTableScreen extends StatelessWidget {
                               "When are you visiting?",
                               style: TextStyle(
                                 fontSize: 16,
-                                color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                fontFamily: AppThemeData.semiBold,
-                                fontWeight: FontWeight.w500,
+                                color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                fontFamily: 'Urbanist',
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                             SizedBox(
@@ -162,7 +160,7 @@ class BookTableScreen extends StatelessWidget {
                                                         width: 1,
                                                         color: controller.selectedDate.value == controller.dateList[index].date
                                                             ? AppThemeData.primary300
-                                                            : themeChange.getThem()
+                                                            : isDark
                                                                 ? AppThemeData.grey800
                                                                 : AppThemeData.grey100),
                                                     borderRadius: BorderRadius.circular(8),
@@ -182,8 +180,8 @@ class BookTableScreen extends StatelessWidget {
                                                                 : DateFormat('EEE').format(controller.dateList[index].date.toDate()),
                                                         style: TextStyle(
                                                           fontSize: 12,
-                                                          color: themeChange.getThem() ? AppThemeData.grey400 : AppThemeData.grey500,
-                                                          fontFamily: AppThemeData.regular,
+                                                          color: isDark ? AppThemeData.grey400 : AppThemeData.grey500,
+                                                          fontFamily: 'Urbanist',
                                                           fontWeight: FontWeight.w500,
                                                         ),
                                                       ),
@@ -191,8 +189,8 @@ class BookTableScreen extends StatelessWidget {
                                                         DateFormat('d MMM').format(controller.dateList[index].date.toDate()).toString(),
                                                         style: TextStyle(
                                                           fontSize: 16,
-                                                          color: themeChange.getThem() ? AppThemeData.grey400 : AppThemeData.grey500,
-                                                          fontFamily: AppThemeData.semiBold,
+                                                          color: isDark ? AppThemeData.grey400 : AppThemeData.grey500,
+                                                          fontFamily: 'Urbanist',
                                                           fontWeight: FontWeight.w600,
                                                         ),
                                                       ),
@@ -229,9 +227,9 @@ class BookTableScreen extends StatelessWidget {
                               "Select time slot and scroll to see offers",
                               style: TextStyle(
                                 fontSize: 16,
-                                color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                fontFamily: AppThemeData.semiBold,
-                                fontWeight: FontWeight.w500,
+                                color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                fontFamily: 'Urbanist',
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                             const SizedBox(
@@ -240,7 +238,7 @@ class BookTableScreen extends StatelessWidget {
                             Container(
                               decoration: ShapeDecoration(
                                 shape: RoundedRectangleBorder(
-                                  side: BorderSide(width: 1, color: themeChange.getThem() ? AppThemeData.grey600 : AppThemeData.grey300),
+                                  side: BorderSide(width: 1, color: isDark ? AppThemeData.grey600 : AppThemeData.grey300),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                               ),
@@ -254,18 +252,18 @@ class BookTableScreen extends StatelessWidget {
                                             borderRadius: BorderRadius.circular(30),
                                           ),
                                           side: BorderSide.none,
-                                          backgroundColor: themeChange.getThem() ? AppThemeData.grey800 : AppThemeData.grey100,
+                                          backgroundColor: isDark ? AppThemeData.grey800 : AppThemeData.grey100,
                                           selectedColor: AppThemeData.primary300,
-                                          labelStyle: TextStyle(color: themeChange.getThem() ? AppThemeData.grey100 : AppThemeData.grey800),
+                                          labelStyle: TextStyle(color: isDark ? AppThemeData.grey100 : AppThemeData.grey800),
                                           label: TranslatedText(
                                             DateFormat('hh:mm a').format(timeSlotList.time!),
                                             style: TextStyle(
                                               color: controller.selectedTimeSlot.value == DateFormat('hh:mm a').format(timeSlotList.time!)
                                                   ? AppThemeData.grey50
-                                                  : themeChange.getThem()
+                                                  : isDark
                                                       ? AppThemeData.grey400
                                                       : AppThemeData.grey500,
-                                              fontFamily: AppThemeData.medium,
+                                              fontFamily: 'Urbanist',
                                               fontWeight: FontWeight.w500,
                                             ),
                                           ),
@@ -295,9 +293,9 @@ class BookTableScreen extends StatelessWidget {
                             "Special Occasion",
                             style: TextStyle(
                               fontSize: 16,
-                              color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                              fontFamily: AppThemeData.semiBold,
-                              fontWeight: FontWeight.w500,
+                              color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                              fontFamily: 'Urbanist',
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),
@@ -308,9 +306,9 @@ class BookTableScreen extends StatelessWidget {
                           child: TranslatedText(
                             "Clear",
                             style: TextStyle(
-                              color: themeChange.getThem() ? AppThemeData.primary300 : AppThemeData.primary300,
-                              fontFamily: AppThemeData.semiBold,
-                              fontWeight: FontWeight.w500,
+                              color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
+                              fontFamily: 'Urbanist',
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         )
@@ -321,7 +319,7 @@ class BookTableScreen extends StatelessWidget {
                     ),
                     Container(
                       decoration: ShapeDecoration(
-                        color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                        color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                       ),
                       child: Padding(
@@ -338,8 +336,8 @@ class BookTableScreen extends StatelessWidget {
                                   '${controller.occasionList[i]}',
                                   style: TextStyle(
                                     fontSize: 16,
-                                    color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                    fontFamily: AppThemeData.medium,
+                                    color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                    fontFamily: 'Urbanist',
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -361,8 +359,8 @@ class BookTableScreen extends StatelessWidget {
                                 'Is this your first visit?',
                                 style: TextStyle(
                                   fontSize: 16,
-                                  color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                  fontFamily: AppThemeData.medium,
+                                  color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                  fontFamily: 'Urbanist',
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -386,9 +384,9 @@ class BookTableScreen extends StatelessWidget {
                       "Personal Details",
                       style: TextStyle(
                         fontSize: 16,
-                        color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                        fontFamily: AppThemeData.semiBold,
-                        fontWeight: FontWeight.w500,
+                        color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                        fontFamily: 'Urbanist',
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(
@@ -396,7 +394,7 @@ class BookTableScreen extends StatelessWidget {
                     ),
                     Container(
                       decoration: ShapeDecoration(
-                        color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                        color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                       ),
                       child: Padding(
@@ -425,17 +423,17 @@ class BookTableScreen extends StatelessWidget {
                                   "${Constant.userModel!.fullName()}",
                                   style: TextStyle(
                                     fontSize: 16,
-                                    color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                    fontFamily: AppThemeData.semiBold,
-                                    fontWeight: FontWeight.w500,
+                                    color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                    fontFamily: 'Urbanist',
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                                 TranslatedText(
                                   "${Constant.userModel!.email}",
                                   style: TextStyle(
                                     fontSize: 12,
-                                    color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                    fontFamily: AppThemeData.medium,
+                                    color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                    fontFamily: 'Urbanist',
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -452,9 +450,9 @@ class BookTableScreen extends StatelessWidget {
                       "Additional Requests",
                       style: TextStyle(
                         fontSize: 16,
-                        color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                        fontFamily: AppThemeData.semiBold,
-                        fontWeight: FontWeight.w500,
+                        color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                        fontFamily: 'Urbanist',
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(
@@ -473,7 +471,7 @@ class BookTableScreen extends StatelessWidget {
               ),
             ),
             bottomNavigationBar: Container(
-              color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+              color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
               child: Padding(
                   padding: const EdgeInsets.only(bottom: 20),

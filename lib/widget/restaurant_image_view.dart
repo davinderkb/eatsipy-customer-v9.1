@@ -7,8 +7,9 @@ import 'package:flutter/material.dart';
 
 class RestaurantImageView extends StatefulWidget {
   final VendorModel vendorModel;
+  final double? height;
 
-  const RestaurantImageView({super.key, required this.vendorModel});
+  const RestaurantImageView({super.key, required this.vendorModel, this.height});
 
   @override
   State<RestaurantImageView> createState() => _RestaurantImageViewState();
@@ -49,13 +50,14 @@ class _RestaurantImageViewState extends State<RestaurantImageView> {
 
   @override
   Widget build(BuildContext context) {
+    final h = widget.height ?? Responsive.height(20, context);
     return SizedBox(
-      height: Responsive.height(20, context),
+      height: h,
       child: widget.vendorModel.photos == null || widget.vendorModel.photos!.isEmpty
           ? NetworkImageWidget(
               imageUrl: widget.vendorModel.photo.toString(),
               fit: BoxFit.cover,
-              height: Responsive.height(20, context),
+              height: h,
               width: Responsive.width(100, context),
             )
           : PageView.builder(
@@ -71,7 +73,7 @@ class _RestaurantImageViewState extends State<RestaurantImageView> {
                 return NetworkImageWidget(
                   imageUrl: image.toString(),
                   fit: BoxFit.cover,
-                  height: Responsive.height(20, context),
+                  height: h,
                   width: Responsive.width(100, context),
                 );
               },

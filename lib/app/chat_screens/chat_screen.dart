@@ -8,7 +8,6 @@ import 'package:eatsipy_customer/constant/show_toast_dialog.dart';
 import 'package:eatsipy_customer/controllers/chat_controller.dart';
 import 'package:eatsipy_customer/models/conversation_model.dart';
 import 'package:eatsipy_customer/themes/app_them_data.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:eatsipy_customer/utils/dynamic_traslator.dart';
 import 'package:eatsipy_customer/utils/fire_store_utils.dart';
 import 'package:eatsipy_customer/utils/network_image_widget.dart';
@@ -22,7 +21,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 import 'ChatVideoContainer.dart';
 
@@ -31,22 +29,22 @@ class ChatScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GetX(
         init: ChatController(),
         builder: (controller) {
           return Scaffold(
             appBar: AppBar(
-                backgroundColor: themeChange.getThem() ? AppThemeData.surfaceDark : AppThemeData.surface,
+                backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
                 centerTitle: false,
                 titleSpacing: 0,
                 title: TranslatedText(
                   controller.receivedName.value,
                   textAlign: TextAlign.start,
                   style: TextStyle(
-                    fontFamily: AppThemeData.medium,
+                    fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
                     fontSize: 16,
-                    color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                    color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                   ),
                 ),
                 bottom: PreferredSize(
@@ -58,9 +56,9 @@ class ChatScreen extends StatelessWidget {
                         child: TranslatedText(
                           "${"Order"} ${Constant.orderId(orderId: controller.orderId.value.toString())}",
                           style: TextStyle(
-                            fontFamily: AppThemeData.medium,
+                            fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
                             fontSize: 14,
-                            color: themeChange.getThem() ? AppThemeData.grey200 : AppThemeData.grey700,
+                            color: isDark ? AppThemeData.grey200 : AppThemeData.grey700,
                           ),
                         ),
                       ),
@@ -78,7 +76,7 @@ class ChatScreen extends StatelessWidget {
                       physics: const BouncingScrollPhysics(),
                       itemBuilder: (context, documentSnapshots, index) {
                         ConversationModel inboxModel = ConversationModel.fromJson(documentSnapshots[index].data() as Map<String, dynamic>);
-                        return chatItemView(themeChange, context, inboxModel.senderId == FireStoreUtils.getCurrentUid(), inboxModel);
+                        return chatItemView(isDark, context, inboxModel.senderId == FireStoreUtils.getCurrentUid(), inboxModel);
                       },
                       onEmpty: Constant.showEmptyView(message: "No Conversion found"),
                       // orderBy is compulsory to enable pagination
@@ -89,7 +87,7 @@ class ChatScreen extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                  color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                     child: Column(
@@ -100,7 +98,7 @@ class ChatScreen extends StatelessWidget {
                           children: [
                             InkWell(
                                 onTap: () {
-                                  onCameraClick(themeChange, context, controller);
+                                  onCameraClick(isDark, context, controller);
                                 },
                                 child: SvgPicture.asset("assets/icons/ic_picture_one.svg")),
                             Flexible(
@@ -141,7 +139,7 @@ class ChatScreen extends StatelessWidget {
                               child: Container(
                                 margin: const EdgeInsets.only(left: 10),
                                 decoration: BoxDecoration(
-                                  color: themeChange.getThem() ? AppThemeData.grey700 : AppThemeData.grey200,
+                                  color: isDark ? AppThemeData.grey700 : AppThemeData.grey200,
                                   borderRadius: BorderRadius.circular(30),
                                 ),
                                 child: Padding(
@@ -165,7 +163,7 @@ class ChatScreen extends StatelessWidget {
         });
   }
 
-  Widget chatItemView(themeChange, context, bool isMe, ConversationModel data) {
+  Widget chatItemView(isDark, context, bool isMe, ConversationModel data) {
     return Container(
       padding: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
       child: isMe
@@ -188,7 +186,7 @@ class ChatScreen extends StatelessWidget {
                             child: TranslatedText(
                               data.message.toString(),
                               style: const TextStyle(
-                                fontFamily: AppThemeData.medium,
+                                fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
                                 fontSize: 16,
                                 color: AppThemeData.grey50,
                               ),
@@ -246,15 +244,15 @@ class ChatScreen extends StatelessWidget {
                             ),
                             decoration: BoxDecoration(
                               borderRadius: const BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12), bottomRight: Radius.circular(12)),
-                              color: themeChange.getThem() ? AppThemeData.grey700 : AppThemeData.grey200,
+                              color: isDark ? AppThemeData.grey700 : AppThemeData.grey200,
                             ),
                             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                             child: TranslatedText(
                               data.message.toString(),
                               style: TextStyle(
-                                fontFamily: AppThemeData.medium,
+                                fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
                                 fontSize: 16,
-                                color: themeChange.getThem() ? AppThemeData.grey100 : AppThemeData.grey800,
+                                color: isDark ? AppThemeData.grey100 : AppThemeData.grey800,
                               ),
                             ),
                           )
@@ -302,13 +300,13 @@ class ChatScreen extends StatelessWidget {
     );
   }
 
-  void onCameraClick(DarkThemeProvider themeChange, BuildContext context, ChatController controller) {
+  void onCameraClick(bool isDark, BuildContext context, ChatController controller) {
     final action = CupertinoActionSheet(
       message: TranslatedText(
         'Send Media',
         style: TextStyle(
           fontSize: 18.0,
-          color: themeChange.getThem() ? AppThemeData.grey100 : AppThemeData.grey800,
+          color: isDark ? AppThemeData.grey100 : AppThemeData.grey800,
         ),
       ),
       actions: <Widget>[

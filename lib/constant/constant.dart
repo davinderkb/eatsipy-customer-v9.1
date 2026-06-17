@@ -113,6 +113,8 @@ class Constant {
   static bool packagingChargeEnable = false;
 
   static bool isDineInEnable = false;
+  static bool showHomeQuickActions = false;
+  static bool takeawayEnabled = true;
 
   static String getTaxDisplayText(List<TaxModel>? taxes) {
     if (taxes == null || taxes.isEmpty) return '';
@@ -337,7 +339,7 @@ class Constant {
     return Center(
       child: TranslatedText(message,
           style:
-              const TextStyle(fontFamily: AppThemeData.medium, fontSize: 18)),
+              const TextStyle(fontFamily: 'Urbanist', fontWeight: FontWeight.w500, fontSize: 18)),
     );
   }
 
@@ -1008,60 +1010,55 @@ class Constant {
     return currentDate.isAfter(startDate) && currentDate.isBefore(endDate);
   }
 
-  static String getNextOpeningTime(VendorModel vendor, DateTime now) {
-    final daysOfWeek = [
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-      "Sunday"
-    ];
+  static DateTime? getNextOpeningDateTime(VendorModel vendor, DateTime now) {
+    final daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    int todayIndex = daysOfWeek.indexOf(DateFormat('EEEE', 'en_US').format(now));
 
-    String today = DateFormat('EEEE').format(now); // e.g. "Friday"
-    int todayIndex = daysOfWeek.indexOf(today);
-
-    // Loop through today + next 6 days
     for (int i = 0; i < 7; i++) {
       int dayIndex = (todayIndex + i) % 7;
       String dayName = daysOfWeek[dayIndex];
-
-      // Find schedule for this day
       final daySchedule = vendor.workingHours?.firstWhere(
         (d) => d.day?.toLowerCase() == dayName.toLowerCase(),
         orElse: () => WorkingHours(day: "", timeslot: []),
       );
-
-      if (daySchedule != null &&
-          daySchedule.day != null &&
-          daySchedule.day!.isNotEmpty &&
-          daySchedule.timeslot != null &&
-          daySchedule.timeslot!.isNotEmpty) {
+      if (daySchedule != null && daySchedule.day != null && daySchedule.day!.isNotEmpty
+          && daySchedule.timeslot != null && daySchedule.timeslot!.isNotEmpty) {
         for (var slot in daySchedule.timeslot!) {
-          if (slot.from == null || slot.to == null) continue;
-
+          if (slot.from == null) continue;
           DateTime fromTime = DateFormat("HH:mm").parse(slot.from!);
-
-          // Attach correct date (today + i days)
-          fromTime = DateTime(
-              now.year, now.month, now.day + i, fromTime.hour, fromTime.minute);
-
-          // ✅ Only care about NEXT future opening
-          if (fromTime.isAfter(now)) {
-            if (i == 0) {
-              return "Open again today at ${DateFormat.jm().format(fromTime)}";
-            } else if (i == 1) {
-              return "Open again tomorrow at ${DateFormat.jm().format(fromTime)}";
-            } else {
-              return "Open again $dayName at ${DateFormat.jm().format(fromTime)}";
-            }
-          }
+          fromTime = DateTime(now.year, now.month, now.day + i, fromTime.hour, fromTime.minute);
+          if (fromTime.isAfter(now)) return fromTime;
         }
       }
     }
+    return null;
+  }
 
-    return "Closed this week";
+  static String getNextOpeningTime(VendorModel vendor, DateTime now) {
+    final nextOpen = getNextOpeningDateTime(vendor, now);
+    if (nextOpen == null) return "Temporarily unavailable";
+
+    final diff = nextOpen.difference(now);
+
+    if (diff.inMinutes < 60) {
+      final mins = diff.inMinutes < 1 ? 1 : diff.inMinutes;
+      return "Opens in $mins ${mins == 1 ? 'min' : 'mins'}";
+    }
+
+    if (nextOpen.year == now.year && nextOpen.month == now.month && nextOpen.day == now.day) {
+      return "Opens at ${DateFormat.jm().format(nextOpen)}";
+    }
+
+    final tomorrow = DateTime(now.year, now.month, now.day + 1);
+    if (nextOpen.year == tomorrow.year && nextOpen.month == tomorrow.month && nextOpen.day == tomorrow.day) {
+      return "Opens tomorrow";
+    }
+
+    if (diff.inDays <= 7) {
+      return "Opens ${DateFormat('EEEE').format(nextOpen)}";
+    }
+
+    return "Opens next week";
   }
 }
 

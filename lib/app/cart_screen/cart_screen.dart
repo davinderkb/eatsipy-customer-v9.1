@@ -18,7 +18,6 @@ import 'package:eatsipy_customer/themes/app_them_data.dart';
 import 'package:eatsipy_customer/themes/responsive.dart';
 import 'package:eatsipy_customer/themes/round_button_fill.dart';
 import 'package:eatsipy_customer/themes/text_field_widget.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:eatsipy_customer/utils/fire_store_utils.dart';
 import 'package:eatsipy_customer/utils/network_image_widget.dart';
 import 'package:eatsipy_customer/widget/my_separator.dart';
@@ -27,21 +26,20 @@ import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GetX(
         init: CartController(),
         builder: (controller) {
           return Scaffold(
-            backgroundColor: themeChange.getThem() ? AppThemeData.surfaceDark : AppThemeData.surface,
+            backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
             appBar: AppBar(
-              backgroundColor: themeChange.getThem() ? AppThemeData.surfaceDark : AppThemeData.surface,
+              backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
             ),
             body: cartItem.isEmpty
                 ? Constant.showEmptyView(message: "Item Not available")
@@ -69,7 +67,7 @@ class CartScreen extends StatelessWidget {
                                     children: [
                                       Container(
                                         decoration: ShapeDecoration(
-                                          color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                                          color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                         ),
                                         child: Padding(
@@ -93,8 +91,8 @@ class CartScreen extends StatelessWidget {
                                                       controller.selectedAddress.value.addressAs.toString(),
                                                       textAlign: TextAlign.start,
                                                       style: TextStyle(
-                                                        fontFamily: AppThemeData.semiBold,
-                                                        color: themeChange.getThem() ? AppThemeData.primary300 : AppThemeData.primary300,
+                                                        fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                                        color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
                                                         fontSize: 16,
                                                       ),
                                                     ),
@@ -109,8 +107,8 @@ class CartScreen extends StatelessWidget {
                                                 controller.selectedAddress.value.getFullAddress(),
                                                 textAlign: TextAlign.start,
                                                 style: TextStyle(
-                                                  fontFamily: AppThemeData.medium,
-                                                  color: themeChange.getThem() ? AppThemeData.grey400 : AppThemeData.grey500,
+                                                  fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
+                                                  color: isDark ? AppThemeData.grey400 : AppThemeData.grey500,
                                                 ),
                                               ),
                                             ],
@@ -128,7 +126,7 @@ class CartScreen extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: Container(
                             decoration: ShapeDecoration(
-                              color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                              color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                             ),
                             child: Padding(
@@ -182,8 +180,8 @@ class CartScreen extends StatelessWidget {
                                                       "${cartProductModel.name}",
                                                       textAlign: TextAlign.start,
                                                       style: TextStyle(
-                                                        fontFamily: AppThemeData.regular,
-                                                        color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                        fontFamily: 'Urbanist',
+                                                        color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                                         fontSize: 16,
                                                       ),
                                                     ),
@@ -192,8 +190,8 @@ class CartScreen extends StatelessWidget {
                                                             Constant.amountShow(amount: cartProductModel.price),
                                                             style: TextStyle(
                                                               fontSize: 16,
-                                                              color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                                              fontFamily: AppThemeData.semiBold,
+                                                              color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                              fontFamily: 'Urbanist',
                                                               fontWeight: FontWeight.w600,
                                                             ),
                                                           )
@@ -205,8 +203,8 @@ class CartScreen extends StatelessWidget {
                                                                   Constant.amountShow(amount: cartProductModel.discountPrice.toString()),
                                                                   style: TextStyle(
                                                                     fontSize: 16,
-                                                                    color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                                                    fontFamily: AppThemeData.semiBold,
+                                                                    color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                                    fontFamily: 'Urbanist',
                                                                     fontWeight: FontWeight.w600,
                                                                   ),
                                                                 ),
@@ -218,9 +216,9 @@ class CartScreen extends StatelessWidget {
                                                                   style: TextStyle(
                                                                     fontSize: 14,
                                                                     decoration: TextDecoration.lineThrough,
-                                                                    decorationColor: themeChange.getThem() ? AppThemeData.grey500 : AppThemeData.grey400,
-                                                                    color: themeChange.getThem() ? AppThemeData.grey500 : AppThemeData.grey400,
-                                                                    fontFamily: AppThemeData.semiBold,
+                                                                    decorationColor: isDark ? AppThemeData.grey500 : AppThemeData.grey400,
+                                                                    color: isDark ? AppThemeData.grey500 : AppThemeData.grey400,
+                                                                    fontFamily: 'Urbanist',
                                                                     fontWeight: FontWeight.w600,
                                                                   ),
                                                                 ),
@@ -236,8 +234,8 @@ class CartScreen extends StatelessWidget {
                                                               overflow: TextOverflow.ellipsis,
                                                               style: TextStyle(
                                                                 fontSize: 12,
-                                                                color: themeChange.getThem() ? AppThemeData.secondary300 : AppThemeData.secondary300,
-                                                                fontFamily: AppThemeData.semiBold,
+                                                                color: isDark ? AppThemeData.secondary300 : AppThemeData.secondary300,
+                                                                fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
                                                               ),
                                                             )
                                                   ],
@@ -246,9 +244,9 @@ class CartScreen extends StatelessWidget {
                                               Container(
                                                 width: Responsive.width(26, context),
                                                 decoration: ShapeDecoration(
-                                                  color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                                                  color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                                                   shape: RoundedRectangleBorder(
-                                                    side: const BorderSide(width: 1, color: Color(0xFFD1D5DB)),
+                                                    side: const BorderSide(width: 1, color: AppThemeData.grey300),
                                                     borderRadius: BorderRadius.circular(200),
                                                   ),
                                                 ),
@@ -272,9 +270,9 @@ class CartScreen extends StatelessWidget {
                                                           style: TextStyle(
                                                             fontSize: 16,
                                                             overflow: TextOverflow.ellipsis,
-                                                            fontFamily: AppThemeData.medium,
+                                                            fontFamily: 'Urbanist',
                                                             fontWeight: FontWeight.w500,
-                                                            color: themeChange.getThem() ? AppThemeData.grey100 : AppThemeData.grey800,
+                                                            color: isDark ? AppThemeData.grey100 : AppThemeData.grey800,
                                                           ),
                                                         ),
                                                       ),
@@ -333,8 +331,8 @@ class CartScreen extends StatelessWidget {
                                                         "Variants",
                                                         textAlign: TextAlign.start,
                                                         style: TextStyle(
-                                                          fontFamily: AppThemeData.semiBold,
-                                                          color: themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
+                                                          fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                                          color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
                                                           fontSize: 16,
                                                         ),
                                                       ),
@@ -349,7 +347,7 @@ class CartScreen extends StatelessWidget {
                                                           (i) {
                                                             return Container(
                                                               decoration: ShapeDecoration(
-                                                                color: themeChange.getThem() ? AppThemeData.grey800 : AppThemeData.grey100,
+                                                                color: isDark ? AppThemeData.grey800 : AppThemeData.grey100,
                                                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                                               ),
                                                               child: Padding(
@@ -358,8 +356,8 @@ class CartScreen extends StatelessWidget {
                                                                   "${cartProductModel.variantInfo!.variantOptions!.keys.elementAt(i)} : ${cartProductModel.variantInfo!.variantOptions![cartProductModel.variantInfo!.variantOptions!.keys.elementAt(i)]}",
                                                                   textAlign: TextAlign.start,
                                                                   style: TextStyle(
-                                                                    fontFamily: AppThemeData.medium,
-                                                                    color: themeChange.getThem() ? AppThemeData.grey500 : AppThemeData.grey400,
+                                                                    fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
+                                                                    color: isDark ? AppThemeData.grey500 : AppThemeData.grey400,
                                                                   ),
                                                                 ),
                                                               ),
@@ -385,8 +383,8 @@ class CartScreen extends StatelessWidget {
                                                             "Addons",
                                                             textAlign: TextAlign.start,
                                                             style: TextStyle(
-                                                              fontFamily: AppThemeData.semiBold,
-                                                              color: themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
+                                                              fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                                              color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
                                                               fontSize: 16,
                                                             ),
                                                           ),
@@ -396,8 +394,8 @@ class CartScreen extends StatelessWidget {
                                                               amount: (double.parse(cartProductModel.extrasPrice.toString()) * double.parse(cartProductModel.quantity.toString())).toString()),
                                                           textAlign: TextAlign.start,
                                                           style: TextStyle(
-                                                            fontFamily: AppThemeData.semiBold,
-                                                            color: themeChange.getThem() ? AppThemeData.primary300 : AppThemeData.primary300,
+                                                            fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                                            color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
                                                             fontSize: 16,
                                                           ),
                                                         ),
@@ -414,7 +412,7 @@ class CartScreen extends StatelessWidget {
                                                         (i) {
                                                           return Container(
                                                             decoration: ShapeDecoration(
-                                                              color: themeChange.getThem() ? AppThemeData.grey800 : AppThemeData.grey100,
+                                                              color: isDark ? AppThemeData.grey800 : AppThemeData.grey100,
                                                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                                             ),
                                                             child: Padding(
@@ -423,8 +421,8 @@ class CartScreen extends StatelessWidget {
                                                                 cartProductModel.extras![i].toString(),
                                                                 textAlign: TextAlign.start,
                                                                 style: TextStyle(
-                                                                  fontFamily: AppThemeData.medium,
-                                                                  color: themeChange.getThem() ? AppThemeData.grey500 : AppThemeData.grey400,
+                                                                  fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
+                                                                  color: isDark ? AppThemeData.grey500 : AppThemeData.grey400,
                                                                 ),
                                                               ),
                                                             ),
@@ -442,7 +440,7 @@ class CartScreen extends StatelessWidget {
                                 separatorBuilder: (context, index) {
                                   return Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 10),
-                                    child: MySeparator(color: themeChange.getThem() ? AppThemeData.grey700 : AppThemeData.grey200),
+                                    child: MySeparator(color: isDark ? AppThemeData.grey700 : AppThemeData.grey200),
                                   );
                                 },
                               ),
@@ -461,8 +459,8 @@ class CartScreen extends StatelessWidget {
                                 "${'Delivery Type'} ${'(${controller.selectedFoodType.value})'}",
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
-                                  fontFamily: AppThemeData.semiBold,
-                                  color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                  fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                  color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                   fontSize: 16,
                                 ),
                               ),
@@ -474,7 +472,7 @@ class CartScreen extends StatelessWidget {
                                   : Container(
                                       width: Responsive.width(100, context),
                                       decoration: ShapeDecoration(
-                                        color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                                        color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                       ),
                                       child: Padding(
@@ -489,8 +487,8 @@ class CartScreen extends StatelessWidget {
                                                     "Instant Delivery",
                                                     textAlign: TextAlign.start,
                                                     style: TextStyle(
-                                                      fontFamily: AppThemeData.medium,
-                                                      color: themeChange.getThem() ? AppThemeData.primary300 : AppThemeData.primary300,
+                                                      fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
+                                                      color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
                                                       fontSize: 16,
                                                     ),
                                                   ),
@@ -501,9 +499,9 @@ class CartScreen extends StatelessWidget {
                                                     "Standard",
                                                     textAlign: TextAlign.start,
                                                     style: TextStyle(
-                                                      fontFamily: AppThemeData.medium,
+                                                      fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
                                                       fontSize: 12,
-                                                      color: themeChange.getThem() ? AppThemeData.grey400 : AppThemeData.grey500,
+                                                      color: isDark ? AppThemeData.grey400 : AppThemeData.grey500,
                                                     ),
                                                   ),
                                                 ],
@@ -527,7 +525,7 @@ class CartScreen extends StatelessWidget {
                               Container(
                                 width: Responsive.width(100, context),
                                 decoration: ShapeDecoration(
-                                  color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                                  color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                 ),
                                 child: InkWell(
@@ -555,8 +553,8 @@ class CartScreen extends StatelessWidget {
                                                 "Schedule Time",
                                                 textAlign: TextAlign.start,
                                                 style: TextStyle(
-                                                  fontFamily: AppThemeData.medium,
-                                                  color: themeChange.getThem() ? AppThemeData.primary300 : AppThemeData.primary300,
+                                                  fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
+                                                  color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
                                                   fontSize: 16,
                                                 ),
                                               ),
@@ -567,9 +565,9 @@ class CartScreen extends StatelessWidget {
                                                 "${'Your preferred time'} ${controller.deliveryType.value == "schedule" ? Constant.timestampToDateTime(Timestamp.fromDate(controller.scheduleDateTime.value)) : ""}",
                                                 textAlign: TextAlign.start,
                                                 style: TextStyle(
-                                                  fontFamily: AppThemeData.medium,
+                                                  fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
                                                   fontSize: 12,
-                                                  color: themeChange.getThem() ? AppThemeData.grey400 : AppThemeData.grey500,
+                                                  color: isDark ? AppThemeData.grey400 : AppThemeData.grey500,
                                                 ),
                                               ),
                                             ],
@@ -613,8 +611,8 @@ class CartScreen extends StatelessWidget {
                                 "Offers & Benefits",
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
-                                  fontFamily: AppThemeData.semiBold,
-                                  color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                  fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                  color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                   fontSize: 16,
                                 ),
                               ),
@@ -628,7 +626,7 @@ class CartScreen extends StatelessWidget {
                                 child: Container(
                                   width: Responsive.width(100, context),
                                   decoration: ShapeDecoration(
-                                    color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                                    color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                     shadows: const [
                                       BoxShadow(
@@ -649,8 +647,8 @@ class CartScreen extends StatelessWidget {
                                             "Apply Coupons",
                                             textAlign: TextAlign.start,
                                             style: TextStyle(
-                                              fontFamily: AppThemeData.semiBold,
-                                              color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                              fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                              color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                               fontSize: 16,
                                             ),
                                           ),
@@ -679,8 +677,8 @@ class CartScreen extends StatelessWidget {
                                 "Bill Details",
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
-                                  fontFamily: AppThemeData.semiBold,
-                                  color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                  fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                  color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                   fontSize: 16,
                                 ),
                               ),
@@ -690,7 +688,7 @@ class CartScreen extends StatelessWidget {
                               Container(
                                 width: Responsive.width(100, context),
                                 decoration: ShapeDecoration(
-                                  color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                                  color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                   shadows: const [
                                     BoxShadow(
@@ -707,7 +705,7 @@ class CartScreen extends StatelessWidget {
                                       amountRow(
                                         title: "Item totals",
                                         amount: Constant.amountShow(amount: controller.subTotal.value.toString()),
-                                        isDark: themeChange.getThem(),
+                                        isDark: isDark,
                                       ),
 
                                       const SizedBox(height: 10),
@@ -716,7 +714,7 @@ class CartScreen extends StatelessWidget {
                                       amountRow(
                                         title: "Coupon Discount",
                                         amount: "- (${Constant.amountShow(amount: controller.couponAmount.value.toString())})",
-                                        isDark: themeChange.getThem(),
+                                        isDark: isDark,
                                         amountColor: AppThemeData.danger300,
                                       ),
 
@@ -726,7 +724,7 @@ class CartScreen extends StatelessWidget {
                                         amountRow(
                                           title: "Special Discount",
                                           amount: "- (${Constant.amountShow(amount: controller.specialDiscountAmount.value.toString())})",
-                                          isDark: themeChange.getThem(),
+                                          isDark: isDark,
                                           amountColor: AppThemeData.danger300,
                                         ),
                                       ],
@@ -737,22 +735,22 @@ class CartScreen extends StatelessWidget {
                                       amountRow(
                                         title: "Packaging charge",
                                         amount: Constant.amountShow(amount: controller.packagingCharge.value.toString()),
-                                        isDark: themeChange.getThem(),
+                                        isDark: isDark,
                                       ),
 
-                                      sectionDivider(themeChange.getThem()),
+                                      sectionDivider(isDark),
 
                                       /// Delivery Fee
                                       if (controller.selectedFoodType.value != 'TakeAway')
                                         amountRow(
                                           title: "Delivery Fee",
-                                          isDark: themeChange.getThem(),
+                                          isDark: isDark,
                                           trailing:
                                               ((controller.vendorModel.value.isSelfDelivery == true && Constant.isSelfDeliveryFeature == true) || controller.isEnableFreeDeliveryByAdmin.value == true)
                                                   ? TranslatedText(
                                                       'Free Delivery',
                                                       style: TextStyle(
-                                                        fontFamily: AppThemeData.regular,
+                                                        fontFamily: 'Urbanist',
                                                         color: AppThemeData.success400,
                                                         fontSize: 16,
                                                       ),
@@ -760,8 +758,8 @@ class CartScreen extends StatelessWidget {
                                                   : Text(
                                                       Constant.amountShow(amount: controller.deliveryCharges.value.toString()),
                                                       style: TextStyle(
-                                                        fontFamily: AppThemeData.regular,
-                                                        color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                        fontFamily: 'Urbanist',
+                                                        color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                                         fontSize: 16,
                                                       ),
                                                     ),
@@ -783,8 +781,8 @@ class CartScreen extends StatelessWidget {
                                                   TranslatedText(
                                                     "Delivery Tips",
                                                     style: TextStyle(
-                                                      fontFamily: AppThemeData.regular,
-                                                      color: themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
+                                                      fontFamily: 'Urbanist',
+                                                      color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
                                                       fontSize: 16,
                                                     ),
                                                   ),
@@ -797,7 +795,7 @@ class CartScreen extends StatelessWidget {
                                                       child: TranslatedText(
                                                         "Remove",
                                                         style: TextStyle(
-                                                          fontFamily: AppThemeData.medium,
+                                                          fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
                                                           color: AppThemeData.primary300,
                                                         ),
                                                       ),
@@ -808,8 +806,8 @@ class CartScreen extends StatelessWidget {
                                             Text(
                                               Constant.amountShow(amount: controller.deliveryTips.toString()),
                                               style: TextStyle(
-                                                fontFamily: AppThemeData.regular,
-                                                color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                fontFamily: 'Urbanist',
+                                                color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                                 fontSize: 16,
                                               ),
                                             ),
@@ -819,38 +817,38 @@ class CartScreen extends StatelessWidget {
                                       if (!(controller.selectedFoodType.value == 'TakeAway' ||
                                           controller.isEnableFreeDeliveryByAdmin.value == true ||
                                           (controller.vendorModel.value.isSelfDelivery == true && Constant.isSelfDeliveryFeature == true)))
-                                        sectionDivider(themeChange.getThem()),
+                                        sectionDivider(isDark),
 
                                       /// Platform Fee
                                       amountRow(
                                         title: "Platform fee",
                                         amount: Constant.amountShow(amount: controller.platformFee.value.toString()),
-                                        isDark: themeChange.getThem(),
+                                        isDark: isDark,
                                       ),
 
-                                      sectionDivider(themeChange.getThem()),
+                                      sectionDivider(isDark),
 
                                       /// Tax
                                       InkWell(
                                         onTap: () {
-                                          showBillBifurcationDialog(context, themeChange.getThem(), controller);
+                                          showBillBifurcationDialog(context, isDark, controller);
                                         },
                                         child: amountRow(
                                             title: "Tax amount",
                                             amount: Constant.amountShow(amount: controller.totalTaxAmount.value.toString()),
-                                            isDark: themeChange.getThem(),
+                                            isDark: isDark,
                                             textColour: AppThemeData.secondary300,
                                             underline: true),
                                       ),
 
-                                      sectionDivider(themeChange.getThem()),
+                                      sectionDivider(isDark),
 
                                       /// To Pay
                                       amountRow(
                                         title: "To Pay",
                                         amount: Constant.amountShow(amount: controller.totalAmount.value.toString()),
                                         amountColor: AppThemeData.primary300,
-                                        isDark: themeChange.getThem(),
+                                        isDark: isDark,
                                       ),
                                     ],
                                   ),
@@ -874,8 +872,8 @@ class CartScreen extends StatelessWidget {
                                       "Thanks with a tip!",
                                       textAlign: TextAlign.start,
                                       style: TextStyle(
-                                        fontFamily: AppThemeData.semiBold,
-                                        color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                        fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                        color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                         fontSize: 16,
                                       ),
                                     ),
@@ -885,7 +883,7 @@ class CartScreen extends StatelessWidget {
                                     Container(
                                       width: Responsive.width(100, context),
                                       decoration: ShapeDecoration(
-                                        color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                                        color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                         shadows: const [
                                           BoxShadow(
@@ -908,8 +906,8 @@ class CartScreen extends StatelessWidget {
                                                     "Around the clock, our delivery partners bring you your favorite meals. Show your appreciation with a tip.",
                                                     textAlign: TextAlign.start,
                                                     style: TextStyle(
-                                                      fontFamily: AppThemeData.medium,
-                                                      color: themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
+                                                      fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
+                                                      color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
                                                     ),
                                                   ),
                                                 ),
@@ -937,7 +935,7 @@ class CartScreen extends StatelessWidget {
                                                               width: 1,
                                                               color: controller.deliveryTips.value == 20
                                                                   ? AppThemeData.primary300
-                                                                  : themeChange.getThem()
+                                                                  : isDark
                                                                       ? AppThemeData.grey800
                                                                       : AppThemeData.grey100),
                                                           borderRadius: BorderRadius.circular(8),
@@ -949,10 +947,10 @@ class CartScreen extends StatelessWidget {
                                                           child: Text(
                                                             Constant.amountShow(amount: "20"),
                                                             style: TextStyle(
-                                                              color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                              color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                                               fontSize: 14,
-                                                              fontFamily: AppThemeData.medium,
-                                                              fontWeight: FontWeight.w600,
+                                                              fontFamily: 'Urbanist',
+                                                              fontWeight: FontWeight.w500,
                                                             ),
                                                           ),
                                                         ),
@@ -976,7 +974,7 @@ class CartScreen extends StatelessWidget {
                                                               width: 1,
                                                               color: controller.deliveryTips.value == 30
                                                                   ? AppThemeData.primary300
-                                                                  : themeChange.getThem()
+                                                                  : isDark
                                                                       ? AppThemeData.grey800
                                                                       : AppThemeData.grey100),
                                                           borderRadius: BorderRadius.circular(8),
@@ -988,10 +986,10 @@ class CartScreen extends StatelessWidget {
                                                           child: Text(
                                                             Constant.amountShow(amount: "30"),
                                                             style: TextStyle(
-                                                              color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                              color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                                               fontSize: 14,
-                                                              fontFamily: AppThemeData.medium,
-                                                              fontWeight: FontWeight.w600,
+                                                              fontFamily: 'Urbanist',
+                                                              fontWeight: FontWeight.w500,
                                                             ),
                                                           ),
                                                         ),
@@ -1015,7 +1013,7 @@ class CartScreen extends StatelessWidget {
                                                               width: 1,
                                                               color: controller.deliveryTips.value == 40
                                                                   ? AppThemeData.primary300
-                                                                  : themeChange.getThem()
+                                                                  : isDark
                                                                       ? AppThemeData.grey800
                                                                       : AppThemeData.grey100),
                                                           borderRadius: BorderRadius.circular(8),
@@ -1027,10 +1025,10 @@ class CartScreen extends StatelessWidget {
                                                           child: Text(
                                                             Constant.amountShow(amount: "40"),
                                                             style: TextStyle(
-                                                              color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                              color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                                               fontSize: 14,
-                                                              fontFamily: AppThemeData.medium,
-                                                              fontWeight: FontWeight.w600,
+                                                              fontFamily: 'Urbanist',
+                                                              fontWeight: FontWeight.w500,
                                                             ),
                                                           ),
                                                         ),
@@ -1047,14 +1045,14 @@ class CartScreen extends StatelessWidget {
                                                       showDialog(
                                                         context: context,
                                                         builder: (BuildContext context) {
-                                                          return tipsDialog(controller, themeChange);
+                                                          return tipsDialog(controller, isDark);
                                                         },
                                                       );
                                                     },
                                                     child: Container(
                                                       decoration: ShapeDecoration(
                                                         shape: RoundedRectangleBorder(
-                                                          side: BorderSide(width: 1, color: themeChange.getThem() ? AppThemeData.grey800 : AppThemeData.grey100),
+                                                          side: BorderSide(width: 1, color: isDark ? AppThemeData.grey800 : AppThemeData.grey100),
                                                           borderRadius: BorderRadius.circular(8),
                                                         ),
                                                       ),
@@ -1064,10 +1062,10 @@ class CartScreen extends StatelessWidget {
                                                           child: TranslatedText(
                                                             'Other',
                                                             style: TextStyle(
-                                                              color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                              color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                                               fontSize: 14,
-                                                              fontFamily: AppThemeData.medium,
-                                                              fontWeight: FontWeight.w600,
+                                                              fontFamily: 'Urbanist',
+                                                              fontWeight: FontWeight.w500,
                                                             ),
                                                           ),
                                                         ),
@@ -1106,7 +1104,7 @@ class CartScreen extends StatelessWidget {
             bottomNavigationBar: cartItem.isEmpty
                 ? null
                 : Container(
-                    decoration: BoxDecoration(color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50),
+                    decoration: BoxDecoration(color: isDark ? AppThemeData.grey900 : AppThemeData.grey50),
                     height: controller.selectedPaymentMethod.value == ''
                         ? 100
                         : controller.isCashbackApply.value == true
@@ -1134,8 +1132,8 @@ class CartScreen extends StatelessWidget {
                                   child: TranslatedText(
                                     "Cashback Offer",
                                     style: TextStyle(
-                                      color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                      fontFamily: AppThemeData.semiBold,
+                                      color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                      fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
                                       fontSize: 13,
                                     ),
                                   ),
@@ -1144,7 +1142,7 @@ class CartScreen extends StatelessWidget {
                                   "${"Cashback Name :"} ${controller.bestCashback.value.title ?? ''}",
                                   style: TextStyle(
                                     color: AppThemeData.darkGreen,
-                                    fontFamily: AppThemeData.semiBold,
+                                    fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
                                     fontSize: 13,
                                   ),
                                 ),
@@ -1152,7 +1150,7 @@ class CartScreen extends StatelessWidget {
                                   "${"You will get"} ${Constant.amountShow(amount: controller.bestCashback.value.cashbackValue?.toStringAsFixed(2))} ${"cashback after completing the order."}",
                                   style: TextStyle(
                                     color: AppThemeData.darkGreen,
-                                    fontFamily: AppThemeData.semiBold,
+                                    fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
                                     fontSize: 13,
                                   ),
                                 ),
@@ -1179,14 +1177,14 @@ class CartScreen extends StatelessWidget {
                                           child: TranslatedText(
                                         "%",
                                         style: TextStyle(
-                                            color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey50, fontFamily: AppThemeData.semiBold, fontWeight: FontWeight.w600, fontSize: 12),
+                                            color: isDark ? AppThemeData.grey50 : AppThemeData.grey50, fontFamily: 'Urbanist', fontWeight: FontWeight.w600, fontSize: 12),
                                       )),
                                     ),
                                     TranslatedText(
                                       "${'Buy'} ${Constant.amountShow(amount: "${double.parse("${controller.freeDeliveryByAdminModel.value.freeDeliveryOver ?? 0.0}") - controller.subTotal.value}")} ${"more for free delivery"}",
                                       style: TextStyle(
                                         color: AppThemeData.primary300,
-                                        fontFamily: AppThemeData.semiBold,
+                                        fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
                                         fontSize: 13,
                                       ),
                                     ),
@@ -1213,48 +1211,48 @@ class CartScreen extends StatelessWidget {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       controller.selectedPaymentMethod.value == ''
-                                          ? cardDecoration(controller, PaymentGateway.wallet, themeChange, "")
+                                          ? cardDecoration(controller, PaymentGateway.wallet, isDark, "")
                                           : controller.selectedPaymentMethod.value == PaymentGateway.wallet.name
-                                              ? cardDecoration(controller, PaymentGateway.wallet, themeChange, "assets/images/ic_wallet.png")
+                                              ? cardDecoration(controller, PaymentGateway.wallet, isDark, "assets/images/ic_wallet.png")
                                               : controller.selectedPaymentMethod.value == PaymentGateway.cod.name
-                                                  ? cardDecoration(controller, PaymentGateway.cod, themeChange, "assets/images/ic_cash.png")
+                                                  ? cardDecoration(controller, PaymentGateway.cod, isDark, "assets/images/ic_cash.png")
                                                   : controller.selectedPaymentMethod.value == PaymentGateway.stripe.name
-                                                      ? cardDecoration(controller, PaymentGateway.stripe, themeChange, "assets/images/stripe.png")
+                                                      ? cardDecoration(controller, PaymentGateway.stripe, isDark, "assets/images/stripe.png")
                                                       : controller.selectedPaymentMethod.value == PaymentGateway.paypal.name
-                                                          ? cardDecoration(controller, PaymentGateway.paypal, themeChange, "assets/images/paypal.png")
+                                                          ? cardDecoration(controller, PaymentGateway.paypal, isDark, "assets/images/paypal.png")
                                                           : controller.selectedPaymentMethod.value == PaymentGateway.payStack.name
-                                                              ? cardDecoration(controller, PaymentGateway.payStack, themeChange, "assets/images/paystack.png")
+                                                              ? cardDecoration(controller, PaymentGateway.payStack, isDark, "assets/images/paystack.png")
                                                               : controller.selectedPaymentMethod.value == PaymentGateway.mercadoPago.name
-                                                                  ? cardDecoration(controller, PaymentGateway.mercadoPago, themeChange, "assets/images/mercado-pago.png")
+                                                                  ? cardDecoration(controller, PaymentGateway.mercadoPago, isDark, "assets/images/mercado-pago.png")
                                                                   : controller.selectedPaymentMethod.value == PaymentGateway.flutterWave.name
-                                                                      ? cardDecoration(controller, PaymentGateway.flutterWave, themeChange, "assets/images/flutterwave_logo.png")
+                                                                      ? cardDecoration(controller, PaymentGateway.flutterWave, isDark, "assets/images/flutterwave_logo.png")
                                                                       : controller.selectedPaymentMethod.value == PaymentGateway.payFast.name
-                                                                          ? cardDecoration(controller, PaymentGateway.payFast, themeChange, "assets/images/payfast.png")
+                                                                          ? cardDecoration(controller, PaymentGateway.payFast, isDark, "assets/images/payfast.png")
                                                                           : controller.selectedPaymentMethod.value == PaymentGateway.paytm.name
-                                                                              ? cardDecoration(controller, PaymentGateway.paytm, themeChange, "assets/images/paytm.png")
+                                                                              ? cardDecoration(controller, PaymentGateway.paytm, isDark, "assets/images/paytm.png")
                                                                               : controller.selectedPaymentMethod.value == PaymentGateway.midTrans.name
-                                                                                  ? cardDecoration(controller, PaymentGateway.midTrans, themeChange, "assets/images/midtrans.png")
+                                                                                  ? cardDecoration(controller, PaymentGateway.midTrans, isDark, "assets/images/midtrans.png")
                                                                                   : controller.selectedPaymentMethod.value == PaymentGateway.orangeMoney.name
-                                                                                      ? cardDecoration(controller, PaymentGateway.orangeMoney, themeChange, "assets/images/orange_money.png")
+                                                                                      ? cardDecoration(controller, PaymentGateway.orangeMoney, isDark, "assets/images/orange_money.png")
                                                                                       : controller.selectedPaymentMethod.value == PaymentGateway.xendit.name
-                                                                                          ? cardDecoration(controller, PaymentGateway.mtnMomo, themeChange, "assets/images/xendit.png")
+                                                                                          ? cardDecoration(controller, PaymentGateway.mtnMomo, isDark, "assets/images/xendit.png")
                                                                                           : controller.selectedPaymentMethod.value == PaymentGateway.razorpay.name
-                                                                                              ? cardDecoration(controller, PaymentGateway.razorpay, themeChange, "assets/images/razorpay.png")
+                                                                                              ? cardDecoration(controller, PaymentGateway.razorpay, isDark, "assets/images/razorpay.png")
                                                                                               : controller.selectedPaymentMethod.value == PaymentGateway.mtnMomo.name
-                                                                                                  ? cardDecoration(controller, PaymentGateway.razorpay, themeChange, "assets/images/mtnmom.png")
+                                                                                                  ? cardDecoration(controller, PaymentGateway.razorpay, isDark, "assets/images/mtnmom.png")
                                                                                                   : controller.selectedPaymentMethod.value == PaymentGateway.phonePe.name
-                                                                                                      ? cardDecoration(controller, PaymentGateway.razorpay, themeChange, "assets/images/phonepe.png")
+                                                                                                      ? cardDecoration(controller, PaymentGateway.razorpay, isDark, "assets/images/phonepe.png")
                                                                                                       : controller.selectedPaymentMethod.value == PaymentGateway.cashfree.name
                                                                                                           ? cardDecoration(
-                                                                                                              controller, PaymentGateway.razorpay, themeChange, "assets/images/cashfree.png")
+                                                                                                              controller, PaymentGateway.razorpay, isDark, "assets/images/cashfree.png")
                                                                                                           : controller.selectedPaymentMethod.value == PaymentGateway.instamojo.name
                                                                                                               ? cardDecoration(
-                                                                                                                  controller, PaymentGateway.razorpay, themeChange, "assets/images/instamojo.png")
+                                                                                                                  controller, PaymentGateway.razorpay, isDark, "assets/images/instamojo.png")
                                                                                                               : controller.selectedPaymentMethod.value == PaymentGateway.foloosi.name
                                                                                                                   ? cardDecoration(
-                                                                                                                      controller, PaymentGateway.razorpay, themeChange, "assets/images/foloosi.png")
+                                                                                                                      controller, PaymentGateway.razorpay, isDark, "assets/images/foloosi.png")
                                                                                                                   : controller.selectedPaymentMethod.value == PaymentGateway.payMongo.name
-                                                                                                                      ? cardDecoration(controller, PaymentGateway.razorpay, themeChange,
+                                                                                                                      ? cardDecoration(controller, PaymentGateway.razorpay, isDark,
                                                                                                                           "assets/images/payMongo.png")
                                                                                                                       : const SizedBox(
                                                                                                                           width: 10,
@@ -1269,15 +1267,15 @@ class CartScreen extends StatelessWidget {
                                               "Pay Via",
                                               textAlign: TextAlign.start,
                                               style: TextStyle(
-                                                fontFamily: AppThemeData.semiBold,
-                                                color: themeChange.getThem() ? AppThemeData.grey400 : AppThemeData.grey500,
+                                                fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                                color: isDark ? AppThemeData.grey400 : AppThemeData.grey500,
                                                 fontSize: 12,
                                               ),
                                             ),
                                             controller.selectedPaymentMethod.value == ''
                                                 ? Padding(
                                                     padding: const EdgeInsets.only(top: 4),
-                                                    child: Container(width: 60, height: 12, color: themeChange.getThem() ? AppThemeData.grey800 : AppThemeData.grey100),
+                                                    child: Container(width: 60, height: 12, color: isDark ? AppThemeData.grey800 : AppThemeData.grey100),
                                                   )
                                                 : Row(
                                                     children: [
@@ -1285,8 +1283,8 @@ class CartScreen extends StatelessWidget {
                                                         controller.selectedPaymentMethod.value,
                                                         textAlign: TextAlign.start,
                                                         style: TextStyle(
-                                                          fontFamily: AppThemeData.semiBold,
-                                                          color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                          fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                                          color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                                           fontSize: 16,
                                                         ),
                                                       ),
@@ -1295,7 +1293,7 @@ class CartScreen extends StatelessWidget {
                                                         "(Change)",
                                                         textAlign: TextAlign.start,
                                                         style: TextStyle(
-                                                          fontFamily: AppThemeData.semiBold,
+                                                          fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
                                                           color: AppThemeData.primary300,
                                                           fontSize: 16,
                                                         ),
@@ -1313,7 +1311,7 @@ class CartScreen extends StatelessWidget {
                                 child: RoundedButtonFill(
                                   textColor: controller.selectedPaymentMethod.value != ''
                                       ? AppThemeData.surface
-                                      : themeChange.getThem()
+                                      : isDark
                                           ? AppThemeData.grey800
                                           : AppThemeData.grey100,
                                   isEnabled: controller.selectedPaymentMethod.value != '',
@@ -1321,7 +1319,7 @@ class CartScreen extends StatelessWidget {
                                   height: 5,
                                   color: controller.selectedPaymentMethod.value != ''
                                       ? AppThemeData.primary300
-                                      : themeChange.getThem()
+                                      : isDark
                                           ? AppThemeData.grey800
                                           : AppThemeData.grey100,
                                   fontSizes: 16,
@@ -1450,7 +1448,7 @@ class CartScreen extends StatelessWidget {
                   TranslatedText(
                     "Tax Details",
                     style: TextStyle(
-                      fontFamily: AppThemeData.medium,
+                      fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
                       fontSize: 18,
                       color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                     ),
@@ -1569,7 +1567,7 @@ class CartScreen extends StatelessWidget {
           child: TranslatedText(
             title,
             style: TextStyle(
-                fontFamily: AppThemeData.regular,
+                fontFamily: 'Urbanist',
                 color: textColour ?? (isDark ? AppThemeData.grey300 : AppThemeData.grey600),
                 fontSize: 16,
                 decoration: underline == true ? TextDecoration.underline : TextDecoration.none),
@@ -1579,7 +1577,7 @@ class CartScreen extends StatelessWidget {
             Text(
               amount,
               style: TextStyle(
-                fontFamily: AppThemeData.regular,
+                fontFamily: 'Urbanist',
                 color: amountColor ?? (isDark ? AppThemeData.grey50 : AppThemeData.grey900),
                 fontSize: 16,
               ),
@@ -1598,7 +1596,7 @@ class CartScreen extends StatelessWidget {
     );
   }
 
-  Padding cardDecoration(CartController controller, PaymentGateway value, themeChange, String image) {
+  Padding cardDecoration(CartController controller, PaymentGateway value, isDark, String image) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: Container(
@@ -1606,14 +1604,14 @@ class CartScreen extends StatelessWidget {
         height: 40,
         decoration: ShapeDecoration(
           shape: RoundedRectangleBorder(
-            side: const BorderSide(width: 1, color: Color(0xFFE5E7EB)),
+            side: const BorderSide(width: 1, color: AppThemeData.grey200),
             borderRadius: BorderRadius.circular(8),
           ),
         ),
         child: Padding(
           padding: EdgeInsets.all(value.name == "payFast" ? 0 : 8.0),
           child: image == ''
-              ? Container(color: themeChange.getThem() ? AppThemeData.grey800 : AppThemeData.grey100)
+              ? Container(color: isDark ? AppThemeData.grey800 : AppThemeData.grey100)
               : Image.asset(
                   image,
                 ),
@@ -1622,12 +1620,12 @@ class CartScreen extends StatelessWidget {
     );
   }
 
-  Dialog tipsDialog(CartController controller, themeChange) {
+  Dialog tipsDialog(CartController controller, isDark) {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       insetPadding: const EdgeInsets.all(10),
       clipBehavior: Clip.antiAliasWithSaveLayer,
-      backgroundColor: themeChange.getThem() ? AppThemeData.surfaceDark : AppThemeData.surface,
+      backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
       child: Padding(
         padding: const EdgeInsets.all(30),
         child: SizedBox(
@@ -1648,7 +1646,7 @@ class CartScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                   child: Text(
                     "${Constant.currencyModel!.symbol}",
-                    style: TextStyle(color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900, fontFamily: AppThemeData.semiBold, fontSize: 18),
+                    style: TextStyle(color: isDark ? AppThemeData.grey50 : AppThemeData.grey900, fontFamily: 'Urbanist', fontWeight: FontWeight.w600, fontSize: 18),
                   ),
                 ),
                 hintText: 'Enter Tips Amount',
@@ -1658,8 +1656,8 @@ class CartScreen extends StatelessWidget {
                   Expanded(
                     child: RoundedButtonFill(
                       title: "Cancel",
-                      color: themeChange.getThem() ? AppThemeData.grey700 : AppThemeData.grey200,
-                      textColor: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                      color: isDark ? AppThemeData.grey700 : AppThemeData.grey200,
+                      textColor: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                       onPress: () async {
                         Get.back();
                       },

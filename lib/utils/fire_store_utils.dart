@@ -253,7 +253,7 @@ class FireStoreUtils {
 
   static Future<void> getSettings() async {
     try {
-      fireStore.collection(CollectionName.settings).doc("localisationSettings").snapshots().listen((event) async {
+      fireStore.collection(CollectionName.settings).doc("localisationSettings").get().then((event) {
         if (event.exists) {
           Constant.apiKeyOfDeepl = event.data()?["apiKeyOfDeepl"] ?? '';
           Constant.localisationType = event.data()?["localisationType"] ?? '';
@@ -270,6 +270,7 @@ class FireStoreUtils {
       fireStore.collection(CollectionName.settings).doc('restaurant').get().then((value) {
         Constant.isSubscriptionModelApplied = value.data()!['subscription_model'];
         Constant.packagingChargeEnable = value.data()!['packagingChargeEnable'];
+        Constant.takeawayEnabled = value.data()?['takeaway_enabled'] ?? true;
       });
 
       fireStore.collection(CollectionName.settings).doc("RestaurantNearBy").snapshots().listen((event) {
@@ -286,6 +287,7 @@ class FireStoreUtils {
         Constant.isSelfDeliveryFeature = value.data()!['isSelfDelivery'] ?? false;
         AppThemeData.primary300 = Color(int.parse(value.data()!['app_customer_color'].replaceFirst("#", "0xff")));
         Constant.taxScope = value.data()?['taxScope'] ?? "";
+        Constant.showHomeQuickActions = value.data()?['show_home_quick_actions'] ?? false;
       });
 
       fireStore.collection(CollectionName.settings).doc("DineinForRestaurant").get().then((dineinresult) {
@@ -294,14 +296,14 @@ class FireStoreUtils {
         }
       });
 
-      fireStore.collection(CollectionName.settings).doc("googleMapKey").snapshots().listen((event) {
+      fireStore.collection(CollectionName.settings).doc("googleMapKey").get().then((event) {
         if (event.exists) {
           Constant.mapAPIKey = event.data()!["key"];
           Constant.placeHolderImage = event.data()!["placeHolderImage"];
         }
       });
 
-      fireStore.collection(CollectionName.settings).doc("home_page_theme").snapshots().listen((event) {
+      fireStore.collection(CollectionName.settings).doc("home_page_theme").get().then((event) {
         if (event.exists) {
           Constant.theme = event.data()!["theme"];
         }
@@ -320,25 +322,25 @@ class FireStoreUtils {
         }
       });
 
-      fireStore.collection(CollectionName.settings).doc("privacyPolicy").snapshots().listen((event) {
+      fireStore.collection(CollectionName.settings).doc("privacyPolicy").get().then((event) {
         if (event.exists) {
           Constant.privacyPolicy = event.data()!["privacy_policy"];
         }
       });
 
-      fireStore.collection(CollectionName.settings).doc("termsAndConditions").snapshots().listen((event) {
+      fireStore.collection(CollectionName.settings).doc("termsAndConditions").get().then((event) {
         if (event.exists) {
           Constant.termsAndConditions = event.data()!["termsAndConditions"];
         }
       });
 
-      fireStore.collection(CollectionName.settings).doc("walletSettings").snapshots().listen((event) {
+      fireStore.collection(CollectionName.settings).doc("walletSettings").get().then((event) {
         if (event.exists) {
           Constant.walletSetting = event.data()!["isEnabled"];
         }
       });
 
-      fireStore.collection(CollectionName.settings).doc("Version").snapshots().listen((event) {
+      fireStore.collection(CollectionName.settings).doc("Version").get().then((event) {
         if (event.exists) {
           Constant.googlePlayLink = event.data()!["googlePlayLink"] ?? '';
           Constant.appStoreLink = event.data()!["appStoreLink"] ?? '';
@@ -457,10 +459,14 @@ class FireStoreUtils {
     return airPortList;
   }
 
+  static final Map<String, VendorCategoryModel> _categoryCache = {};
+
+  static void clearCategoryCache() => _categoryCache.clear();
+
   static Future<List<WalletTransactionModel>?> getWalletTransaction() async {
     List<WalletTransactionModel> walletTransactionList = [];
     log("FireStoreUtils.getCurrentUid() :: ${FireStoreUtils.getCurrentUid()}");
-    await fireStore.collection(CollectionName.wallet).where('user_id', isEqualTo: FireStoreUtils.getCurrentUid()).orderBy('date', descending: true).get().then((value) {
+    await fireStore.collection(CollectionName.wallet).where('user_id', isEqualTo: FireStoreUtils.getCurrentUid()).orderBy('date', descending: true).limit(50).get().then((value) {
       for (var element in value.docs) {
         WalletTransactionModel walletTransactionModel = WalletTransactionModel.fromJson(element.data());
         walletTransactionList.add(walletTransactionModel);
@@ -471,124 +477,63 @@ class FireStoreUtils {
     return walletTransactionList;
   }
 
+  static Future _loadPaymentSetting(String docId, String prefKey, Map<String, dynamic> Function(Map<String, dynamic>) fromToJson) async {
+    final value = await fireStore.collection(CollectionName.settings).doc(docId).get();
+    if (value.exists) {
+      await Preferences.setString(prefKey, jsonEncode(fromToJson(value.data()!)));
+    }
+  }
+
   static Future getPaymentSettingsData() async {
-    await fireStore.collection(CollectionName.settings).doc("payFastSettings").get().then((value) async {
-      if (value.exists) {
-        PayFastModel payFastModel = PayFastModel.fromJson(value.data()!);
-        await Preferences.setString(Preferences.payFastSettings, jsonEncode(payFastModel.toJson()));
-      }
-    });
-    await fireStore.collection(CollectionName.settings).doc("MercadoPago").get().then((value) async {
-      if (value.exists) {
-        MercadoPagoModel mercadoPagoModel = MercadoPagoModel.fromJson(value.data()!);
-        await Preferences.setString(Preferences.mercadoPago, jsonEncode(mercadoPagoModel.toJson()));
-      }
-    });
-    await fireStore.collection(CollectionName.settings).doc("paypalSettings").get().then((value) async {
-      if (value.exists) {
-        PayPalModel payPalModel = PayPalModel.fromJson(value.data()!);
-        await Preferences.setString(Preferences.paypalSettings, jsonEncode(payPalModel.toJson()));
-      }
-    });
-    await fireStore.collection(CollectionName.settings).doc("stripeSettings").get().then((value) async {
-      if (value.exists) {
-        StripeModel stripeModel = StripeModel.fromJson(value.data()!);
-        await Preferences.setString(Preferences.stripeSettings, jsonEncode(stripeModel.toJson()));
-      }
-    });
-    await fireStore.collection(CollectionName.settings).doc("flutterWave").get().then((value) async {
-      if (value.exists) {
-        FlutterWaveModel flutterWaveModel = FlutterWaveModel.fromJson(value.data()!);
-        await Preferences.setString(Preferences.flutterWave, jsonEncode(flutterWaveModel.toJson()));
-      }
-    });
-    await fireStore.collection(CollectionName.settings).doc("payStack").get().then((value) async {
-      if (value.exists) {
-        PayStackModel payStackModel = PayStackModel.fromJson(value.data()!);
-        await Preferences.setString(Preferences.payStack, jsonEncode(payStackModel.toJson()));
-      }
-    });
-    await fireStore.collection(CollectionName.settings).doc("PaytmSettings").get().then((value) async {
-      if (value.exists) {
-        PaytmModel paytmModel = PaytmModel.fromJson(value.data()!);
-        await Preferences.setString(Preferences.paytmSettings, jsonEncode(paytmModel.toJson()));
-      }
-    });
-    await fireStore.collection(CollectionName.settings).doc("walletSettings").get().then((value) async {
-      if (value.exists) {
-        WalletSettingModel walletSettingModel = WalletSettingModel.fromJson(value.data()!);
-        await Preferences.setString(Preferences.walletSettings, jsonEncode(walletSettingModel.toJson()));
-      }
-    });
-    await fireStore.collection(CollectionName.settings).doc("razorpaySettings").get().then((value) async {
-      if (value.exists) {
-        RazorPayModel razorPayModel = RazorPayModel.fromJson(value.data()!);
-        await Preferences.setString(Preferences.razorpaySettings, jsonEncode(razorPayModel.toJson()));
-      }
-    });
-    await fireStore.collection(CollectionName.settings).doc("CODSettings").get().then((value) async {
-      if (value.exists) {
-        CodSettingModel codSettingModel = CodSettingModel.fromJson(value.data()!);
-        await Preferences.setString(Preferences.codSettings, jsonEncode(codSettingModel.toJson()));
-      }
-    });
+    await Future.wait([
+      _loadPaymentSetting("payFastSettings", Preferences.payFastSettings, (d) => PayFastModel.fromJson(d).toJson()),
+      _loadPaymentSetting("MercadoPago", Preferences.mercadoPago, (d) => MercadoPagoModel.fromJson(d).toJson()),
+      _loadPaymentSetting("paypalSettings", Preferences.paypalSettings, (d) => PayPalModel.fromJson(d).toJson()),
+      _loadPaymentSetting("stripeSettings", Preferences.stripeSettings, (d) => StripeModel.fromJson(d).toJson()),
+      _loadPaymentSetting("flutterWave", Preferences.flutterWave, (d) => FlutterWaveModel.fromJson(d).toJson()),
+      _loadPaymentSetting("payStack", Preferences.payStack, (d) => PayStackModel.fromJson(d).toJson()),
+      _loadPaymentSetting("PaytmSettings", Preferences.paytmSettings, (d) => PaytmModel.fromJson(d).toJson()),
+      _loadPaymentSetting("walletSettings", Preferences.walletSettings, (d) => WalletSettingModel.fromJson(d).toJson()),
+      _loadPaymentSetting("razorpaySettings", Preferences.razorpaySettings, (d) => RazorPayModel.fromJson(d).toJson()),
+      _loadPaymentSetting("CODSettings", Preferences.codSettings, (d) => CodSettingModel.fromJson(d).toJson()),
+      _loadPaymentSetting("midtrans_settings", Preferences.midTransSettings, (d) => MidTrans.fromJson(d).toJson()),
+      _loadPaymentSetting("orange_money_settings", Preferences.orangeMoneySettings, (d) => OrangeMoney.fromJson(d).toJson()),
+      _loadPaymentSetting("xendit_settings", Preferences.xenditSettings, (d) => Xendit.fromJson(d).toJson()),
+      _loadPaymentSetting("mtnMomo_settings", Preferences.mtnMomoSettings, (d) => MtnMomo.fromJson(d).toJson()),
+      _loadPaymentSetting("phonepay_settings", Preferences.phonePaySettings, (d) => PhonePe.fromJson(d).toJson()),
+      _loadPaymentSetting("foloosi_settings", Preferences.foloosiSettings, (d) => Foloosi.fromJson(d).toJson()),
+      _loadPaymentSetting("cashfree_settings", Preferences.cashFreeSettings, (d) => Cashfree.fromJson(d).toJson()),
+      _loadPaymentSetting("paymongo_settings", Preferences.payMongoSettings, (d) => PayMongo.fromJson(d).toJson()),
+      _loadPaymentSetting("instamojo_settings", Preferences.instamojoSettings, (d) => Instamojo.fromJson(d).toJson()),
+    ]);
+  }
 
-    await fireStore.collection(CollectionName.settings).doc("midtrans_settings").get().then((value) async {
-      if (value.exists) {
-        MidTrans midTrans = MidTrans.fromJson(value.data()!);
-        await Preferences.setString(Preferences.midTransSettings, jsonEncode(midTrans.toJson()));
+  static Future<Map<String, VendorModel>> getVendorsByIds(List<String> vendorIds) async {
+    final Map<String, VendorModel> result = {};
+    if (vendorIds.isEmpty) return result;
+    final uniqueIds = vendorIds.toSet().toList();
+    for (var i = 0; i < uniqueIds.length; i += 30) {
+      final chunk = uniqueIds.sublist(i, i + 30 > uniqueIds.length ? uniqueIds.length : i + 30);
+      final snapshot = await fireStore.collection(CollectionName.vendors).where(FieldPath.documentId, whereIn: chunk).get();
+      for (var doc in snapshot.docs) {
+        result[doc.id] = VendorModel.fromJson(doc.data());
       }
-    });
+    }
+    return result;
+  }
 
-    await fireStore.collection(CollectionName.settings).doc("orange_money_settings").get().then((value) async {
-      if (value.exists) {
-        OrangeMoney orangeMoney = OrangeMoney.fromJson(value.data()!);
-        await Preferences.setString(Preferences.orangeMoneySettings, jsonEncode(orangeMoney.toJson()));
+  static Future<Map<String, ProductModel>> getProductsByIds(List<String> productIds) async {
+    final Map<String, ProductModel> result = {};
+    if (productIds.isEmpty) return result;
+    final uniqueIds = productIds.toSet().toList();
+    for (var i = 0; i < uniqueIds.length; i += 30) {
+      final chunk = uniqueIds.sublist(i, i + 30 > uniqueIds.length ? uniqueIds.length : i + 30);
+      final snapshot = await fireStore.collection(CollectionName.vendorProducts).where(FieldPath.documentId, whereIn: chunk).get();
+      for (var doc in snapshot.docs) {
+        result[doc.id] = ProductModel.fromJson(doc.data());
       }
-    });
-
-    await fireStore.collection(CollectionName.settings).doc("xendit_settings").get().then((value) async {
-      if (value.exists) {
-        Xendit xendit = Xendit.fromJson(value.data()!);
-        await Preferences.setString(Preferences.xenditSettings, jsonEncode(xendit.toJson()));
-      }
-    });
-    await fireStore.collection(CollectionName.settings).doc("mtnMomo_settings").get().then((value) async {
-      if (value.exists) {
-        MtnMomo mtnMomo = MtnMomo.fromJson(value.data()!);
-        await Preferences.setString(Preferences.mtnMomoSettings, jsonEncode(mtnMomo.toJson()));
-      }
-    });
-    await fireStore.collection(CollectionName.settings).doc("phonepay_settings").get().then((value) async {
-      if (value.exists) {
-        PhonePe phonePe = PhonePe.fromJson(value.data()!);
-        await Preferences.setString(Preferences.phonePaySettings, jsonEncode(phonePe.toJson()));
-      }
-    });
-    await fireStore.collection(CollectionName.settings).doc("foloosi_settings").get().then((value) async {
-      if (value.exists) {
-        Foloosi foloosi = Foloosi.fromJson(value.data()!);
-        await Preferences.setString(Preferences.foloosiSettings, jsonEncode(foloosi.toJson()));
-      }
-    });
-    await fireStore.collection(CollectionName.settings).doc("cashfree_settings").get().then((value) async {
-      if (value.exists) {
-        Cashfree cashfree = Cashfree.fromJson(value.data()!);
-        await Preferences.setString(Preferences.cashFreeSettings, jsonEncode(cashfree.toJson()));
-      }
-    });
-    await fireStore.collection(CollectionName.settings).doc("paymongo_settings").get().then((value) async {
-      if (value.exists) {
-        PayMongo payMongo = PayMongo.fromJson(value.data()!);
-        await Preferences.setString(Preferences.payMongoSettings, jsonEncode(payMongo.toJson()));
-      }
-    });
-    await fireStore.collection(CollectionName.settings).doc("instamojo_settings").get().then((value) async {
-      if (value.exists) {
-        Instamojo instamojo = Instamojo.fromJson(value.data()!);
-        await Preferences.setString(Preferences.instamojoSettings, jsonEncode(instamojo.toJson()));
-      }
-    });
+    }
+    return result;
   }
 
   static Future<VendorModel?> getVendorById(String vendorId) async {
@@ -696,7 +641,7 @@ class FireStoreUtils {
 
   static Future<List<StoryModel>> getStory() async {
     List<StoryModel> storyList = [];
-    await fireStore.collection(CollectionName.story).get().then((value) {
+    await fireStore.collection(CollectionName.story).limit(20).get().then((value) {
       for (var element in value.docs) {
         StoryModel walletTransactionModel = StoryModel.fromJson(element.data());
         storyList.add(walletTransactionModel);
@@ -714,6 +659,7 @@ class FireStoreUtils {
         .where('expiresAt', isGreaterThanOrEqualTo: Timestamp.now())
         .where("isEnabled", isEqualTo: true)
         .where("isPublic", isEqualTo: true)
+        .limit(30)
         .get()
         .then((value) {
       for (var element in value.docs) {
@@ -728,10 +674,11 @@ class FireStoreUtils {
 
   static Future<List<VendorCategoryModel>> getHomeVendorCategory() async {
     List<VendorCategoryModel> list = [];
-    await fireStore.collection(CollectionName.vendorCategories).where("show_in_homepage", isEqualTo: true).where('publish', isEqualTo: true).get().then((value) {
+    await fireStore.collection(CollectionName.vendorCategories).where("show_in_homepage", isEqualTo: true).where('publish', isEqualTo: true).limit(50).get().then((value) {
       for (var element in value.docs) {
-        VendorCategoryModel walletTransactionModel = VendorCategoryModel.fromJson(element.data());
-        list.add(walletTransactionModel);
+        VendorCategoryModel model = VendorCategoryModel.fromJson(element.data());
+        list.add(model);
+        if (model.id != null) _categoryCache[model.id!] = model;
       }
     }).catchError((error) {
       log(error.toString());
@@ -741,10 +688,11 @@ class FireStoreUtils {
 
   static Future<List<VendorCategoryModel>> getVendorCategory() async {
     List<VendorCategoryModel> list = [];
-    await fireStore.collection(CollectionName.vendorCategories).where('publish', isEqualTo: true).get().then((value) {
+    await fireStore.collection(CollectionName.vendorCategories).where('publish', isEqualTo: true).limit(50).get().then((value) {
       for (var element in value.docs) {
-        VendorCategoryModel walletTransactionModel = VendorCategoryModel.fromJson(element.data());
-        list.add(walletTransactionModel);
+        VendorCategoryModel model = VendorCategoryModel.fromJson(element.data());
+        list.add(model);
+        if (model.id != null) _categoryCache[model.id!] = model;
       }
     }).catchError((error) {
       log(error.toString());
@@ -866,11 +814,15 @@ class FireStoreUtils {
   }
 
   static Future<VendorCategoryModel?> getVendorCategoryById(String categoryId) async {
+    if (_categoryCache.containsKey(categoryId)) {
+      return _categoryCache[categoryId];
+    }
     VendorCategoryModel? vendorCategoryModel;
     try {
       await fireStore.collection(CollectionName.vendorCategories).doc(categoryId).get().then((value) {
         if (value.exists) {
           vendorCategoryModel = VendorCategoryModel.fromJson(value.data()!);
+          if (vendorCategoryModel != null) _categoryCache[categoryId] = vendorCategoryModel!;
         }
       });
     } catch (e, s) {
@@ -917,7 +869,7 @@ class FireStoreUtils {
 
   static Future<List<AttributesModel>?> getAttributes() async {
     List<AttributesModel> attributeList = [];
-    await fireStore.collection(CollectionName.vendorAttributes).get().then(
+    await fireStore.collection(CollectionName.vendorAttributes).limit(50).get().then(
       (value) {
         for (var element in value.docs) {
           AttributesModel favouriteModel = AttributesModel.fromJson(element.data());
@@ -1062,7 +1014,7 @@ class FireStoreUtils {
   static Future<List<OrderModel>> getAllOrder() async {
     List<OrderModel> list = [];
 
-    await fireStore.collection(CollectionName.restaurantOrders).where("authorID", isEqualTo: FireStoreUtils.getCurrentUid()).orderBy("createdAt", descending: true).get().then((value) {
+    await fireStore.collection(CollectionName.restaurantOrders).where("authorID", isEqualTo: FireStoreUtils.getCurrentUid()).orderBy("createdAt", descending: true).limit(50).get().then((value) {
       log("FireStoreUtils.getCurrentUid() :: ${FireStoreUtils.getCurrentUid()}");
       for (var element in value.docs) {
         OrderModel taxModel = OrderModel.fromJson(element.data());
@@ -1072,6 +1024,31 @@ class FireStoreUtils {
       log("FireStoreUtils.getCurrentUid() :: getAllOrder :: $e");
     });
     return list;
+  }
+
+  static Future<({List<OrderModel> orders, DocumentSnapshot? lastDoc})> getOrdersPaginated({int limit = 20, DocumentSnapshot? startAfter}) async {
+    List<OrderModel> list = [];
+    DocumentSnapshot? lastDocument;
+    try {
+      Query<Map<String, dynamic>> query = fireStore
+          .collection(CollectionName.restaurantOrders)
+          .where("authorID", isEqualTo: FireStoreUtils.getCurrentUid())
+          .orderBy("createdAt", descending: true)
+          .limit(limit);
+      if (startAfter != null) {
+        query = query.startAfterDocument(startAfter);
+      }
+      final snapshot = await query.get();
+      for (var doc in snapshot.docs) {
+        list.add(OrderModel.fromJson(doc.data()));
+      }
+      if (snapshot.docs.isNotEmpty) {
+        lastDocument = snapshot.docs.last;
+      }
+    } catch (e) {
+      log("getOrdersPaginated :: $e");
+    }
+    return (orders: list, lastDoc: lastDocument);
   }
 
   static Future<OrderModel?> getOrderByOrderId(String orderId) async {
@@ -1211,20 +1188,24 @@ class FireStoreUtils {
 
   static Future<List> getVendorCuisines(String id) async {
     List tagList = [];
-    List prodTagList = [];
-    QuerySnapshot<Map<String, dynamic>> productsQuery = await fireStore.collection(CollectionName.vendorProducts).where('vendorID', isEqualTo: id).get();
-    await Future.forEach(productsQuery.docs, (QueryDocumentSnapshot<Map<String, dynamic>> document) {
-      if (document.data().containsKey("categoryID") && document.data()['categoryID'].toString().isNotEmpty) {
-        prodTagList.add(document.data()['categoryID']);
+    final productsQuery = await fireStore.collection(CollectionName.vendorProducts).where('vendorID', isEqualTo: id).limit(100).get();
+    final categoryIds = <String>{};
+    for (var doc in productsQuery.docs) {
+      final catId = doc.data()['categoryID']?.toString() ?? '';
+      if (catId.isNotEmpty) categoryIds.add(catId);
+    }
+
+    for (final catId in categoryIds) {
+      final cached = _categoryCache[catId];
+      if (cached != null && cached.title != null && cached.title!.isNotEmpty) {
+        tagList.add(cached.title);
+        continue;
       }
-    });
-    QuerySnapshot<Map<String, dynamic>> catQuery = await fireStore.collection(CollectionName.vendorCategories).where('publish', isEqualTo: true).get();
-    await Future.forEach(catQuery.docs, (QueryDocumentSnapshot<Map<String, dynamic>> document) {
-      Map<String, dynamic> catDoc = document.data();
-      if (catDoc.containsKey("id") && catDoc['id'].toString().isNotEmpty && catDoc.containsKey("title") && catDoc['title'].toString().isNotEmpty && prodTagList.contains(catDoc['id'])) {
-        tagList.add(catDoc['title']);
+      final cat = await getVendorCategoryById(catId);
+      if (cat != null && cat.title != null && cat.title!.isNotEmpty) {
+        tagList.add(cat.title);
       }
-    });
+    }
     return tagList;
   }
 
@@ -1378,20 +1359,7 @@ class FireStoreUtils {
     return ratingModel;
   }
 
-  static Future<VendorCategoryModel?> getVendorCategoryByCategoryId(String categoryId) async {
-    VendorCategoryModel? vendorCategoryModel;
-    try {
-      await fireStore.collection(CollectionName.vendorCategories).doc(categoryId).get().then((value) {
-        if (value.exists) {
-          vendorCategoryModel = VendorCategoryModel.fromJson(value.data()!);
-        }
-      });
-    } catch (e, s) {
-      log('FireStoreUtils.firebaseCreateNewUser $e $s');
-      return null;
-    }
-    return vendorCategoryModel;
-  }
+  static Future<VendorCategoryModel?> getVendorCategoryByCategoryId(String categoryId) => getVendorCategoryById(categoryId);
 
   static Future<ReviewAttributeModel?> getVendorReviewAttribute(String attributeId) async {
     ReviewAttributeModel? vendorCategoryModel;
@@ -1460,7 +1428,7 @@ class FireStoreUtils {
 
   static Future<List<CashbackModel>> getAllCashbak() async {
     List<CashbackModel> cashbackList = [];
-    await fireStore.collection(CollectionName.cashback).get().then((value) {
+    await fireStore.collection(CollectionName.cashback).limit(20).get().then((value) {
       cashbackList = value.docs.map((doc) {
         return CashbackModel.fromJson(doc.data());
       }).toList();
@@ -1495,6 +1463,7 @@ class FireStoreUtils {
           .where('isEnabled', isEqualTo: true)
           .where('startDate', isLessThanOrEqualTo: Timestamp.now())
           .where('endDate', isGreaterThanOrEqualTo: Timestamp.now())
+          .limit(20)
           .get()
           .then((event) {
         if (event.docs.isNotEmpty) {

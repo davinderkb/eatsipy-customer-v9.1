@@ -47,7 +47,7 @@ class RoundedButtonFill extends StatelessWidget {
               title.tr.toString(),
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontFamily: AppThemeData.semiBold,
+                fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
                 color: textColor ?? AppThemeData.grey800,
                 fontSize: fontSizes ?? 14,
               ),

@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:eatsipy_customer/themes/app_them_data.dart';
 import 'package:eatsipy_customer/themes/round_button_fill.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:eatsipy_customer/utils/dynamic_traslator.dart';
 import 'package:eatsipy_customer/widget/osm_map/map_controller.dart';
 import 'package:eatsipy_customer/widget/translated_text.dart';
@@ -10,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:provider/provider.dart';
 
 class MapPickerPage extends StatelessWidget {
   final OSMMapController controller = Get.put(OSMMapController());
@@ -20,19 +18,19 @@ class MapPickerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: themeChange.getThem() ? AppThemeData.surfaceDark : AppThemeData.surface,
+        backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
         centerTitle: false,
         titleSpacing: 0,
         title: TranslatedText(
           "PickUp Location",
           textAlign: TextAlign.start,
           style: TextStyle(
-            fontFamily: AppThemeData.medium,
+            fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
             fontSize: 16,
-            color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+            color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
           ),
         ),
       ),
@@ -86,7 +84,7 @@ class MapPickerPage extends StatelessWidget {
                   child: TextField(
                     controller: searchController,
                     decoration: InputDecoration(
-                      fillColor: themeChange.getThem() ? AppThemeData.primary600 : AppThemeData.surface,
+                      fillColor: isDark ? AppThemeData.primary600 : AppThemeData.surface,
                       hintText: 'Search location...'.tr,
                       contentPadding: EdgeInsets.all(12),
                       border: InputBorder.none,
@@ -101,7 +99,7 @@ class MapPickerPage extends StatelessWidget {
                   return Container(
                     margin: const EdgeInsets.only(top: 4),
                     decoration: BoxDecoration(
-                      color: themeChange.getThem() ? AppThemeData.primary600 : AppThemeData.surface,
+                      color: isDark ? AppThemeData.primary600 : AppThemeData.surface,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: ListView.builder(
@@ -132,7 +130,7 @@ class MapPickerPage extends StatelessWidget {
       bottomNavigationBar: Obx(() {
         return Container(
           padding: const EdgeInsets.all(16),
-          color: themeChange.getThem() ? AppThemeData.surfaceDark : AppThemeData.surface,
+          color: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -140,8 +138,8 @@ class MapPickerPage extends StatelessWidget {
               TranslatedText(
                 controller.pickedPlace.value != null ? "Picked Location:" : "No Location Picked",
                 style: TextStyle(
-                  color: themeChange.getThem() ? AppThemeData.primary300 : AppThemeData.primary300,
-                  fontFamily: AppThemeData.semiBold,
+                  color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
+                  fontFamily: 'Urbanist',
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -151,7 +149,7 @@ class MapPickerPage extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 2.0),
                   child: TranslatedText(
                     "${controller.pickedPlace.value!.address}\n(${controller.pickedPlace.value!.coordinates.latitude.toStringAsFixed(5)}, ${controller.pickedPlace.value!.coordinates.longitude.toStringAsFixed(5)})",
-                    style: TextStyle(fontSize: 13, color: themeChange.getThem() ? AppThemeData.surface : AppThemeData.primary600),
+                    style: TextStyle(fontSize: 13, color: isDark ? AppThemeData.surface : AppThemeData.primary600),
                   ),
                 ),
               const SizedBox(height: 10),

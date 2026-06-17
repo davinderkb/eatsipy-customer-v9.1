@@ -119,11 +119,11 @@ class _OrangeMoneyScreenState extends State<OrangeMoneyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // ignore: deprecated_member_use
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
         _showMyDialog();
-        return false;
       },
       child: Scaffold(
         appBar: AppBar(

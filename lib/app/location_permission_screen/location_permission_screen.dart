@@ -7,7 +7,6 @@ import 'package:eatsipy_customer/models/user_model.dart';
 import 'package:eatsipy_customer/themes/app_them_data.dart';
 import 'package:eatsipy_customer/themes/responsive.dart';
 import 'package:eatsipy_customer/themes/round_button_fill.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:eatsipy_customer/widget/osm_map/map_picker_page.dart';
 import 'package:eatsipy_customer/widget/place_picker/location_picker_screen.dart';
 import 'package:eatsipy_customer/widget/place_picker/selected_location_model.dart';
@@ -17,14 +16,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 class LocationPermissionScreen extends StatelessWidget {
   const LocationPermissionScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GetBuilder(
       init: LocationPermissionController(),
       builder: (controller) {
@@ -33,7 +31,7 @@ class LocationPermissionScreen extends StatelessWidget {
             height: Responsive.height(100, context),
             width: Responsive.width(100, context),
             decoration:
-                BoxDecoration(image: DecorationImage(image: themeChange.getThem() ? AssetImage("assets/images/location_bg_dark.png") : AssetImage("assets/images/location_bg.png"), fit: BoxFit.cover)),
+                BoxDecoration(image: DecorationImage(image: isDark ? AssetImage("assets/images/location_bg_dark.png") : AssetImage("assets/images/location_bg.png"), fit: BoxFit.cover)),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 35),
               child: Column(
@@ -41,12 +39,12 @@ class LocationPermissionScreen extends StatelessWidget {
                 children: [
                   TranslatedText(
                     "Enable Location Services 📍",
-                    style: TextStyle(color: themeChange.getThem() ? AppThemeData.grey200 : AppThemeData.grey900, fontSize: 22, fontFamily: AppThemeData.semiBold),
+                    style: TextStyle(color: isDark ? AppThemeData.grey200 : AppThemeData.grey900, fontSize: 22, fontFamily: 'Urbanist', fontWeight: FontWeight.w600),
                   ),
                   TranslatedText(
                     "To provide the best dining experience, allow Eatsipy to access your location.",
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: themeChange.getThem() ? AppThemeData.grey200 : AppThemeData.grey900, fontSize: 16, fontFamily: AppThemeData.bold),
+                    style: TextStyle(color: isDark ? AppThemeData.grey200 : AppThemeData.grey900, fontSize: 16, fontFamily: 'Urbanist', fontWeight: FontWeight.w700),
                   ),
                   const SizedBox(
                     height: 32,

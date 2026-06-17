@@ -8,7 +8,6 @@ import 'package:eatsipy_customer/themes/app_them_data.dart';
 import 'package:eatsipy_customer/themes/round_button_border.dart';
 import 'package:eatsipy_customer/themes/round_button_fill.dart';
 import 'package:eatsipy_customer/themes/text_field_widget.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:eatsipy_customer/utils/dynamic_traslator.dart';
 import 'package:eatsipy_customer/utils/translation_notifier.dart';
 import 'package:flutter/gestures.dart';
@@ -17,20 +16,19 @@ import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 class PhoneNumberScreen extends StatelessWidget {
   const PhoneNumberScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GetX(
         init: PhoneNumberController(),
         builder: (controller) {
           return Scaffold(
             appBar: AppBar(
-              backgroundColor: themeChange.getThem() ? AppThemeData.surfaceDark : AppThemeData.surface,
+              backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
             ),
             body: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -40,11 +38,11 @@ class PhoneNumberScreen extends StatelessWidget {
                   children: [
                     TranslatedText(
                       "Welcome Back! 👋",
-                      style: TextStyle(color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900, fontSize: 22, fontFamily: AppThemeData.semiBold),
+                      style: TextStyle(color: isDark ? AppThemeData.grey50 : AppThemeData.grey900, fontSize: 22, fontFamily: 'Urbanist', fontWeight: FontWeight.w600),
                     ),
                     TranslatedText(
                       "Log in to continue enjoying delicious food delivered to your doorstep.",
-                      style: TextStyle(color: themeChange.getThem() ? AppThemeData.grey400 : AppThemeData.grey500, fontSize: 16, fontFamily: AppThemeData.regular),
+                      style: TextStyle(color: isDark ? AppThemeData.grey400 : AppThemeData.grey500, fontSize: 16, fontFamily: 'Urbanist'),
                     ),
                     const SizedBox(
                       height: 32,
@@ -71,13 +69,13 @@ class PhoneNumberScreen extends StatelessWidget {
                                 controller.countryCodeEditingController.value.text = value.dialCode.toString();
                                 controller.countryISOCodeEditingController.value.text = value.code ?? Constant.defaultCountryCode;
                               },
-                              dialogTextStyle: TextStyle(color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900, fontWeight: FontWeight.w500, fontFamily: AppThemeData.medium),
-                              dialogBackgroundColor: themeChange.getThem() ? AppThemeData.grey800 : AppThemeData.grey100,
+                              dialogTextStyle: TextStyle(color: isDark ? AppThemeData.grey50 : AppThemeData.grey900, fontWeight: FontWeight.w500, fontFamily: 'Urbanist'),
+                              dialogBackgroundColor: isDark ? AppThemeData.grey800 : AppThemeData.grey100,
                               initialSelection: controller.countryISOCodeEditingController.value.text,
                               comparator: (a, b) => b.name!.compareTo(a.name.toString()),
-                              textStyle: TextStyle(fontSize: 14, color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900, fontFamily: AppThemeData.medium),
-                              searchDecoration: InputDecoration(iconColor: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900),
-                              searchStyle: TextStyle(color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900, fontWeight: FontWeight.w500, fontFamily: AppThemeData.medium),
+                              textStyle: TextStyle(fontSize: 14, color: isDark ? AppThemeData.grey50 : AppThemeData.grey900, fontFamily: 'Urbanist', fontWeight: FontWeight.w500),
+                              searchDecoration: InputDecoration(iconColor: isDark ? AppThemeData.grey50 : AppThemeData.grey900),
+                              searchStyle: TextStyle(color: isDark ? AppThemeData.grey50 : AppThemeData.grey900, fontWeight: FontWeight.w500, fontFamily: 'Urbanist'),
                             );
                           }),
                     ),
@@ -107,9 +105,9 @@ class PhoneNumberScreen extends StatelessWidget {
                               "or",
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                color: themeChange.getThem() ? AppThemeData.grey500 : AppThemeData.grey400,
+                                color: isDark ? AppThemeData.grey500 : AppThemeData.grey400,
                                 fontSize: 16,
-                                fontFamily: AppThemeData.medium,
+                                fontFamily: 'Urbanist',
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -145,8 +143,8 @@ class PhoneNumberScreen extends StatelessWidget {
                               TextSpan(
                                   text: 'Didn’t have an account?'.tr,
                                   style: TextStyle(
-                                    color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                    fontFamily: AppThemeData.medium,
+                                    color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                    fontFamily: 'Urbanist',
                                     fontWeight: FontWeight.w500,
                                   )),
                               const WidgetSpan(
@@ -161,8 +159,8 @@ class PhoneNumberScreen extends StatelessWidget {
                                   text: 'Sign up'.tr,
                                   style: TextStyle(
                                       color: AppThemeData.primary300,
-                                      fontFamily: AppThemeData.bold,
-                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'Urbanist',
+                                      fontWeight: FontWeight.w700,
                                       decoration: TextDecoration.underline,
                                       decorationColor: AppThemeData.primary300)),
                             ],

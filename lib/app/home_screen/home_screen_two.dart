@@ -29,7 +29,6 @@ import 'package:eatsipy_customer/themes/custom_dialog_box.dart';
 import 'package:eatsipy_customer/themes/responsive.dart';
 import 'package:eatsipy_customer/themes/round_button_fill.dart';
 import 'package:eatsipy_customer/themes/text_field_widget.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:eatsipy_customer/utils/dynamic_traslator.dart';
 import 'package:eatsipy_customer/utils/fire_store_utils.dart';
 import 'package:eatsipy_customer/utils/network_image_widget.dart';
@@ -45,8 +44,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:eatsipy_customer/app/home_screen/widgets/map_view.dart';
+import 'package:eatsipy_customer/app/home_screen/widgets/advertisement_home_card.dart';
 
 import 'discount_restaurant_list_screen.dart';
 
@@ -55,12 +55,12 @@ class HomeScreenTwo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GetX(
       init: HomeController(),
       builder: (controller) {
         return Scaffold(
-          backgroundColor: themeChange.getThem() ? AppThemeData.surfaceDark : AppThemeData.surface,
+          backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
           body: controller.isLoading.value
               ? Constant.loader()
               : Constant.isZoneAvailable == false
@@ -79,7 +79,7 @@ class HomeScreenTwo extends StatelessWidget {
                           ),
                           TranslatedText(
                             "No Restaurants Found in Your Area",
-                            style: TextStyle(color: themeChange.getThem() ? AppThemeData.grey100 : AppThemeData.grey800, fontSize: 22, fontFamily: AppThemeData.semiBold),
+                            style: TextStyle(color: isDark ? AppThemeData.grey100 : AppThemeData.grey800, fontSize: 22, fontFamily: 'Urbanist', fontWeight: FontWeight.w600),
                           ),
                           const SizedBox(
                             height: 5,
@@ -87,7 +87,7 @@ class HomeScreenTwo extends StatelessWidget {
                           TranslatedText(
                             "Currently, there are no available restaurants in your zone. Try changing your location to find nearby options.",
                             textAlign: TextAlign.center,
-                            style: TextStyle(color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey500, fontSize: 16, fontFamily: AppThemeData.bold),
+                            style: TextStyle(color: isDark ? AppThemeData.grey50 : AppThemeData.grey500, fontSize: 16, fontFamily: 'Urbanist', fontWeight: FontWeight.w700),
                           ),
                           const SizedBox(
                             height: 20,
@@ -158,8 +158,8 @@ class HomeScreenTwo extends StatelessWidget {
                                                           "Login",
                                                           textAlign: TextAlign.center,
                                                           style: TextStyle(
-                                                            fontFamily: AppThemeData.medium,
-                                                            color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                            fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
+                                                            color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                                             fontSize: 12,
                                                           ),
                                                         ),
@@ -168,8 +168,8 @@ class HomeScreenTwo extends StatelessWidget {
                                                         "${Constant.userModel!.fullName()}",
                                                         textAlign: TextAlign.center,
                                                         style: TextStyle(
-                                                          fontFamily: AppThemeData.medium,
-                                                          color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                          fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
+                                                          color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                                           fontSize: 12,
                                                         ),
                                                       ),
@@ -254,9 +254,9 @@ class HomeScreenTwo extends StatelessWidget {
                                                               TextSpan(
                                                                 text: Constant.selectedLocation.getFullAddress(),
                                                                 style: TextStyle(
-                                                                  fontFamily: AppThemeData.medium,
+                                                                  fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
                                                                   overflow: TextOverflow.ellipsis,
-                                                                  color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                                  color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                                                   fontSize: 14,
                                                                 ),
                                                               ),
@@ -282,10 +282,10 @@ class HomeScreenTwo extends StatelessWidget {
                                             child: ClipOval(
                                               child: Container(
                                                   padding: const EdgeInsets.all(8.0),
-                                                  color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                                                  color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                                                   child: SvgPicture.asset(
                                                     "assets/icons/ic_shoping_cart.svg",
-                                                    colorFilter: ColorFilter.mode(themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900, BlendMode.srcIn),
+                                                    colorFilter: ColorFilter.mode(isDark ? AppThemeData.grey50 : AppThemeData.grey900, BlendMode.srcIn),
                                                   )),
                                             ),
                                           )
@@ -384,9 +384,9 @@ class HomeScreenTwo extends StatelessWidget {
                                                                   "Highlights for you",
                                                                   textAlign: TextAlign.start,
                                                                   style: TextStyle(
-                                                                    fontFamily: AppThemeData.semiBold,
+                                                                    fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
                                                                     fontSize: 16,
-                                                                    color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                                    color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                                                   ),
                                                                 ),
                                                               ),
@@ -400,8 +400,8 @@ class HomeScreenTwo extends StatelessWidget {
                                                                   "See all",
                                                                   textAlign: TextAlign.center,
                                                                   style: TextStyle(
-                                                                    fontFamily: AppThemeData.regular,
-                                                                    color: themeChange.getThem() ? AppThemeData.primary300 : AppThemeData.primary300,
+                                                                    fontFamily: 'Urbanist',
+                                                                    color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
                                                                   ),
                                                                 ),
                                                               )
@@ -448,8 +448,8 @@ class HomeScreenTwo extends StatelessWidget {
                             ),
                     ),
           floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-          floatingActionButton: Container(
-            decoration: BoxDecoration(color: themeChange.getThem() ? AppThemeData.grey800 : AppThemeData.grey100, borderRadius: const BorderRadius.all(Radius.circular(30))),
+          floatingActionButton: !Constant.showHomeQuickActions ? null : Container(
+            decoration: BoxDecoration(color: isDark ? AppThemeData.grey800 : AppThemeData.grey100, borderRadius: const BorderRadius.all(Radius.circular(30))),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
               child: Row(
@@ -457,7 +457,7 @@ class HomeScreenTwo extends StatelessWidget {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                      color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                       borderRadius: const BorderRadius.all(
                         Radius.circular(30),
                       ),
@@ -514,12 +514,12 @@ class HomeScreenTwo extends StatelessWidget {
                     },
                     child: ClipOval(
                       child: Container(
-                          decoration: BoxDecoration(color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50),
+                          decoration: BoxDecoration(color: isDark ? AppThemeData.grey900 : AppThemeData.grey50),
                           child: Padding(
                             padding: const EdgeInsets.all(10),
                             child: SvgPicture.asset(
                               "assets/icons/ic_scan_code.svg",
-                              colorFilter: ColorFilter.mode(themeChange.getThem() ? AppThemeData.grey400 : AppThemeData.grey500, BlendMode.srcIn),
+                              colorFilter: ColorFilter.mode(isDark ? AppThemeData.grey400 : AppThemeData.grey500, BlendMode.srcIn),
                             ),
                           )),
                     ),
@@ -532,15 +532,15 @@ class HomeScreenTwo extends StatelessWidget {
                     underline: const SizedBox(),
                     value: controller.selectedOrderTypeValue.value,
                     icon: const Icon(Icons.keyboard_arrow_down),
-                    items: <String>['Delivery', 'TakeAway'].map((String value) {
+                    items: <String>['Delivery', if (Constant.takeawayEnabled) 'TakeAway'].map((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: TranslatedText(
                           value,
                           style: TextStyle(
-                            fontFamily: AppThemeData.semiBold,
+                            fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
                             fontSize: 16,
-                            color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                            color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                           ),
                         ),
                       );
@@ -594,10 +594,10 @@ class CategoryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       decoration: ShapeDecoration(
-        color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+        color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
         ),
@@ -621,8 +621,8 @@ class CategoryView extends StatelessWidget {
                         child: TranslatedText(
                           "Our Categories",
                           style: TextStyle(
-                            fontFamily: AppThemeData.semiBold,
-                            color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                            fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                            color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                             fontSize: 18,
                           ),
                         ),
@@ -635,8 +635,8 @@ class CategoryView extends StatelessWidget {
                           "See all",
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontFamily: AppThemeData.medium,
-                            color: themeChange.getThem() ? AppThemeData.primary300 : AppThemeData.primary300,
+                            fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
+                            color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
                             fontSize: 14,
                           ),
                         ),
@@ -686,8 +686,8 @@ class CategoryView extends StatelessWidget {
                         "${vendorCategoryModel.title}",
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontFamily: AppThemeData.medium,
-                          color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                          fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
+                          color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                           fontSize: 12,
                         ),
                       ),
@@ -710,10 +710,10 @@ class OfferView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       decoration: ShapeDecoration(
-        color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+        color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
         ),
@@ -737,8 +737,8 @@ class OfferView extends StatelessWidget {
                         child: TranslatedText(
                           "Large Discounts",
                           style: TextStyle(
-                            fontFamily: AppThemeData.semiBold,
-                            color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                            fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                            color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                             fontSize: 18,
                           ),
                         ),
@@ -752,8 +752,8 @@ class OfferView extends StatelessWidget {
                           "See all",
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontFamily: AppThemeData.medium,
-                            color: themeChange.getThem() ? AppThemeData.primary300 : AppThemeData.primary300,
+                            fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
+                            color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
                             fontSize: 14,
                           ),
                         ),
@@ -812,7 +812,7 @@ class OfferView extends StatelessWidget {
                                       gradient: LinearGradient(
                                         begin: const Alignment(-0.00, -1.00),
                                         end: const Alignment(0, 1),
-                                        colors: [Colors.black.withOpacity(0), AppThemeData.grey900],
+                                        colors: [Colors.black.withValues(alpha: 0), AppThemeData.grey900],
                                       ),
                                     ),
                                   ),
@@ -831,8 +831,8 @@ class OfferView extends StatelessWidget {
                                             style: TextStyle(
                                               fontSize: 18,
                                               overflow: TextOverflow.ellipsis,
-                                              fontFamily: AppThemeData.semiBold,
-                                              color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey50,
+                                              fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                              color: isDark ? AppThemeData.grey50 : AppThemeData.grey50,
                                             ),
                                           ),
                                           const SizedBox(
@@ -947,7 +947,7 @@ class StoryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       height: Responsive.height(32, context),
       decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(20)), image: DecorationImage(image: AssetImage("assets/images/story_bg.png"), fit: BoxFit.cover)),
@@ -965,8 +965,8 @@ class StoryView extends StatelessWidget {
                       child: TranslatedText(
                         "Stories",
                         style: TextStyle(
-                          fontFamily: AppThemeData.semiBold,
-                          color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey50,
+                          fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                          color: isDark ? AppThemeData.grey50 : AppThemeData.grey50,
                           fontSize: 18,
                         ),
                       ),
@@ -1020,7 +1020,7 @@ class StoryView extends StatelessWidget {
                                 width: Responsive.width(100, context),
                               ),
                               Container(
-                                color: Colors.black.withOpacity(0.30),
+                                color: Colors.black.withValues(alpha: 0.30),
                               ),
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 8),
@@ -1121,9 +1121,9 @@ class RestaurantView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
-      color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+      color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(
@@ -1140,8 +1140,8 @@ class RestaurantView extends StatelessWidget {
                     child: TranslatedText(
                       "Best Restaurants",
                       style: TextStyle(
-                        fontFamily: AppThemeData.semiBold,
-                        color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                        fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                        color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                         fontSize: 18,
                       ),
                     ),
@@ -1154,8 +1154,8 @@ class RestaurantView extends StatelessWidget {
                       "See all",
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontFamily: AppThemeData.medium,
-                        color: themeChange.getThem() ? AppThemeData.primary300 : AppThemeData.primary300,
+                        fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
+                        color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
                         fontSize: 14,
                       ),
                     ),
@@ -1193,7 +1193,7 @@ class RestaurantView extends StatelessWidget {
                       padding: const EdgeInsets.only(bottom: 20),
                       child: Container(
                         decoration: ShapeDecoration(
-                          color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                          color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                         ),
                         child: Row(
@@ -1216,7 +1216,7 @@ class RestaurantView extends StatelessWidget {
                                       gradient: LinearGradient(
                                         begin: const Alignment(-0.00, -1.00),
                                         end: const Alignment(0, 1),
-                                        colors: [Colors.black.withOpacity(0), const Color(0xFF111827)],
+                                        colors: [Colors.black.withValues(alpha: 0), AppThemeData.grey900],
                                       ),
                                     ),
                                   ),
@@ -1238,9 +1238,9 @@ class RestaurantView extends StatelessWidget {
                                                   maxLines: 1,
                                                   style: TextStyle(
                                                     overflow: TextOverflow.ellipsis,
-                                                    fontFamily: AppThemeData.regular,
+                                                    fontFamily: 'Urbanist',
                                                     fontWeight: FontWeight.w900,
-                                                    color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey50,
+                                                    color: isDark ? AppThemeData.grey50 : AppThemeData.grey50,
                                                   ),
                                                 ),
                                                 Text(
@@ -1250,8 +1250,8 @@ class RestaurantView extends StatelessWidget {
                                                   style: TextStyle(
                                                     fontSize: 18,
                                                     overflow: TextOverflow.ellipsis,
-                                                    fontFamily: AppThemeData.semiBold,
-                                                    color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey50,
+                                                    fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                                    color: isDark ? AppThemeData.grey50 : AppThemeData.grey50,
                                                   ),
                                                 ),
                                               ],
@@ -1276,8 +1276,8 @@ class RestaurantView extends StatelessWidget {
                                     style: TextStyle(
                                       fontSize: 18,
                                       overflow: TextOverflow.ellipsis,
-                                      fontFamily: AppThemeData.semiBold,
-                                      color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                      fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                      color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                     ),
                                   ),
                                   TranslatedText(
@@ -1286,9 +1286,9 @@ class RestaurantView extends StatelessWidget {
                                     maxLines: 2,
                                     style: TextStyle(
                                       overflow: TextOverflow.ellipsis,
-                                      fontFamily: AppThemeData.medium,
+                                      fontFamily: 'Urbanist',
                                       fontWeight: FontWeight.w500,
-                                      color: themeChange.getThem() ? AppThemeData.grey400 : AppThemeData.grey400,
+                                      color: isDark ? AppThemeData.grey400 : AppThemeData.grey400,
                                     ),
                                   ),
                                   const SizedBox(
@@ -1313,9 +1313,9 @@ class RestaurantView extends StatelessWidget {
                                                 "Free Delivery",
                                                 style: TextStyle(
                                                   overflow: TextOverflow.ellipsis,
-                                                  fontFamily: AppThemeData.medium,
+                                                  fontFamily: 'Urbanist',
                                                   fontWeight: FontWeight.w500,
-                                                  color: themeChange.getThem() ? AppThemeData.grey400 : AppThemeData.grey400,
+                                                  color: isDark ? AppThemeData.grey400 : AppThemeData.grey400,
                                                 ),
                                               ),
                                               const SizedBox(
@@ -1340,9 +1340,9 @@ class RestaurantView extends StatelessWidget {
                                               maxLines: 1,
                                               style: TextStyle(
                                                 overflow: TextOverflow.ellipsis,
-                                                fontFamily: AppThemeData.medium,
+                                                fontFamily: 'Urbanist',
                                                 fontWeight: FontWeight.w500,
-                                                color: themeChange.getThem() ? AppThemeData.grey400 : AppThemeData.grey400,
+                                                color: isDark ? AppThemeData.grey400 : AppThemeData.grey400,
                                               ),
                                             ),
                                           ],
@@ -1354,7 +1354,7 @@ class RestaurantView extends StatelessWidget {
                                               child: Icon(
                                                 Icons.circle,
                                                 size: 5,
-                                                color: themeChange.getThem() ? AppThemeData.grey400 : AppThemeData.grey500,
+                                                color: isDark ? AppThemeData.grey400 : AppThemeData.grey500,
                                               ),
                                             ),
                                             TranslatedText(
@@ -1368,9 +1368,9 @@ class RestaurantView extends StatelessWidget {
                                               maxLines: 1,
                                               style: TextStyle(
                                                 overflow: TextOverflow.ellipsis,
-                                                fontFamily: AppThemeData.medium,
+                                                fontFamily: 'Urbanist',
                                                 fontWeight: FontWeight.w500,
-                                                color: themeChange.getThem() ? AppThemeData.grey400 : AppThemeData.grey400,
+                                                color: isDark ? AppThemeData.grey400 : AppThemeData.grey400,
                                               ),
                                             ),
                                           ],

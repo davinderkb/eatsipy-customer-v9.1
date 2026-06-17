@@ -2,27 +2,24 @@ import 'package:eatsipy_customer/constant/constant.dart';
 import 'package:eatsipy_customer/constant/show_toast_dialog.dart';
 import 'package:eatsipy_customer/controllers/dash_board_controller.dart';
 import 'package:eatsipy_customer/themes/app_them_data.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
-import 'package:eatsipy_customer/utils/dynamic_traslator.dart';
 import 'package:eatsipy_customer/utils/translation_notifier.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 class DashBoardScreen extends StatelessWidget {
   const DashBoardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GetX(
         init: DashBoardController(),
         builder: (controller) {
           return PopScope(
             canPop: controller.canPopNow.value,
-            onPopInvoked: (didPop) {
+            onPopInvokedWithResult: (didPop, _) {
               final now = DateTime.now();
               if (controller.currentBackPressTime == null || now.difference(controller.currentBackPressTime!) > const Duration(seconds: 2)) {
                 controller.currentBackPressTime = now;
@@ -33,106 +30,37 @@ class DashBoardScreen extends StatelessWidget {
                 controller.canPopNow.value = true;
               }
             },
-            // onPopInvokedWithResult: (didPop, dynamic) {
-            //   final now = DateTime.now();
-            //   if (controller.currentBackPressTime == null || now.difference(controller.currentBackPressTime!) > const Duration(seconds: 2)) {
-            //     controller.currentBackPressTime = now;
-            //     controller.canPopNow.value = false;
-            //     ShowToastDialog.showToast("Double press to exit");
-            //     return;
-            //   } else {
-            //     controller.canPopNow.value = true;
-            //   }
-            // },
             child: Scaffold(
               body: controller.pageList.isEmpty ? SizedBox() : controller.pageList[controller.selectedIndex.value],
               bottomNavigationBar: ValueListenableBuilder(
                   valueListenable: TranslationNotifier.refresh,
                   builder: (_, __, ___) {
-                    return BottomNavigationBar(
-                      type: BottomNavigationBarType.fixed,
-                      showUnselectedLabels: true,
-                      showSelectedLabels: true,
-                      selectedFontSize: 12,
-                      selectedLabelStyle: const TextStyle(fontFamily: AppThemeData.bold),
-                      unselectedLabelStyle: const TextStyle(fontFamily: AppThemeData.bold),
-                      currentIndex: controller.selectedIndex.value,
-                      backgroundColor: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
-                      selectedItemColor: themeChange.getThem() ? AppThemeData.primary300 : AppThemeData.primary300,
-                      unselectedItemColor: themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
-                      onTap: (int index) {
+                    return NavigationBar(
+                      selectedIndex: controller.selectedIndex.value,
+                      backgroundColor: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
+                      indicatorColor: AppThemeData.primary300.withValues(alpha: 0.20),
+                      animationDuration: const Duration(milliseconds: 400),
+                      elevation: 2,
+                      labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+                      onDestinationSelected: (int index) {
                         if (index == 0) {
                           Get.put(DashBoardController());
                         }
                         controller.selectedIndex.value = index;
                       },
-                      items: Constant.walletSetting == false
+                      destinations: Constant.walletSetting == false
                           ? [
-                              navigationBarItem(
-                                themeChange,
-                                index: 0,
-                                assetIcon: "assets/icons/ic_home.svg",
-                                label: 'Home',
-                                controller: controller,
-                              ),
-                              navigationBarItem(
-                                themeChange,
-                                index: 1,
-                                assetIcon: "assets/icons/ic_fav.svg",
-                                label: 'Favourites',
-                                controller: controller,
-                              ),
-                              navigationBarItem(
-                                themeChange,
-                                index: 2,
-                                assetIcon: "assets/icons/ic_orders.svg",
-                                label: 'Orders',
-                                controller: controller,
-                              ),
-                              navigationBarItem(
-                                themeChange,
-                                index: 3,
-                                assetIcon: "assets/icons/ic_profile.svg",
-                                label: 'Profile',
-                                controller: controller,
-                              ),
+                              _destination(isDark, assetIcon: "assets/icons/ic_home.svg", label: 'Home'),
+                              _destination(isDark, assetIcon: "assets/icons/ic_fav.svg", label: 'Favourites'),
+                              _destination(isDark, assetIcon: "assets/icons/ic_orders.svg", label: 'Orders'),
+                              _destination(isDark, assetIcon: "assets/icons/ic_profile.svg", label: 'Profile'),
                             ]
                           : [
-                              navigationBarItem(
-                                themeChange,
-                                index: 0,
-                                assetIcon: "assets/icons/ic_home.svg",
-                                label: 'Home',
-                                controller: controller,
-                              ),
-                              navigationBarItem(
-                                themeChange,
-                                index: 1,
-                                assetIcon: "assets/icons/ic_fav.svg",
-                                label: 'Favourites',
-                                controller: controller,
-                              ),
-                              navigationBarItem(
-                                themeChange,
-                                index: 2,
-                                assetIcon: "assets/icons/ic_wallet.svg",
-                                label: 'Wallet',
-                                controller: controller,
-                              ),
-                              navigationBarItem(
-                                themeChange,
-                                index: 3,
-                                assetIcon: "assets/icons/ic_orders.svg",
-                                label: 'Orders',
-                                controller: controller,
-                              ),
-                              navigationBarItem(
-                                themeChange,
-                                index: 4,
-                                assetIcon: "assets/icons/ic_profile.svg",
-                                label: 'Profile',
-                                controller: controller,
-                              ),
+                              _destination(isDark, assetIcon: "assets/icons/ic_home.svg", label: 'Home'),
+                              _destination(isDark, assetIcon: "assets/icons/ic_fav.svg", label: 'Favourites'),
+                              _destination(isDark, assetIcon: "assets/icons/ic_wallet.svg", label: 'Wallet'),
+                              _destination(isDark, assetIcon: "assets/icons/ic_orders.svg", label: 'Orders'),
+                              _destination(isDark, assetIcon: "assets/icons/ic_profile.svg", label: 'Profile'),
                             ],
                     );
                   }),
@@ -141,22 +69,22 @@ class DashBoardScreen extends StatelessWidget {
         });
   }
 
-  BottomNavigationBarItem navigationBarItem(themeChange, {required int index, required String label, required String assetIcon, required DashBoardController controller}) {
-    return BottomNavigationBarItem(
-      icon: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 5),
-        child: SvgPicture.asset(
-          assetIcon,
-          height: 22,
-          width: 22,
-          color: controller.selectedIndex.value == index
-              ? themeChange.getThem()
-                  ? AppThemeData.primary300
-                  : AppThemeData.primary300
-              : themeChange.getThem()
-                  ? AppThemeData.grey300
-                  : AppThemeData.grey600,
+  NavigationDestination _destination(bool isDark, {required String assetIcon, required String label}) {
+    return NavigationDestination(
+      icon: SvgPicture.asset(
+        assetIcon,
+        height: 22,
+        width: 22,
+        colorFilter: ColorFilter.mode(
+          isDark ? AppThemeData.grey300 : AppThemeData.grey600,
+          BlendMode.srcIn,
         ),
+      ),
+      selectedIcon: SvgPicture.asset(
+        assetIcon,
+        height: 22,
+        width: 22,
+        colorFilter: ColorFilter.mode(AppThemeData.primary300, BlendMode.srcIn),
       ),
       label: label.tr,
     );

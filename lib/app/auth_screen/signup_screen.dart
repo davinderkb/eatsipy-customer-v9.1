@@ -5,7 +5,6 @@ import 'package:eatsipy_customer/controllers/signup_controller.dart';
 import 'package:eatsipy_customer/themes/app_them_data.dart';
 import 'package:eatsipy_customer/themes/round_button_fill.dart';
 import 'package:eatsipy_customer/themes/text_field_widget.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:eatsipy_customer/utils/dynamic_traslator.dart';
 import 'package:eatsipy_customer/utils/translation_notifier.dart';
 import 'package:flutter/material.dart';
@@ -13,20 +12,19 @@ import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 class SignupScreen extends StatelessWidget {
   const SignupScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GetX(
         init: SignupController(),
         builder: (controller) {
           return Scaffold(
             appBar: AppBar(
-              backgroundColor: themeChange.getThem() ? AppThemeData.surfaceDark : AppThemeData.surface,
+              backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
             ),
             body: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -40,11 +38,11 @@ class SignupScreen extends StatelessWidget {
                     children: [
                       TranslatedText(
                         "Create an Account 🚀",
-                        style: TextStyle(color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900, fontSize: 22, fontFamily: AppThemeData.semiBold),
+                        style: TextStyle(color: isDark ? AppThemeData.grey50 : AppThemeData.grey900, fontSize: 22, fontFamily: 'Urbanist', fontWeight: FontWeight.w600),
                       ),
                       TranslatedText(
                         "Sign up to start your food adventure with Eatsipy",
-                        style: TextStyle(color: themeChange.getThem() ? AppThemeData.grey400 : AppThemeData.grey500, fontSize: 16, fontFamily: AppThemeData.regular),
+                        style: TextStyle(color: isDark ? AppThemeData.grey400 : AppThemeData.grey500, fontSize: 16, fontFamily: 'Urbanist'),
                       ),
                       const SizedBox(
                         height: 32,
@@ -61,7 +59,7 @@ class SignupScreen extends StatelessWidget {
                                 child: SvgPicture.asset(
                                   "assets/icons/ic_user.svg",
                                   colorFilter: ColorFilter.mode(
-                                    themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
+                                    isDark ? AppThemeData.grey300 : AppThemeData.grey600,
                                     BlendMode.srcIn,
                                   ),
                                 ),
@@ -81,7 +79,7 @@ class SignupScreen extends StatelessWidget {
                                 child: SvgPicture.asset(
                                   "assets/icons/ic_user.svg",
                                   colorFilter: ColorFilter.mode(
-                                    themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
+                                    isDark ? AppThemeData.grey300 : AppThemeData.grey600,
                                     BlendMode.srcIn,
                                   ),
                                 ),
@@ -101,7 +99,7 @@ class SignupScreen extends StatelessWidget {
                           child: SvgPicture.asset(
                             "assets/icons/ic_mail.svg",
                             colorFilter: ColorFilter.mode(
-                              themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
+                              isDark ? AppThemeData.grey300 : AppThemeData.grey600,
                               BlendMode.srcIn,
                             ),
                           ),
@@ -131,13 +129,13 @@ class SignupScreen extends StatelessWidget {
                                   controller.countryCodeEditingController.value.text = value.dialCode.toString();
                                   controller.countryISOCodeEditingController.value.text = value.code.toString();
                                 },
-                                dialogTextStyle: TextStyle(color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900, fontWeight: FontWeight.w500, fontFamily: AppThemeData.medium),
-                                dialogBackgroundColor: themeChange.getThem() ? AppThemeData.grey800 : AppThemeData.grey100,
+                                dialogTextStyle: TextStyle(color: isDark ? AppThemeData.grey50 : AppThemeData.grey900, fontWeight: FontWeight.w500, fontFamily: 'Urbanist'),
+                                dialogBackgroundColor: isDark ? AppThemeData.grey800 : AppThemeData.grey100,
                                 initialSelection: controller.countryISOCodeEditingController.value.text,
                                 comparator: (a, b) => b.name!.compareTo(a.name.toString()),
-                                textStyle: TextStyle(fontSize: 14, color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900, fontFamily: AppThemeData.medium),
-                                searchDecoration: InputDecoration(iconColor: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900),
-                                searchStyle: TextStyle(color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900, fontWeight: FontWeight.w500, fontFamily: AppThemeData.medium),
+                                textStyle: TextStyle(fontSize: 14, color: isDark ? AppThemeData.grey50 : AppThemeData.grey900, fontFamily: 'Urbanist', fontWeight: FontWeight.w500),
+                                searchDecoration: InputDecoration(iconColor: isDark ? AppThemeData.grey50 : AppThemeData.grey900),
+                                searchStyle: TextStyle(color: isDark ? AppThemeData.grey50 : AppThemeData.grey900, fontWeight: FontWeight.w500, fontFamily: 'Urbanist'),
                               );
                             }),
                       ),
@@ -155,7 +153,7 @@ class SignupScreen extends StatelessWidget {
                                     child: SvgPicture.asset(
                                       "assets/icons/ic_lock.svg",
                                       colorFilter: ColorFilter.mode(
-                                        themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
+                                        isDark ? AppThemeData.grey300 : AppThemeData.grey600,
                                         BlendMode.srcIn,
                                       ),
                                     ),
@@ -170,14 +168,14 @@ class SignupScreen extends StatelessWidget {
                                             ? SvgPicture.asset(
                                                 "assets/icons/ic_password_show.svg",
                                                 colorFilter: ColorFilter.mode(
-                                                  themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
+                                                  isDark ? AppThemeData.grey300 : AppThemeData.grey600,
                                                   BlendMode.srcIn,
                                                 ),
                                               )
                                             : SvgPicture.asset(
                                                 "assets/icons/ic_password_close.svg",
                                                 colorFilter: ColorFilter.mode(
-                                                  themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
+                                                  isDark ? AppThemeData.grey300 : AppThemeData.grey600,
                                                   BlendMode.srcIn,
                                                 ),
                                               )),
@@ -193,7 +191,7 @@ class SignupScreen extends StatelessWidget {
                                     child: SvgPicture.asset(
                                       "assets/icons/ic_lock.svg",
                                       colorFilter: ColorFilter.mode(
-                                        themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
+                                        isDark ? AppThemeData.grey300 : AppThemeData.grey600,
                                         BlendMode.srcIn,
                                       ),
                                     ),
@@ -208,14 +206,14 @@ class SignupScreen extends StatelessWidget {
                                             ? SvgPicture.asset(
                                                 "assets/icons/ic_password_show.svg",
                                                 colorFilter: ColorFilter.mode(
-                                                  themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
+                                                  isDark ? AppThemeData.grey300 : AppThemeData.grey600,
                                                   BlendMode.srcIn,
                                                 ),
                                               )
                                             : SvgPicture.asset(
                                                 "assets/icons/ic_password_close.svg",
                                                 colorFilter: ColorFilter.mode(
-                                                  themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
+                                                  isDark ? AppThemeData.grey300 : AppThemeData.grey600,
                                                   BlendMode.srcIn,
                                                 ),
                                               )),

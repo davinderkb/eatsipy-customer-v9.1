@@ -4,13 +4,11 @@ import 'package:eatsipy_customer/controllers/refer_friend_controller.dart';
 import 'package:eatsipy_customer/themes/app_them_data.dart';
 import 'package:eatsipy_customer/themes/responsive.dart';
 import 'package:eatsipy_customer/themes/round_button_fill.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 class ReferFriendScreen extends StatelessWidget {
@@ -18,7 +16,7 @@ class ReferFriendScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GetX(
         init: ReferFriendController(),
         builder: (controller) {
@@ -60,8 +58,8 @@ class ReferFriendScreen extends StatelessWidget {
                                   "Refer your friend and earn",
                                   style: TextStyle(
                                     fontSize: 22,
-                                    color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey50,
-                                    fontFamily: AppThemeData.regular,
+                                    color: isDark ? AppThemeData.grey50 : AppThemeData.grey50,
+                                    fontFamily: 'Urbanist',
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -72,9 +70,9 @@ class ReferFriendScreen extends StatelessWidget {
                                   "${Constant.amountShow(amount: Constant.referralAmount)} ${'Each'} 🎉",
                                   style: TextStyle(
                                     fontSize: 24,
-                                    color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey50,
-                                    fontFamily: AppThemeData.semiBold,
-                                    fontWeight: FontWeight.w500,
+                                    color: isDark ? AppThemeData.grey50 : AppThemeData.grey50,
+                                    fontFamily: 'Urbanist',
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                                 const SizedBox(
@@ -84,9 +82,9 @@ class ReferFriendScreen extends StatelessWidget {
                                   "Invite Friends & Businesses",
                                   style: TextStyle(
                                     fontSize: 16,
-                                    color: themeChange.getThem() ? AppThemeData.secondary100 : AppThemeData.secondary100,
-                                    fontFamily: AppThemeData.semiBold,
-                                    fontWeight: FontWeight.w500,
+                                    color: isDark ? AppThemeData.secondary100 : AppThemeData.secondary100,
+                                    fontFamily: 'Urbanist',
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                                 const SizedBox(
@@ -97,8 +95,8 @@ class ReferFriendScreen extends StatelessWidget {
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: 16,
-                                    color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey50,
-                                    fontFamily: AppThemeData.regular,
+                                    color: isDark ? AppThemeData.grey50 : AppThemeData.grey50,
+                                    fontFamily: 'Urbanist',
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -133,9 +131,9 @@ class ReferFriendScreen extends StatelessWidget {
                                           controller.referralModel.value.referralCode.toString(),
                                           style: TextStyle(
                                             fontSize: 16,
-                                            color: themeChange.getThem() ? AppThemeData.secondary100 : AppThemeData.secondary100,
-                                            fontFamily: AppThemeData.semiBold,
-                                            fontWeight: FontWeight.w500,
+                                            color: isDark ? AppThemeData.secondary100 : AppThemeData.secondary100,
+                                            fontFamily: 'Urbanist',
+                                            fontWeight: FontWeight.w600,
                                           ),
                                         ),
                                         const SizedBox(
@@ -161,7 +159,7 @@ class ReferFriendScreen extends StatelessWidget {
                                       Expanded(
                                         child: Divider(
                                           thickness: 1,
-                                          color: themeChange.getThem() ? AppThemeData.secondary200 : AppThemeData.secondary200,
+                                          color: isDark ? AppThemeData.secondary200 : AppThemeData.secondary200,
                                         ),
                                       ),
                                       Padding(
@@ -170,16 +168,16 @@ class ReferFriendScreen extends StatelessWidget {
                                           "or",
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
-                                            color: themeChange.getThem() ? AppThemeData.secondary200 : AppThemeData.secondary200,
+                                            color: isDark ? AppThemeData.secondary200 : AppThemeData.secondary200,
                                             fontSize: 12,
-                                            fontFamily: AppThemeData.medium,
+                                            fontFamily: 'Urbanist',
                                             fontWeight: FontWeight.w500,
                                           ),
                                         ),
                                       ),
                                       Expanded(
                                         child: Divider(
-                                          color: themeChange.getThem() ? AppThemeData.secondary200 : AppThemeData.secondary200,
+                                          color: isDark ? AppThemeData.secondary200 : AppThemeData.secondary200,
                                         ),
                                       ),
                                     ],

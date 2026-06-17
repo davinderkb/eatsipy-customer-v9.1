@@ -2,6 +2,67 @@ import 'package:flutter/material.dart';
 
 
 class AppThemeData {
+  // ── Spacing scale ──
+  static const double space4 = 4;
+  static const double space8 = 8;
+  static const double space12 = 12;
+  static const double space16 = 16;
+  static const double space20 = 20;
+  static const double space24 = 24;
+  static const double space32 = 32;
+
+  // ── Border radius scale ──
+  static const double radius8 = 8;
+  static const double radius12 = 12;
+  static const double radius16 = 16;
+  static const double radius20 = 20;
+  static const double radius24 = 24;
+
+  // ── Elevation / shadow presets ──
+  static List<BoxShadow> shadowSm(bool isDark) => [
+        BoxShadow(
+          color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.06),
+          blurRadius: 4,
+          offset: const Offset(0, 2),
+        ),
+      ];
+
+  static List<BoxShadow> shadowMd(bool isDark) => [
+        BoxShadow(
+          color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.08),
+          blurRadius: 8,
+          offset: const Offset(0, 4),
+        ),
+      ];
+
+  static List<BoxShadow> shadowLg(bool isDark) => [
+        BoxShadow(
+          color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.1),
+          blurRadius: 16,
+          offset: const Offset(0, 8),
+        ),
+      ];
+
+  // ── Desaturation filters for closed restaurants ──
+  static const desatLight = ColorFilter.matrix(<double>[
+    0.8032, 0.1788, 0.0181, 0, 0,
+    0.0532, 0.9288, 0.0181, 0, 0,
+    0.0532, 0.1788, 0.7681, 0, 0,
+    0, 0, 0, 1, 0,
+  ]);
+  static const desatMuted = ColorFilter.matrix(<double>[
+    0.7244, 0.2503, 0.0253, 0, 0,
+    0.0744, 0.9003, 0.0253, 0, 0,
+    0.0744, 0.2503, 0.6753, 0, 0,
+    0, 0, 0, 1, 0,
+  ]);
+
+  // ── Card dimension constants ──
+  static const double restaurantImageHeight = 200;
+  static const double categoryIconSize = 85;
+  static const double offerCardWidthPercent = 88;
+  static const double featuredCardWidthPercent = 72;
+
   static const Color primary50 = Color(0xFFE5FBF0);
   static const Color primary100 = Color(0xFFB2F3D3);
   static const Color primary200 = Color(0xFF66E8A8);
@@ -67,13 +128,14 @@ class AppThemeData {
   static const Color grey900 = Color(0xFF111827);
   static const Color outrageous300 = Color(0xFFFF6839);
 
-  static const String black = 'Urbanist-Black';
-  static const String bold = 'Urbanist-Bold';
-  static const String extraBold = 'Urbanist-ExtraBold';
-  static const String extraLight = 'Urbanist-ExtraLight';
-  static const String light = 'Urbanist-Light';
-  static const String medium = 'Urbanist-Medium';
-  static const String regular = 'Urbanist-Regular';
-  static const String semiBold = 'Urbanist-SemiBold';
-  static const String thin = 'Urbanist-Thin';
+  static const String fontFamily = 'Urbanist';
+  static const String black = fontFamily;
+  static const String bold = fontFamily;
+  static const String extraBold = fontFamily;
+  static const String extraLight = fontFamily;
+  static const String light = fontFamily;
+  static const String medium = fontFamily;
+  static const String regular = fontFamily;
+  static const String semiBold = fontFamily;
+  static const String thin = fontFamily;
 }

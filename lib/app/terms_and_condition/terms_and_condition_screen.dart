@@ -1,13 +1,11 @@
 import 'package:eatsipy_customer/constant/constant.dart';
 import 'package:eatsipy_customer/themes/app_them_data.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:eatsipy_customer/utils/dynamic_traslator.dart';
 import 'package:eatsipy_customer/utils/translation_notifier.dart';
 import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 class TermsAndConditionScreen extends StatelessWidget {
   final String? type;
@@ -16,11 +14,11 @@ class TermsAndConditionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       backgroundColor: AppThemeData.surface,
       appBar: AppBar(
-        backgroundColor: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+        backgroundColor: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
         centerTitle: false,
         automaticallyImplyLeading: false,
         titleSpacing: 0,
@@ -31,18 +29,18 @@ class TermsAndConditionScreen extends StatelessWidget {
           },
           child: Icon(
             Icons.chevron_left_outlined,
-            color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+            color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
           ),
         ),
         title: TranslatedText(
           type == "privacy" ? "Privacy Policy" : "Terms & Conditions",
-          style: TextStyle(color: themeChange.getThem() ? AppThemeData.grey100 : AppThemeData.grey800, fontFamily: AppThemeData.bold, fontSize: 18),
+          style: TextStyle(color: isDark ? AppThemeData.grey100 : AppThemeData.grey800, fontFamily: 'Urbanist', fontWeight: FontWeight.w700, fontSize: 18),
         ),
         elevation: 0,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(4.0),
           child: Container(
-            color: themeChange.getThem() ? AppThemeData.grey700 : AppThemeData.grey200,
+            color: isDark ? AppThemeData.grey700 : AppThemeData.grey200,
             height: 4.0,
           ),
         ),
@@ -67,7 +65,7 @@ class TermsAndConditionScreen extends StatelessWidget {
                       padding: HtmlPaddings.zero,
                       color: AppThemeData.grey900,
                       fontSize: FontSize(14),
-                      fontFamily: AppThemeData.medium,
+                      fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
                     ),
                     "p": Style(
                       color: AppThemeData.grey900,

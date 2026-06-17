@@ -6,21 +6,19 @@ import 'package:eatsipy_customer/themes/app_them_data.dart';
 import 'package:eatsipy_customer/themes/responsive.dart';
 import 'package:eatsipy_customer/themes/round_button_fill.dart';
 import 'package:eatsipy_customer/themes/text_field_widget.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:eatsipy_customer/utils/network_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 
 class EditProfileScreen extends StatelessWidget {
   const EditProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GetX(
         init: EditProfileController(),
         builder: (controller) {
@@ -28,7 +26,7 @@ class EditProfileScreen extends StatelessWidget {
             appBar: AppBar(
               centerTitle: false,
               titleSpacing: 0,
-              backgroundColor: themeChange.getThem() ? AppThemeData.surfaceDark : AppThemeData.surface,
+              backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
             ),
             body: SingleChildScrollView(
               child: Padding(
@@ -40,17 +38,17 @@ class EditProfileScreen extends StatelessWidget {
                       "Profile Information",
                       style: TextStyle(
                         fontSize: 24,
-                        color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                        fontFamily: AppThemeData.semiBold,
-                        fontWeight: FontWeight.w500,
+                        color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                        fontFamily: 'Urbanist',
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     TranslatedText(
                       "View and update your personal details, contact information, and preferences.",
                       style: TextStyle(
                         fontSize: 16,
-                        color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                        fontFamily: AppThemeData.regular,
+                        color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                        fontFamily: 'Urbanist',
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -149,7 +147,7 @@ class EditProfileScreen extends StatelessWidget {
               ),
             ),
             bottomNavigationBar: Container(
-              color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+              color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
               child: Padding(
                   padding: const EdgeInsets.only(bottom: 20),

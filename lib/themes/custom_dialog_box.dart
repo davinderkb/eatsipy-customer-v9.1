@@ -1,9 +1,7 @@
 import 'package:eatsipy_customer/themes/app_them_data.dart';
 import 'package:eatsipy_customer/themes/responsive.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:eatsipy_customer/widget/translated_text.dart';
-import 'package:provider/provider.dart';
 
 class CustomDialogBox extends StatelessWidget {
   final String title, descriptions, positiveString, negativeString;
@@ -34,10 +32,10 @@ class CustomDialogBox extends StatelessWidget {
   }
 
   contentBox(context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.only(left: 20, top: 20, right: 20, bottom: 20),
-      decoration: BoxDecoration(shape: BoxShape.rectangle, color: themeChange.getThem() ? AppThemeData.grey800 : AppThemeData.grey100, borderRadius: BorderRadius.circular(20)),
+      decoration: BoxDecoration(shape: BoxShape.rectangle, color: isDark ? AppThemeData.grey800 : AppThemeData.grey100, borderRadius: BorderRadius.circular(20)),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -49,7 +47,7 @@ class CustomDialogBox extends StatelessWidget {
             visible: title.isNotEmpty,
             child: TranslatedText(
               title,
-              style: TextStyle(fontSize: 20, fontFamily: AppThemeData.semiBold, color: themeChange.getThem() ? AppThemeData.grey100 : AppThemeData.grey800),
+              style: TextStyle(fontSize: 20, fontFamily: 'Urbanist', fontWeight: FontWeight.w600, color: isDark ? AppThemeData.grey100 : AppThemeData.grey800),
             ),
           ),
           const SizedBox(
@@ -59,7 +57,7 @@ class CustomDialogBox extends StatelessWidget {
             visible: descriptions.isNotEmpty,
             child: TranslatedText(
               descriptions,
-              style: TextStyle(fontSize: 14, fontFamily: AppThemeData.regular, color: themeChange.getThem() ? AppThemeData.grey200 : AppThemeData.grey700),
+              style: TextStyle(fontSize: 14, fontFamily: 'Urbanist', color: isDark ? AppThemeData.grey200 : AppThemeData.grey700),
               textAlign: TextAlign.center,
             ),
           ),
@@ -77,7 +75,7 @@ class CustomDialogBox extends StatelessWidget {
                     width: Responsive.width(100, context),
                     height: Responsive.height(5, context),
                     decoration: ShapeDecoration(
-                      color: themeChange.getThem() ? AppThemeData.grey700 : AppThemeData.grey200,
+                      color: isDark ? AppThemeData.grey700 : AppThemeData.grey200,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(200),
                       ),
@@ -90,8 +88,8 @@ class CustomDialogBox extends StatelessWidget {
                           negativeString.toString(),
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontFamily: AppThemeData.medium,
-                            color: themeChange.getThem() ? AppThemeData.grey100 : AppThemeData.grey900,
+                            fontFamily: 'Urbanist',
+                            color: isDark ? AppThemeData.grey100 : AppThemeData.grey900,
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                           ),
@@ -126,7 +124,7 @@ class CustomDialogBox extends StatelessWidget {
                           positiveString.toString(),
                           textAlign: TextAlign.center,
                           style: const TextStyle(
-                            fontFamily: AppThemeData.medium,
+                            fontFamily: 'Urbanist',
                             color: AppThemeData.grey50,
                             fontSize: 14,
                             fontWeight: FontWeight.w500,

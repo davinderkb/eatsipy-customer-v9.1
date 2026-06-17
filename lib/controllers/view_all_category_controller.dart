@@ -1,4 +1,3 @@
-import 'package:eatsipy_customer/constant/constant.dart';
 import 'package:eatsipy_customer/models/vendor_category_model.dart';
 import 'package:eatsipy_customer/utils/fire_store_utils.dart';
 import 'package:get/get.dart';
@@ -21,17 +20,6 @@ class ViewAllCategoryController extends GetxController {
         vendorCategoryModel.value = value;
       },
     );
-
-    if (Constant.restaurantList != null) {
-      List<String> usedCategoryIds = Constant.restaurantList!
-          .expand((vendor) => vendor.categoryID ?? [])
-          .whereType<String>()
-          .toSet()
-          .toList();
-      vendorCategoryModel.value = vendorCategoryModel
-          .where((category) => usedCategoryIds.contains(category.id))
-          .toList();
-    }
 
     isLoading.value = false;
   }

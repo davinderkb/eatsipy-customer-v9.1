@@ -58,10 +58,11 @@ class _MercadoPagoScreenState extends State<MercadoPagoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
         _showMyDialog();
-        return false;
       },
       child: Scaffold(
         appBar: AppBar(

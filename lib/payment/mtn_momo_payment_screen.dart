@@ -222,7 +222,7 @@ class _MtnPaymentScreenState extends State<MtnPaymentScreen> {
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                       color: Colors.white,
-                      boxShadow: [BoxShadow(color: const Color.fromRGBO(0, 0, 0, 0.1).withOpacity(.05), offset: const Offset(0.1, 0), blurRadius: 10, spreadRadius: 3)],
+                      boxShadow: [BoxShadow(color: const Color.fromRGBO(0, 0, 0, 0.1).withValues(alpha: .05), offset: const Offset(0.1, 0), blurRadius: 10, spreadRadius: 3)],
                       borderRadius: BorderRadius.circular(10)),
                   child: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
                     type == PaymentType.process

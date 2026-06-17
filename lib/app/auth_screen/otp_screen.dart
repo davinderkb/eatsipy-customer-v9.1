@@ -8,7 +8,6 @@ import 'package:eatsipy_customer/controllers/otp_controller.dart';
 import 'package:eatsipy_customer/models/user_model.dart';
 import 'package:eatsipy_customer/themes/app_them_data.dart';
 import 'package:eatsipy_customer/themes/round_button_fill.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:eatsipy_customer/utils/dynamic_traslator.dart';
 import 'package:eatsipy_customer/utils/fire_store_utils.dart';
 import 'package:eatsipy_customer/utils/notification_service.dart';
@@ -19,20 +18,19 @@ import 'package:flutter/material.dart';
 import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:provider/provider.dart';
 
 class OtpScreen extends StatelessWidget {
   const OtpScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GetX<OtpController>(
         init: OtpController(),
         builder: (controller) {
           return Scaffold(
             appBar: AppBar(
-              backgroundColor: themeChange.getThem() ? AppThemeData.surfaceDark : AppThemeData.surface,
+              backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
             ),
             body: controller.isLoading.value
                 ? Constant.loader()
@@ -45,15 +43,15 @@ class OtpScreen extends StatelessWidget {
                         children: [
                           TranslatedText(
                             "Verify Your Number 📱",
-                            style: TextStyle(color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900, fontSize: 22, fontFamily: AppThemeData.semiBold),
+                            style: TextStyle(color: isDark ? AppThemeData.grey50 : AppThemeData.grey900, fontSize: 22, fontFamily: 'Urbanist', fontWeight: FontWeight.w600),
                           ),
                           TranslatedText(
                             "${'Enter the OTP sent to your mobile number.'} ${controller.countryCode.value} ${Constant.maskingString(controller.phoneNumber.value, 3)}",
                             textAlign: TextAlign.start,
                             style: TextStyle(
-                              color: themeChange.getThem() ? AppThemeData.grey200 : AppThemeData.grey700,
+                              color: isDark ? AppThemeData.grey200 : AppThemeData.grey700,
                               fontSize: 16,
-                              fontFamily: AppThemeData.regular,
+                              fontFamily: 'Urbanist',
                               fontWeight: FontWeight.w400,
                             ),
                           ),
@@ -76,20 +74,20 @@ class OtpScreen extends StatelessWidget {
 
                                 // Text Style
                                 textStyle: TextStyle(
-                                  fontFamily: AppThemeData.regular,
-                                  color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                  fontFamily: 'Urbanist',
+                                  color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                 ),
 
                                 // Fill Color (like enableActiveFill: true)
-                                fillColor: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                                fillColor: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
 
                                 // Border Colors
-                                borderColor: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                                borderColor: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
 
                                 focusedBorderColor: AppThemeData.primary300,
                                 cursorColor: AppThemeData.primary300,
 
-                                errorColor: themeChange.getThem() ? AppThemeData.grey600 : AppThemeData.grey300,
+                                errorColor: isDark ? AppThemeData.grey600 : AppThemeData.grey300,
                               ),
                               onChanged: (value) {},
                               onCompleted: (pin) async {
@@ -190,10 +188,10 @@ class OtpScreen extends StatelessWidget {
                                   TextSpan(
                                     text: "${'Did’t receive any code? '} ".tr,
                                     style: TextStyle(
-                                      fontWeight: FontWeight.w500,
                                       fontSize: 14,
-                                      fontFamily: AppThemeData.medium,
-                                      color: themeChange.getThem() ? AppThemeData.grey100 : AppThemeData.grey800,
+                                      fontFamily: 'Urbanist',
+                                      fontWeight: FontWeight.w500,
+                                      color: isDark ? AppThemeData.grey100 : AppThemeData.grey800,
                                     ),
                                     children: <TextSpan>[
                                       TextSpan(
@@ -204,10 +202,10 @@ class OtpScreen extends StatelessWidget {
                                           },
                                         text: 'Send Again'.tr,
                                         style: TextStyle(
-                                            color: themeChange.getThem() ? AppThemeData.primary300 : AppThemeData.primary300,
-                                            fontWeight: FontWeight.w500,
+                                            color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
                                             fontSize: 14,
-                                            fontFamily: AppThemeData.medium,
+                                            fontFamily: 'Urbanist',
+                                            fontWeight: FontWeight.w500,
                                             decoration: TextDecoration.underline,
                                             decorationColor: AppThemeData.primary300),
                                       ),

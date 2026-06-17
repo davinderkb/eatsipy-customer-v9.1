@@ -1,12 +1,10 @@
 import 'package:eatsipy_customer/themes/app_them_data.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:eatsipy_customer/utils/dynamic_traslator.dart';
 import 'package:eatsipy_customer/utils/translation_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 class TextFieldWidget extends StatelessWidget {
   final String? title;
@@ -40,7 +38,7 @@ class TextFieldWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Column(
@@ -51,7 +49,7 @@ class TextFieldWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TranslatedText(title ?? "", style: TextStyle(fontFamily: AppThemeData.medium, fontSize: 14, color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900)),
+                TranslatedText(title ?? "", style: TextStyle(fontFamily: 'Urbanist', fontWeight: FontWeight.w500, fontSize: 14, color: isDark ? AppThemeData.grey50 : AppThemeData.grey900)),
                 const SizedBox(
                   height: 5,
                 ),
@@ -71,7 +69,7 @@ class TextFieldWidget extends StatelessWidget {
                   obscureText: obscureText ?? false,
                   obscuringCharacter: '●',
                   onChanged: onchange,
-                  style: TextStyle(color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900, fontFamily: AppThemeData.medium),
+                  style: TextStyle(color: isDark ? AppThemeData.grey50 : AppThemeData.grey900, fontFamily: 'Urbanist', fontWeight: FontWeight.w500),
                   decoration: InputDecoration(
                     errorStyle: const TextStyle(color: Colors.red),
                     filled: true,
@@ -83,34 +81,34 @@ class TextFieldWidget extends StatelessWidget {
                                 ? 13
                                 : 8,
                         horizontal: 10),
-                    fillColor: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                    fillColor: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                     prefixIcon: prefix,
                     suffixIcon: suffix,
                     disabledBorder: UnderlineInputBorder(
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      borderSide: BorderSide(color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50, width: 1),
+                      borderSide: BorderSide(color: isDark ? AppThemeData.grey900 : AppThemeData.grey50, width: 1),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      borderSide: BorderSide(color: themeChange.getThem() ? AppThemeData.primary300 : AppThemeData.primary300, width: 1),
+                      borderSide: BorderSide(color: isDark ? AppThemeData.primary300 : AppThemeData.primary300, width: 1),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      borderSide: BorderSide(color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50, width: 1),
+                      borderSide: BorderSide(color: isDark ? AppThemeData.grey900 : AppThemeData.grey50, width: 1),
                     ),
                     errorBorder: OutlineInputBorder(
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      borderSide: BorderSide(color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50, width: 1),
+                      borderSide: BorderSide(color: isDark ? AppThemeData.grey900 : AppThemeData.grey50, width: 1),
                     ),
                     border: OutlineInputBorder(
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      borderSide: BorderSide(color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50, width: 1),
+                      borderSide: BorderSide(color: isDark ? AppThemeData.grey900 : AppThemeData.grey50, width: 1),
                     ),
                     hintText: hintText.tr,
                     hintStyle: TextStyle(
                       fontSize: 14,
-                      color: themeChange.getThem() ? AppThemeData.grey600 : AppThemeData.grey400,
-                      fontFamily: AppThemeData.regular,
+                      color: isDark ? AppThemeData.grey600 : AppThemeData.grey400,
+                      fontFamily: 'Urbanist',
                     ),
                   ),
                 );

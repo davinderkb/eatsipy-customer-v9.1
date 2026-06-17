@@ -5,7 +5,6 @@ import 'package:eatsipy_customer/controllers/rate_product_controller.dart';
 import 'package:eatsipy_customer/themes/app_them_data.dart';
 import 'package:eatsipy_customer/themes/responsive.dart';
 import 'package:eatsipy_customer/themes/round_button_fill.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:eatsipy_customer/utils/dynamic_traslator.dart';
 import 'package:eatsipy_customer/utils/network_image_widget.dart';
 import 'package:eatsipy_customer/widget/my_separator.dart';
@@ -16,27 +15,26 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 
 class RateProductScreen extends StatelessWidget {
   const RateProductScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GetX(
       init: RateProductController(),
       builder: (controller) {
         return Scaffold(
-          backgroundColor: themeChange.getThem() ? AppThemeData.surfaceDark : AppThemeData.surface,
+          backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
           appBar: AppBar(
-            backgroundColor: themeChange.getThem() ? AppThemeData.surfaceDark : AppThemeData.surface,
+            backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
             centerTitle: false,
             titleSpacing: 0,
             title: TranslatedText(
               "Rate the item",
               textAlign: TextAlign.start,
-              style: TextStyle(fontFamily: AppThemeData.medium, fontSize: 16, color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900),
+              style: TextStyle(fontFamily: 'Urbanist', fontWeight: FontWeight.w500, fontSize: 16, color: isDark ? AppThemeData.grey50 : AppThemeData.grey900),
             ),
           ),
           body: controller.isLoading.value
@@ -49,7 +47,7 @@ class RateProductScreen extends StatelessWidget {
                         Container(
                           width: Responsive.width(100, context),
                           decoration: ShapeDecoration(
-                            color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                            color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                           ),
                           child: Padding(
@@ -57,10 +55,10 @@ class RateProductScreen extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                TranslatedText("Rate for", style: TextStyle(color: themeChange.getThem() ? AppThemeData.grey400 : AppThemeData.grey500, fontSize: 16, fontFamily: AppThemeData.medium)),
+                                TranslatedText("Rate for", style: TextStyle(color: isDark ? AppThemeData.grey400 : AppThemeData.grey500, fontSize: 16, fontFamily: 'Urbanist', fontWeight: FontWeight.w500)),
                                 TranslatedText(
                                   "${controller.productModel.value.name}",
-                                  style: TextStyle(color: themeChange.getThem() ? AppThemeData.grey100 : AppThemeData.grey800, fontSize: 18, fontFamily: AppThemeData.semiBold),
+                                  style: TextStyle(color: isDark ? AppThemeData.grey100 : AppThemeData.grey800, fontSize: 18, fontFamily: 'Urbanist', fontWeight: FontWeight.w600),
                                 ),
                                 const SizedBox(height: 10),
                                 RatingBar.builder(
@@ -69,14 +67,14 @@ class RateProductScreen extends StatelessWidget {
                                   direction: Axis.horizontal,
                                   itemCount: 5,
                                   itemSize: 26,
-                                  unratedColor: themeChange.getThem() ? AppThemeData.grey100 : AppThemeData.grey900,
+                                  unratedColor: isDark ? AppThemeData.grey100 : AppThemeData.grey900,
                                   itemPadding: const EdgeInsets.symmetric(horizontal: 6.0),
                                   itemBuilder: (context, _) => const Icon(Icons.star, color: AppThemeData.warning300),
                                   onRatingUpdate: (double rate) {
                                     controller.ratings.value = rate;
                                   },
                                 ),
-                                Padding(padding: const EdgeInsets.symmetric(vertical: 20), child: MySeparator(color: themeChange.getThem() ? AppThemeData.grey700 : AppThemeData.grey200)),
+                                Padding(padding: const EdgeInsets.symmetric(vertical: 20), child: MySeparator(color: isDark ? AppThemeData.grey700 : AppThemeData.grey200)),
                                 ListView.builder(
                                   itemCount: controller.reviewAttributeList.length,
                                   shrinkWrap: true,
@@ -90,7 +88,7 @@ class RateProductScreen extends StatelessWidget {
                                           Expanded(
                                             child: TranslatedText(
                                               controller.reviewAttributeList[index].title.toString(),
-                                              style: TextStyle(color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900, fontSize: 16, fontFamily: AppThemeData.semiBold),
+                                              style: TextStyle(color: isDark ? AppThemeData.grey50 : AppThemeData.grey900, fontSize: 16, fontFamily: 'Urbanist', fontWeight: FontWeight.w600),
                                             ),
                                           ),
                                           RatingBar.builder(
@@ -100,7 +98,7 @@ class RateProductScreen extends StatelessWidget {
                                             direction: Axis.horizontal,
                                             itemCount: 5,
                                             itemSize: 18,
-                                            unratedColor: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                            unratedColor: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                             itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
                                             itemBuilder: (context, _) => const Icon(Icons.star, color: AppThemeData.warning300),
                                             onRatingUpdate: (double rate) {
@@ -117,11 +115,11 @@ class RateProductScreen extends StatelessWidget {
                                   options: RoundedRectDottedBorderOptions(
                                     radius: const Radius.circular(12),
                                     dashPattern: const [6, 6, 6, 6],
-                                    color: themeChange.getThem() ? AppThemeData.grey700 : AppThemeData.grey200,
+                                    color: isDark ? AppThemeData.grey700 : AppThemeData.grey200,
                                   ),
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                                      color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                                       borderRadius: const BorderRadius.all(Radius.circular(12)),
                                     ),
                                     child: SizedBox(
@@ -135,12 +133,12 @@ class RateProductScreen extends StatelessWidget {
                                           const SizedBox(height: 10),
                                           TranslatedText(
                                             "Choose a image and upload here",
-                                            style: TextStyle(color: themeChange.getThem() ? AppThemeData.grey100 : AppThemeData.grey800, fontFamily: AppThemeData.medium, fontSize: 16),
+                                            style: TextStyle(color: isDark ? AppThemeData.grey100 : AppThemeData.grey800, fontFamily: 'Urbanist', fontWeight: FontWeight.w500, fontSize: 16),
                                           ),
                                           const SizedBox(height: 5),
                                           TranslatedText(
                                             "JPEG, PNG",
-                                            style: TextStyle(fontSize: 12, color: themeChange.getThem() ? AppThemeData.grey200 : AppThemeData.grey700, fontFamily: AppThemeData.regular),
+                                            style: TextStyle(fontSize: 12, color: isDark ? AppThemeData.grey200 : AppThemeData.grey700, fontFamily: 'Urbanist'),
                                           ),
                                           const SizedBox(height: 10),
                                           RoundedButtonFill(
@@ -216,7 +214,7 @@ class RateProductScreen extends StatelessWidget {
                                   options: RoundedRectDottedBorderOptions(
                                     radius: const Radius.circular(12),
                                     dashPattern: const [6, 6, 6, 6],
-                                    color: themeChange.getThem() ? AppThemeData.grey700 : AppThemeData.grey200,
+                                    color: isDark ? AppThemeData.grey700 : AppThemeData.grey200,
                                   ),
                                   child: TextFormField(
                                     keyboardType: TextInputType.text,
@@ -224,18 +222,18 @@ class RateProductScreen extends StatelessWidget {
                                     controller: controller.commentController.value,
                                     maxLines: 4,
                                     textInputAction: TextInputAction.done,
-                                    style: TextStyle(color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900, fontFamily: AppThemeData.medium),
+                                    style: TextStyle(color: isDark ? AppThemeData.grey50 : AppThemeData.grey900, fontFamily: 'Urbanist', fontWeight: FontWeight.w500),
                                     decoration: InputDecoration(
                                       errorStyle: const TextStyle(color: Colors.red),
                                       filled: true,
-                                      fillColor: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                                      fillColor: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                                       disabledBorder: InputBorder.none,
                                       focusedBorder: InputBorder.none,
                                       enabledBorder: InputBorder.none,
                                       errorBorder: InputBorder.none,
                                       border: InputBorder.none,
                                       hintText: "Type comment".tr,
-                                      hintStyle: TextStyle(fontSize: 14, color: themeChange.getThem() ? AppThemeData.grey600 : AppThemeData.grey400, fontFamily: AppThemeData.regular),
+                                      hintStyle: TextStyle(fontSize: 14, color: isDark ? AppThemeData.grey600 : AppThemeData.grey400, fontFamily: 'Urbanist'),
                                     ),
                                   ),
                                 ),
@@ -248,7 +246,7 @@ class RateProductScreen extends StatelessWidget {
                   ),
                 ),
           bottomNavigationBar: Container(
-            color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+            color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
             child: Padding(
               padding: const EdgeInsets.only(bottom: 20),
@@ -272,7 +270,7 @@ class RateProductScreen extends StatelessWidget {
     return showModalBottomSheet(
         context: context,
         builder: (context) {
-          final themeChange = Provider.of<DarkThemeProvider>(context);
+          final isDark = Theme.of(context).brightness == Brightness.dark;
           return StatefulBuilder(builder: (context, setState) {
             return SizedBox(
               height: Responsive.height(22, context),
@@ -283,7 +281,7 @@ class RateProductScreen extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 15),
                     child: TranslatedText(
                       "Please Select",
-                      style: TextStyle(color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900, fontFamily: AppThemeData.bold, fontSize: 16),
+                      style: TextStyle(color: isDark ? AppThemeData.grey50 : AppThemeData.grey900, fontFamily: 'Urbanist', fontWeight: FontWeight.w700, fontSize: 16),
                     ),
                   ),
                   Row(

@@ -1,4 +1,3 @@
-import 'package:eatsipy_customer/constant/collection_name.dart';
 import 'package:eatsipy_customer/constant/constant.dart';
 import 'package:eatsipy_customer/models/favourite_item_model.dart';
 import 'package:eatsipy_customer/models/favourite_model.dart';
@@ -25,86 +24,66 @@ class FavouriteController extends GetxController {
     getData();
   }
 
+  bool _isVendorSubscriptionValid(VendorModel vendor) {
+    if ((Constant.isSubscriptionModelApplied == true || Constant.adminCommission?.isEnabled == true) && vendor.subscriptionPlan != null) {
+      if (vendor.subscriptionTotalOrders == "-1") return true;
+      if ((vendor.subscriptionExpiryDate != null && vendor.subscriptionExpiryDate!.toDate().isBefore(DateTime.now()) == false) ||
+          vendor.subscriptionPlan?.expiryDay == '-1') {
+        return vendor.subscriptionTotalOrders != '0';
+      }
+      return false;
+    }
+    return true;
+  }
+
   Future<void> getData() async {
     reset();
-    if (Constant.userModel != null) {
-      await FireStoreUtils.getFavouriteRestaurant().then(
-        (value) {
-          favouriteList.value = value;
-        },
-      );
+    if (Constant.userModel == null) {
+      isLoading.value = false;
+      return;
+    }
 
-      await FireStoreUtils.getFavouriteItem().then(
-        (value) {
-          favouriteItemList.value = value;
-        },
-      );
-      List<VendorModel> favouriteVendorData = [];
-      for (var element in favouriteList) {
-        await FireStoreUtils.getVendorById(element.restaurantId.toString()).then(
-          (value) async {
-            if (value != null) {
-              if ((Constant.isSubscriptionModelApplied == true || Constant.adminCommission?.isEnabled == true) && value.subscriptionPlan != null) {
-                if (value.subscriptionTotalOrders == "-1") {
-                  favouriteVendorData.add(value);
-                } else {
-                  if ((value.subscriptionExpiryDate != null && value.subscriptionExpiryDate!.toDate().isBefore(DateTime.now()) == false) || value.subscriptionPlan?.expiryDay == '-1') {
-                    if (value.subscriptionTotalOrders != '0') {
-                      favouriteVendorData.add(value);
-                    }
-                  }
-                }
-              } else {
-                favouriteVendorData.add(value);
-              }
-            }
-          },
-        );
-      }
-      favouriteVendorData.sort((a, b) {
-        final aOpen = Constant.statusCheckOpenORClose(vendorModel: a);
-        final bOpen = Constant.statusCheckOpenORClose(vendorModel: b);
-        if (aOpen == bOpen) return 0;
-        return aOpen ? -1 : 1;
-      });
-      favouriteVendorList.value = favouriteVendorData;
+    final results = await Future.wait([
+      FireStoreUtils.getFavouriteRestaurant(),
+      FireStoreUtils.getFavouriteItem(),
+    ]);
+    favouriteList.value = results[0] as List<FavouriteModel>;
+    favouriteItemList.value = results[1] as List<FavouriteItemModel>;
 
-      for (var element in favouriteItemList) {
-        await FireStoreUtils.getProductById(element.productId.toString()).then(
-          (value) async {
-            if (value != null && value.publish == true) {
-              if (Constant.isSubscriptionModelApplied == true || Constant.adminCommission?.isEnabled == true) {
-                await FireStoreUtils.fireStore.collection(CollectionName.vendors).doc(value.vendorID.toString()).get().then((value1) async {
-                  if (value1.exists) {
-                    VendorModel vendorModel = VendorModel.fromJson(value1.data()!);
-                    if (vendorModel.subscriptionPlan != null) {
-                      if (vendorModel.subscriptionTotalOrders == "-1") {
-                        favouriteFoodList.add(value);
-                      } else {
-                        if ((vendorModel.subscriptionExpiryDate != null && vendorModel.subscriptionExpiryDate!.toDate().isBefore(DateTime.now()) == false) ||
-                            vendorModel.subscriptionPlan?.expiryDay == "-1") {
-                          if (vendorModel.subscriptionTotalOrders != '0') {
-                            favouriteFoodList.add(value);
-                          }
-                        }
-                      }
-                    }
-                  }
-                });
-              } else {
-                favouriteFoodList.add(value);
-              }
+    final vendorIds = favouriteList.map((e) => e.restaurantId.toString()).toList();
+    final productIds = favouriteItemList.map((e) => e.productId.toString()).toList();
 
-              // favouriteFoodList.add(value);
-            }
-          },
-        );
+    final batchResults = await Future.wait([
+      FireStoreUtils.getVendorsByIds(vendorIds),
+      FireStoreUtils.getProductsByIds(productIds),
+    ]);
+    final vendorMap = batchResults[0] as Map<String, VendorModel>;
+    final productMap = batchResults[1] as Map<String, ProductModel>;
+
+    // Build favourite vendors list
+    final favouriteVendorData = vendorMap.values.where(_isVendorSubscriptionValid).toList();
+    favouriteVendorData.sort((a, b) {
+      final aOpen = Constant.statusCheckOpenORClose(vendorModel: a);
+      final bOpen = Constant.statusCheckOpenORClose(vendorModel: b);
+      if (aOpen == bOpen) return 0;
+      return aOpen ? -1 : 1;
+    });
+    favouriteVendorList.value = removeDuplicateVendor(favouriteVendorData);
+
+    // Build favourite foods list — need vendor subscription check per product
+    final productVendorIds = productMap.values.where((p) => p.publish == true).map((p) => p.vendorID.toString()).toSet().toList();
+    final productVendorMap = await FireStoreUtils.getVendorsByIds(productVendorIds);
+
+    final favouriteFoodData = <ProductModel>[];
+    for (final product in productMap.values) {
+      if (product.publish != true) continue;
+      final vendor = productVendorMap[product.vendorID.toString()];
+      if (vendor == null) continue;
+      if (_isVendorSubscriptionValid(vendor)) {
+        favouriteFoodData.add(product);
       }
     }
-    List<ProductModel> favouriteFoodData = favouriteFoodList;
-    List<VendorModel> favouriteVendorData = favouriteVendorList;
     favouriteFoodList.value = removeDuplicateFoods(favouriteFoodData);
-    favouriteVendorList.value = removeDuplicateVendor(favouriteVendorData);
     isLoading.value = false;
   }
 

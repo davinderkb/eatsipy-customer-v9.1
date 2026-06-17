@@ -6,26 +6,24 @@ import 'package:eatsipy_customer/controllers/wallet_controller.dart';
 import 'package:eatsipy_customer/models/wallet_transaction_model.dart';
 import 'package:eatsipy_customer/themes/app_them_data.dart';
 import 'package:eatsipy_customer/themes/round_button_fill.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:eatsipy_customer/utils/fire_store_utils.dart';
 import 'package:eatsipy_customer/widget/my_separator.dart';
 import 'package:flutter/material.dart';
 import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 class WalletScreen extends StatelessWidget {
   const WalletScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GetX(
         init: WalletController(),
         builder: (controller) {
           return Scaffold(
-            backgroundColor: themeChange.getThem() ? AppThemeData.surfaceDark : AppThemeData.surface,
+            backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
             body: controller.isLoading.value
                 ? Constant.loader()
                 : Constant.userModel == null
@@ -44,7 +42,7 @@ class WalletScreen extends StatelessWidget {
                             ),
                             TranslatedText(
                               "Please Log In to Continue",
-                              style: TextStyle(color: themeChange.getThem() ? AppThemeData.grey100 : AppThemeData.grey800, fontSize: 22, fontFamily: AppThemeData.semiBold),
+                              style: TextStyle(color: isDark ? AppThemeData.grey100 : AppThemeData.grey800, fontSize: 22, fontFamily: 'Urbanist', fontWeight: FontWeight.w600),
                             ),
                             const SizedBox(
                               height: 5,
@@ -52,7 +50,7 @@ class WalletScreen extends StatelessWidget {
                             TranslatedText(
                               "You’re not logged in. Please sign in to access your account and explore all features.",
                               textAlign: TextAlign.center,
-                              style: TextStyle(color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey500, fontSize: 16, fontFamily: AppThemeData.bold),
+                              style: TextStyle(color: isDark ? AppThemeData.grey50 : AppThemeData.grey500, fontSize: 16, fontFamily: 'Urbanist', fontWeight: FontWeight.w700),
                             ),
                             const SizedBox(
                               height: 20,
@@ -90,16 +88,16 @@ class WalletScreen extends StatelessWidget {
                                               "My Wallet",
                                               style: TextStyle(
                                                 fontSize: 24,
-                                                color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                                fontFamily: AppThemeData.semiBold,
-                                                fontWeight: FontWeight.w500,
+                                                color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                fontFamily: 'Urbanist',
+                                                fontWeight: FontWeight.w600,
                                               ),
                                             ),
                                             TranslatedText(
                                               "Keep track of your balance, transactions, and payment methods all in one place.",
                                               style: TextStyle(
-                                                color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                                fontFamily: AppThemeData.regular,
+                                                color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                fontFamily: 'Urbanist',
                                                 fontWeight: FontWeight.w400,
                                               ),
                                             ),
@@ -125,20 +123,20 @@ class WalletScreen extends StatelessWidget {
                                             "My Wallet",
                                             maxLines: 1,
                                             style: TextStyle(
-                                              color: themeChange.getThem() ? AppThemeData.primary100 : AppThemeData.primary100,
+                                              color: isDark ? AppThemeData.primary100 : AppThemeData.primary100,
                                               fontSize: 16,
                                               overflow: TextOverflow.ellipsis,
-                                              fontFamily: AppThemeData.regular,
+                                              fontFamily: 'Urbanist',
                                             ),
                                           ),
                                           Text(
                                             Constant.amountShow(amount: controller.userModel.value.walletAmount.toString()),
                                             maxLines: 1,
                                             style: TextStyle(
-                                              color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey50,
+                                              color: isDark ? AppThemeData.grey50 : AppThemeData.grey50,
                                               fontSize: 40,
                                               overflow: TextOverflow.ellipsis,
-                                              fontFamily: AppThemeData.bold,
+                                              fontFamily: 'Urbanist', fontWeight: FontWeight.w700,
                                             ),
                                           ),
                                           const SizedBox(
@@ -172,7 +170,7 @@ class WalletScreen extends StatelessWidget {
                                         itemCount: controller.walletTransactionList.length,
                                         itemBuilder: (context, index) {
                                           WalletTransactionModel walletTractionModel = controller.walletTransactionList[index];
-                                          return transactionCard(controller, themeChange, walletTractionModel);
+                                          return transactionCard(controller, isDark, walletTractionModel);
                                         },
                                       ),
                                     ),
@@ -184,7 +182,7 @@ class WalletScreen extends StatelessWidget {
         });
   }
 
-  Column transactionCard(WalletController controller, themeChange, WalletTransactionModel transactionModel) {
+  Column transactionCard(WalletController controller, isDark, WalletTransactionModel transactionModel) {
     return Column(
       children: [
         InkWell(
@@ -204,7 +202,7 @@ class WalletScreen extends StatelessWidget {
                 Container(
                   decoration: ShapeDecoration(
                     shape: RoundedRectangleBorder(
-                      side: BorderSide(width: 1, color: themeChange.getThem() ? AppThemeData.grey800 : AppThemeData.grey100),
+                      side: BorderSide(width: 1, color: isDark ? AppThemeData.grey800 : AppThemeData.grey100),
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
@@ -237,9 +235,9 @@ class WalletScreen extends StatelessWidget {
                               transactionModel.note.toString(),
                               style: TextStyle(
                                 fontSize: 16,
-                                fontFamily: AppThemeData.semiBold,
+                                fontFamily: 'Urbanist',
                                 fontWeight: FontWeight.w600,
-                                color: themeChange.getThem() ? AppThemeData.grey100 : AppThemeData.grey800,
+                                color: isDark ? AppThemeData.grey100 : AppThemeData.grey800,
                               ),
                             ),
                           ),
@@ -247,7 +245,7 @@ class WalletScreen extends StatelessWidget {
                             Constant.amountShow(amount: transactionModel.amount.toString()),
                             style: TextStyle(
                               fontSize: 16,
-                              fontFamily: AppThemeData.medium,
+                              fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
                               color: transactionModel.isTopup == true ? AppThemeData.success400 : AppThemeData.danger300,
                             ),
                           )
@@ -258,7 +256,7 @@ class WalletScreen extends StatelessWidget {
                       ),
                       TranslatedText(
                         Constant.timestampToDateTime(transactionModel.date!),
-                        style: TextStyle(fontSize: 12, fontFamily: AppThemeData.medium, fontWeight: FontWeight.w500, color: themeChange.getThem() ? AppThemeData.grey200 : AppThemeData.grey700),
+                        style: TextStyle(fontSize: 12, fontFamily: 'Urbanist', fontWeight: FontWeight.w500, color: isDark ? AppThemeData.grey200 : AppThemeData.grey700),
                       ),
                     ],
                   ),
@@ -269,7 +267,7 @@ class WalletScreen extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 5),
-          child: MySeparator(color: themeChange.getThem() ? AppThemeData.grey700 : AppThemeData.grey200),
+          child: MySeparator(color: isDark ? AppThemeData.grey700 : AppThemeData.grey200),
         ),
       ],
     );

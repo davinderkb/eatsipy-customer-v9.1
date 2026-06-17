@@ -61,10 +61,11 @@ class _PayStackScreenState extends State<PayStackScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
         _showMyDialog();
-        return false;
       },
       child: Scaffold(
         appBar: AppBar(

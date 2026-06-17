@@ -3,33 +3,31 @@ import 'package:eatsipy_customer/constant/constant.dart';
 import 'package:eatsipy_customer/controllers/view_all_category_controller.dart';
 import 'package:eatsipy_customer/models/vendor_category_model.dart';
 import 'package:eatsipy_customer/themes/app_them_data.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:eatsipy_customer/utils/network_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 class ViewAllCategoryDineInScreen extends StatelessWidget {
   const ViewAllCategoryDineInScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GetX(
         init: ViewAllCategoryController(),
         builder: (controller) {
           return Scaffold(
             appBar: AppBar(
-              backgroundColor: themeChange.getThem() ? AppThemeData.surfaceDark : AppThemeData.surface,
+              backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
               centerTitle: false,
               titleSpacing: 0,
               title: TranslatedText(
                 "Categories",
                 style: TextStyle(
                   fontSize: 16,
-                  color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                  fontFamily: AppThemeData.medium,
+                  color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                  fontFamily: 'Urbanist',
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -54,12 +52,12 @@ class ViewAllCategoryDineInScreen extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
                             child: Container(
                               decoration: ShapeDecoration(
-                                color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                                color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                                 shape: RoundedRectangleBorder(
                                   side: BorderSide(
                                     width: 1,
                                     strokeAlign: BorderSide.strokeAlignOutside,
-                                    color: themeChange.getThem() ? AppThemeData.grey800 : AppThemeData.grey100,
+                                    color: isDark ? AppThemeData.grey800 : AppThemeData.grey100,
                                   ),
                                   borderRadius: BorderRadius.circular(100),
                                 ),
@@ -85,8 +83,8 @@ class ViewAllCategoryDineInScreen extends StatelessWidget {
                                       textAlign: TextAlign.center,
                                       maxLines: 2,
                                       style: TextStyle(
-                                        color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                        fontFamily: AppThemeData.medium,
+                                        color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                        fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
                                       ),
                                     ),
                                   )

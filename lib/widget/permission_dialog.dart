@@ -1,17 +1,15 @@
 import 'package:eatsipy_customer/themes/app_them_data.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 class PermissionDialog extends StatelessWidget {
   const PermissionDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       insetPadding: const EdgeInsets.all(30),
@@ -60,7 +58,7 @@ class PermissionDialog extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: themeChange.getThem() ? Colors.black : Colors.white,
+                        color: isDark ? Colors.black : Colors.white,
                       ),
                     ),
                     onPressed: () async {

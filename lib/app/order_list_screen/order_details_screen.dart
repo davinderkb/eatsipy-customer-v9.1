@@ -14,7 +14,6 @@ import 'package:eatsipy_customer/models/wallet_transaction_model.dart';
 import 'package:eatsipy_customer/themes/app_them_data.dart';
 import 'package:eatsipy_customer/themes/responsive.dart';
 import 'package:eatsipy_customer/themes/round_button_fill.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:eatsipy_customer/utils/fire_store_utils.dart';
 import 'package:eatsipy_customer/utils/network_image_widget.dart';
 import 'package:eatsipy_customer/widget/my_separator.dart';
@@ -22,7 +21,6 @@ import 'package:flutter/material.dart';
 import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 import 'package:timelines_plus/timelines_plus.dart';
 import 'package:uuid/uuid.dart';
 
@@ -31,23 +29,23 @@ class OrderDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GetX(
         init: OrderDetailsController(),
         builder: (controller) {
           return Scaffold(
-            backgroundColor: themeChange.getThem() ? AppThemeData.surfaceDark : AppThemeData.surface,
+            backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
             appBar: AppBar(
-              backgroundColor: themeChange.getThem() ? AppThemeData.surfaceDark : AppThemeData.surface,
+              backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
               centerTitle: false,
               titleSpacing: 0,
               title: TranslatedText(
                 "Order Details",
                 textAlign: TextAlign.start,
                 style: TextStyle(
-                  fontFamily: AppThemeData.medium,
+                  fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
                   fontSize: 16,
-                  color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                  color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                 ),
               ),
             ),
@@ -70,9 +68,9 @@ class OrderDetailsScreen extends StatelessWidget {
                                       "${'Order'} ${Constant.orderId(orderId: controller.orderModel.value.id.toString())}",
                                       textAlign: TextAlign.start,
                                       style: TextStyle(
-                                        fontFamily: AppThemeData.semiBold,
+                                        fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
                                         fontSize: 18,
-                                        color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                        color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                       ),
                                     ),
                                   ],
@@ -95,7 +93,7 @@ class OrderDetailsScreen extends StatelessWidget {
                           controller.orderModel.value.isPosOrder == true
                               ? Container(
                                   decoration: ShapeDecoration(
-                                    color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                                    color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
@@ -113,18 +111,18 @@ class OrderDetailsScreen extends StatelessWidget {
                                                 "${controller.orderModel.value.vendor!.title}",
                                                 textAlign: TextAlign.start,
                                                 style: TextStyle(
-                                                  fontFamily: AppThemeData.semiBold,
+                                                  fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
                                                   fontSize: 16,
-                                                  color: themeChange.getThem() ? AppThemeData.primary300 : AppThemeData.primary300,
+                                                  color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
                                                 ),
                                               ),
                                               TranslatedText(
                                                 "${controller.orderModel.value.vendor!.location}",
                                                 textAlign: TextAlign.start,
                                                 style: TextStyle(
-                                                  fontFamily: AppThemeData.medium,
+                                                  fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
                                                   fontSize: 14,
-                                                  color: themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
+                                                  color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
                                                 ),
                                               ),
                                             ],
@@ -134,7 +132,7 @@ class OrderDetailsScreen extends StatelessWidget {
                               : controller.orderModel.value.takeAway == true
                                   ? Container(
                                       decoration: ShapeDecoration(
-                                        color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                                        color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(12),
                                         ),
@@ -151,18 +149,18 @@ class OrderDetailsScreen extends StatelessWidget {
                                                     "${controller.orderModel.value.vendor!.title}",
                                                     textAlign: TextAlign.start,
                                                     style: TextStyle(
-                                                      fontFamily: AppThemeData.semiBold,
+                                                      fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
                                                       fontSize: 16,
-                                                      color: themeChange.getThem() ? AppThemeData.primary300 : AppThemeData.primary300,
+                                                      color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
                                                     ),
                                                   ),
                                                   TranslatedText(
                                                     "${controller.orderModel.value.vendor!.location}",
                                                     textAlign: TextAlign.start,
                                                     style: TextStyle(
-                                                      fontFamily: AppThemeData.medium,
+                                                      fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
                                                       fontSize: 14,
-                                                      color: themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
+                                                      color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
                                                     ),
                                                   ),
                                                 ],
@@ -181,7 +179,7 @@ class OrderDetailsScreen extends StatelessWidget {
                                                       height: 42,
                                                       decoration: ShapeDecoration(
                                                         shape: RoundedRectangleBorder(
-                                                          side: BorderSide(width: 1, color: themeChange.getThem() ? AppThemeData.grey700 : AppThemeData.grey200),
+                                                          side: BorderSide(width: 1, color: isDark ? AppThemeData.grey700 : AppThemeData.grey200),
                                                           borderRadius: BorderRadius.circular(120),
                                                         ),
                                                       ),
@@ -224,7 +222,7 @@ class OrderDetailsScreen extends StatelessWidget {
                                                       height: 42,
                                                       decoration: ShapeDecoration(
                                                         shape: RoundedRectangleBorder(
-                                                          side: BorderSide(width: 1, color: themeChange.getThem() ? AppThemeData.grey700 : AppThemeData.grey200),
+                                                          side: BorderSide(width: 1, color: isDark ? AppThemeData.grey700 : AppThemeData.grey200),
                                                           borderRadius: BorderRadius.circular(120),
                                                         ),
                                                       ),
@@ -240,7 +238,7 @@ class OrderDetailsScreen extends StatelessWidget {
                                     )
                                   : Container(
                                       decoration: ShapeDecoration(
-                                        color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                                        color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(12),
                                         ),
@@ -282,18 +280,18 @@ class OrderDetailsScreen extends StatelessWidget {
                                                                       "${controller.orderModel.value.vendor!.title}",
                                                                       textAlign: TextAlign.start,
                                                                       style: TextStyle(
-                                                                        fontFamily: AppThemeData.semiBold,
+                                                                        fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
                                                                         fontSize: 16,
-                                                                        color: themeChange.getThem() ? AppThemeData.primary300 : AppThemeData.primary300,
+                                                                        color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
                                                                       ),
                                                                     ),
                                                                     TranslatedText(
                                                                       "${controller.orderModel.value.vendor!.location}",
                                                                       textAlign: TextAlign.start,
                                                                       style: TextStyle(
-                                                                        fontFamily: AppThemeData.medium,
+                                                                        fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
                                                                         fontSize: 14,
-                                                                        color: themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
+                                                                        color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
                                                                       ),
                                                                     ),
                                                                   ],
@@ -312,7 +310,7 @@ class OrderDetailsScreen extends StatelessWidget {
                                                                         height: 42,
                                                                         decoration: ShapeDecoration(
                                                                           shape: RoundedRectangleBorder(
-                                                                            side: BorderSide(width: 1, color: themeChange.getThem() ? AppThemeData.grey700 : AppThemeData.grey200),
+                                                                            side: BorderSide(width: 1, color: isDark ? AppThemeData.grey700 : AppThemeData.grey200),
                                                                             borderRadius: BorderRadius.circular(120),
                                                                           ),
                                                                         ),
@@ -355,7 +353,7 @@ class OrderDetailsScreen extends StatelessWidget {
                                                                         height: 42,
                                                                         decoration: ShapeDecoration(
                                                                           shape: RoundedRectangleBorder(
-                                                                            side: BorderSide(width: 1, color: themeChange.getThem() ? AppThemeData.grey700 : AppThemeData.grey200),
+                                                                            side: BorderSide(width: 1, color: isDark ? AppThemeData.grey700 : AppThemeData.grey200),
                                                                             borderRadius: BorderRadius.circular(120),
                                                                           ),
                                                                         ),
@@ -374,18 +372,18 @@ class OrderDetailsScreen extends StatelessWidget {
                                                                 controller.orderModel.value.address?.addressAs ?? '',
                                                                 textAlign: TextAlign.start,
                                                                 style: TextStyle(
-                                                                  fontFamily: AppThemeData.semiBold,
+                                                                  fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
                                                                   fontSize: 16,
-                                                                  color: themeChange.getThem() ? AppThemeData.primary300 : AppThemeData.primary300,
+                                                                  color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
                                                                 ),
                                                               ),
                                                               TranslatedText(
                                                                 controller.orderModel.value.address?.getFullAddress() ?? '',
                                                                 textAlign: TextAlign.start,
                                                                 style: TextStyle(
-                                                                  fontFamily: AppThemeData.medium,
+                                                                  fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
                                                                   fontSize: 14,
-                                                                  color: themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
+                                                                  color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
                                                                 ),
                                                               ),
                                                             ],
@@ -401,7 +399,7 @@ class OrderDetailsScreen extends StatelessWidget {
                                                     children: [
                                                       Padding(
                                                         padding: const EdgeInsets.symmetric(vertical: 10),
-                                                        child: MySeparator(color: themeChange.getThem() ? AppThemeData.grey700 : AppThemeData.grey200),
+                                                        child: MySeparator(color: isDark ? AppThemeData.grey700 : AppThemeData.grey200),
                                                       ),
                                                       controller.orderModel.value.status == Constant.orderCompleted && controller.orderModel.value.driver != null
                                                           ? Row(
@@ -414,9 +412,9 @@ class OrderDetailsScreen extends StatelessWidget {
                                                                   controller.orderModel.value.driver!.fullName(),
                                                                   textAlign: TextAlign.right,
                                                                   style: TextStyle(
-                                                                    color: themeChange.getThem() ? AppThemeData.grey100 : AppThemeData.grey800,
-                                                                    fontFamily: AppThemeData.semiBold,
-                                                                    fontWeight: FontWeight.w500,
+                                                                    color: isDark ? AppThemeData.grey100 : AppThemeData.grey800,
+                                                                    fontFamily: 'Urbanist',
+                                                                    fontWeight: FontWeight.w600,
                                                                     fontSize: 14,
                                                                   ),
                                                                 ),
@@ -427,8 +425,8 @@ class OrderDetailsScreen extends StatelessWidget {
                                                                   "Order Delivered.",
                                                                   textAlign: TextAlign.right,
                                                                   style: TextStyle(
-                                                                    color: themeChange.getThem() ? AppThemeData.grey100 : AppThemeData.grey800,
-                                                                    fontFamily: AppThemeData.regular,
+                                                                    color: isDark ? AppThemeData.grey100 : AppThemeData.grey800,
+                                                                    fontFamily: 'Urbanist',
                                                                     fontWeight: FontWeight.w500,
                                                                     fontSize: 14,
                                                                   ),
@@ -448,9 +446,9 @@ class OrderDetailsScreen extends StatelessWidget {
                                                                         "${'Your Order has been Preparing and assign to the driver'}\n${'Preparation Time'} ${controller.orderModel.value.estimatedTimeToPrepare}",
                                                                         textAlign: TextAlign.start,
                                                                         style: TextStyle(
-                                                                          color: themeChange.getThem() ? AppThemeData.warning400 : AppThemeData.warning400,
-                                                                          fontFamily: AppThemeData.semiBold,
-                                                                          fontWeight: FontWeight.w500,
+                                                                          color: isDark ? AppThemeData.warning400 : AppThemeData.warning400,
+                                                                          fontFamily: 'Urbanist',
+                                                                          fontWeight: FontWeight.w600,
                                                                           fontSize: 14,
                                                                         ),
                                                                       ),
@@ -479,8 +477,8 @@ class OrderDetailsScreen extends StatelessWidget {
                                                                                 controller.orderModel.value.driver!.fullName().toString(),
                                                                                 textAlign: TextAlign.start,
                                                                                 style: TextStyle(
-                                                                                  color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                                                                  fontFamily: AppThemeData.semiBold,
+                                                                                  color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                                                  fontFamily: 'Urbanist',
                                                                                   fontWeight: FontWeight.w600,
                                                                                   fontSize: 16,
                                                                                 ),
@@ -489,8 +487,8 @@ class OrderDetailsScreen extends StatelessWidget {
                                                                                 controller.orderModel.value.driver!.email.toString(),
                                                                                 textAlign: TextAlign.start,
                                                                                 style: TextStyle(
-                                                                                  color: themeChange.getThem() ? AppThemeData.success400 : AppThemeData.success400,
-                                                                                  fontFamily: AppThemeData.regular,
+                                                                                  color: isDark ? AppThemeData.success400 : AppThemeData.success400,
+                                                                                  fontFamily: 'Urbanist',
                                                                                   fontWeight: FontWeight.w400,
                                                                                   fontSize: 12,
                                                                                 ),
@@ -507,7 +505,7 @@ class OrderDetailsScreen extends StatelessWidget {
                                                                             height: 42,
                                                                             decoration: ShapeDecoration(
                                                                               shape: RoundedRectangleBorder(
-                                                                                side: BorderSide(width: 1, color: themeChange.getThem() ? AppThemeData.grey700 : AppThemeData.grey200),
+                                                                                side: BorderSide(width: 1, color: isDark ? AppThemeData.grey700 : AppThemeData.grey200),
                                                                                 borderRadius: BorderRadius.circular(120),
                                                                               ),
                                                                             ),
@@ -546,7 +544,7 @@ class OrderDetailsScreen extends StatelessWidget {
                                                                             height: 42,
                                                                             decoration: ShapeDecoration(
                                                                               shape: RoundedRectangleBorder(
-                                                                                side: BorderSide(width: 1, color: themeChange.getThem() ? AppThemeData.grey700 : AppThemeData.grey200),
+                                                                                side: BorderSide(width: 1, color: isDark ? AppThemeData.grey700 : AppThemeData.grey200),
                                                                                 borderRadius: BorderRadius.circular(120),
                                                                               ),
                                                                             ),
@@ -575,9 +573,9 @@ class OrderDetailsScreen extends StatelessWidget {
                             "Your Order",
                             textAlign: TextAlign.start,
                             style: TextStyle(
-                              fontFamily: AppThemeData.semiBold,
+                              fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
                               fontSize: 16,
-                              color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                              color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                             ),
                           ),
                           const SizedBox(
@@ -585,7 +583,7 @@ class OrderDetailsScreen extends StatelessWidget {
                           ),
                           Container(
                             decoration: ShapeDecoration(
-                              color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                              color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -623,7 +621,7 @@ class OrderDetailsScreen extends StatelessWidget {
                                                     gradient: LinearGradient(
                                                       begin: const Alignment(-0.00, -1.00),
                                                       end: const Alignment(0, 1),
-                                                      colors: [Colors.black.withOpacity(0), const Color(0xFF111827)],
+                                                      colors: [Colors.black.withValues(alpha: 0), AppThemeData.grey900],
                                                     ),
                                                   ),
                                                 ),
@@ -647,8 +645,8 @@ class OrderDetailsScreen extends StatelessWidget {
                                                         "${cartProductModel.name}",
                                                         textAlign: TextAlign.start,
                                                         style: TextStyle(
-                                                          fontFamily: AppThemeData.regular,
-                                                          color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                          fontFamily: 'Urbanist',
+                                                          color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                                           fontSize: 16,
                                                         ),
                                                       ),
@@ -657,8 +655,8 @@ class OrderDetailsScreen extends StatelessWidget {
                                                       "x ${cartProductModel.quantity}",
                                                       textAlign: TextAlign.start,
                                                       style: TextStyle(
-                                                        fontFamily: AppThemeData.regular,
-                                                        color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                        fontFamily: 'Urbanist',
+                                                        color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                                         fontSize: 16,
                                                       ),
                                                     ),
@@ -672,8 +670,8 @@ class OrderDetailsScreen extends StatelessWidget {
                                                         Constant.amountShow(amount: cartProductModel.price),
                                                         style: TextStyle(
                                                           fontSize: 16,
-                                                          color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                                          fontFamily: AppThemeData.semiBold,
+                                                          color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                          fontFamily: 'Urbanist',
                                                           fontWeight: FontWeight.w600,
                                                         ),
                                                       )
@@ -683,8 +681,8 @@ class OrderDetailsScreen extends StatelessWidget {
                                                             Constant.amountShow(amount: cartProductModel.discountPrice.toString()),
                                                             style: TextStyle(
                                                               fontSize: 16,
-                                                              color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                                                              fontFamily: AppThemeData.semiBold,
+                                                              color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                              fontFamily: 'Urbanist',
                                                               fontWeight: FontWeight.w600,
                                                             ),
                                                           ),
@@ -696,9 +694,9 @@ class OrderDetailsScreen extends StatelessWidget {
                                                             style: TextStyle(
                                                               fontSize: 14,
                                                               decoration: TextDecoration.lineThrough,
-                                                              decorationColor: themeChange.getThem() ? AppThemeData.grey500 : AppThemeData.grey400,
-                                                              color: themeChange.getThem() ? AppThemeData.grey500 : AppThemeData.grey400,
-                                                              fontFamily: AppThemeData.semiBold,
+                                                              decorationColor: isDark ? AppThemeData.grey500 : AppThemeData.grey400,
+                                                              color: isDark ? AppThemeData.grey500 : AppThemeData.grey400,
+                                                              fontFamily: 'Urbanist',
                                                               fontWeight: FontWeight.w600,
                                                             ),
                                                           ),
@@ -713,8 +711,8 @@ class OrderDetailsScreen extends StatelessWidget {
                                                           overflow: TextOverflow.ellipsis,
                                                           style: TextStyle(
                                                             fontSize: 12,
-                                                            color: themeChange.getThem() ? AppThemeData.secondary300 : AppThemeData.secondary300,
-                                                            fontFamily: AppThemeData.semiBold,
+                                                            color: isDark ? AppThemeData.secondary300 : AppThemeData.secondary300,
+                                                            fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
                                                           ),
                                                         ),
                                               ],
@@ -733,8 +731,8 @@ class OrderDetailsScreen extends StatelessWidget {
                                                     "Variants",
                                                     textAlign: TextAlign.start,
                                                     style: TextStyle(
-                                                      fontFamily: AppThemeData.semiBold,
-                                                      color: themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
+                                                      fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                                      color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
                                                       fontSize: 16,
                                                     ),
                                                   ),
@@ -749,7 +747,7 @@ class OrderDetailsScreen extends StatelessWidget {
                                                       (i) {
                                                         return Container(
                                                           decoration: ShapeDecoration(
-                                                            color: themeChange.getThem() ? AppThemeData.grey800 : AppThemeData.grey100,
+                                                            color: isDark ? AppThemeData.grey800 : AppThemeData.grey100,
                                                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                                           ),
                                                           child: Padding(
@@ -758,8 +756,8 @@ class OrderDetailsScreen extends StatelessWidget {
                                                               "${cartProductModel.variantInfo!.variantOptions!.keys.elementAt(i)} : ${cartProductModel.variantInfo!.variantOptions![cartProductModel.variantInfo!.variantOptions!.keys.elementAt(i)]}",
                                                               textAlign: TextAlign.start,
                                                               style: TextStyle(
-                                                                fontFamily: AppThemeData.medium,
-                                                                color: themeChange.getThem() ? AppThemeData.grey500 : AppThemeData.grey400,
+                                                                fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
+                                                                color: isDark ? AppThemeData.grey500 : AppThemeData.grey400,
                                                               ),
                                                             ),
                                                           ),
@@ -782,8 +780,8 @@ class OrderDetailsScreen extends StatelessWidget {
                                                         "Addons",
                                                         textAlign: TextAlign.start,
                                                         style: TextStyle(
-                                                          fontFamily: AppThemeData.semiBold,
-                                                          color: themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
+                                                          fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                                          color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
                                                           fontSize: 16,
                                                         ),
                                                       ),
@@ -793,8 +791,8 @@ class OrderDetailsScreen extends StatelessWidget {
                                                           amount: (double.parse(cartProductModel.extrasPrice.toString()) * double.parse(cartProductModel.quantity.toString())).toString()),
                                                       textAlign: TextAlign.start,
                                                       style: TextStyle(
-                                                        fontFamily: AppThemeData.semiBold,
-                                                        color: themeChange.getThem() ? AppThemeData.primary300 : AppThemeData.primary300,
+                                                        fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                                        color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
                                                         fontSize: 16,
                                                       ),
                                                     ),
@@ -808,7 +806,7 @@ class OrderDetailsScreen extends StatelessWidget {
                                                     (i) {
                                                       return Container(
                                                         decoration: ShapeDecoration(
-                                                          color: themeChange.getThem() ? AppThemeData.grey800 : AppThemeData.grey100,
+                                                          color: isDark ? AppThemeData.grey800 : AppThemeData.grey100,
                                                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                                         ),
                                                         child: Padding(
@@ -817,8 +815,8 @@ class OrderDetailsScreen extends StatelessWidget {
                                                             cartProductModel.extras![i].toString(),
                                                             textAlign: TextAlign.start,
                                                             style: TextStyle(
-                                                              fontFamily: AppThemeData.medium,
-                                                              color: themeChange.getThem() ? AppThemeData.grey500 : AppThemeData.grey400,
+                                                              fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
+                                                              color: isDark ? AppThemeData.grey500 : AppThemeData.grey400,
                                                             ),
                                                           ),
                                                         ),
@@ -834,8 +832,8 @@ class OrderDetailsScreen extends StatelessWidget {
                                           title: "Rate us",
                                           height: 3.8,
                                           width: 20,
-                                          color: themeChange.getThem() ? AppThemeData.warning300 : AppThemeData.warning300,
-                                          textColor: themeChange.getThem() ? AppThemeData.grey100 : AppThemeData.grey800,
+                                          color: isDark ? AppThemeData.warning300 : AppThemeData.warning300,
+                                          textColor: isDark ? AppThemeData.grey100 : AppThemeData.grey800,
                                           onPress: () async {
                                             Get.to(const RateProductScreen(), arguments: {"orderModel": controller.orderModel.value, "productId": cartProductModel.id});
                                           },
@@ -847,7 +845,7 @@ class OrderDetailsScreen extends StatelessWidget {
                                 separatorBuilder: (context, index) {
                                   return Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 10),
-                                    child: MySeparator(color: themeChange.getThem() ? AppThemeData.grey700 : AppThemeData.grey200),
+                                    child: MySeparator(color: isDark ? AppThemeData.grey700 : AppThemeData.grey200),
                                   );
                                 },
                               ),
@@ -866,9 +864,9 @@ class OrderDetailsScreen extends StatelessWidget {
                           //         "Delivery Man",
                           //         textAlign: TextAlign.start,
                           //         style: TextStyle(
-                          //           fontFamily: AppThemeData.semiBold,
+                          //           fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
                           //           fontSize: 16,
-                          //           color: themeChange.getThem()
+                          //           color: isDark
                           //               ? AppThemeData.grey50
                           //               : AppThemeData.grey900,
                           //         ),
@@ -885,9 +883,9 @@ class OrderDetailsScreen extends StatelessWidget {
                             "Bill Details",
                             textAlign: TextAlign.start,
                             style: TextStyle(
-                              fontFamily: AppThemeData.semiBold,
+                              fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
                               fontSize: 16,
-                              color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                              color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                             ),
                           ),
                           const SizedBox(
@@ -896,7 +894,7 @@ class OrderDetailsScreen extends StatelessWidget {
                           Container(
                             width: Responsive.width(100, context),
                             decoration: ShapeDecoration(
-                              color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                              color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                               shadows: const [
                                 BoxShadow(
@@ -913,20 +911,20 @@ class OrderDetailsScreen extends StatelessWidget {
                                   amountRow(
                                     title: "Item totals",
                                     amount: Constant.amountShow(amount: controller.subTotal.value.toString()),
-                                    isDark: themeChange.getThem(),
+                                    isDark: isDark,
                                   ),
 
-                                  sectionDivider(themeChange.getThem()),
+                                  sectionDivider(isDark),
 
                                   /// Coupon Discount
                                   amountRow(
                                     title: "Coupon Discount",
                                     amount: "- (${Constant.amountShow(amount: controller.couponAmount.value.toString())})",
-                                    isDark: themeChange.getThem(),
+                                    isDark: isDark,
                                     amountColor: AppThemeData.danger300,
                                   ),
 
-                                  sectionDivider(themeChange.getThem()),
+                                  sectionDivider(isDark),
 
                                   /// Special Discount
                                   if (controller.orderModel.value.vendor!.specialDiscountEnable == true) ...[
@@ -934,7 +932,7 @@ class OrderDetailsScreen extends StatelessWidget {
                                     amountRow(
                                       title: "Special Discount",
                                       amount: "- (${Constant.amountShow(amount: controller.specialDiscountAmount.value.toString())})",
-                                      isDark: themeChange.getThem(),
+                                      isDark: isDark,
                                       amountColor: AppThemeData.danger300,
                                     ),
                                   ],
@@ -944,21 +942,21 @@ class OrderDetailsScreen extends StatelessWidget {
                                   amountRow(
                                     title: "Packaging charge",
                                     amount: Constant.amountShow(amount: controller.packagingCharge.value.toString()),
-                                    isDark: themeChange.getThem(),
+                                    isDark: isDark,
                                   ),
 
-                                  sectionDivider(themeChange.getThem()),
+                                  sectionDivider(isDark),
 
                                   /// Delivery Fee
                                   if (controller.orderModel.value.takeAway == false)
                                     amountRow(
                                       title: "Delivery Fee",
-                                      isDark: themeChange.getThem(),
+                                      isDark: isDark,
                                       trailing: (controller.orderModel.value.vendor!.isSelfDelivery == true || controller.orderModel.value.isFreeDelivery == true)
                                           ? TranslatedText(
                                               'Free Delivery',
                                               style: TextStyle(
-                                                fontFamily: AppThemeData.regular,
+                                                fontFamily: 'Urbanist',
                                                 color: AppThemeData.success400,
                                                 fontSize: 16,
                                               ),
@@ -966,8 +964,8 @@ class OrderDetailsScreen extends StatelessWidget {
                                           : Text(
                                               Constant.amountShow(amount: controller.deliveryCharges.value.toString()),
                                               style: TextStyle(
-                                                fontFamily: AppThemeData.regular,
-                                                color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                fontFamily: 'Urbanist',
+                                                color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                                 fontSize: 16,
                                               ),
                                             ),
@@ -989,8 +987,8 @@ class OrderDetailsScreen extends StatelessWidget {
                                               TranslatedText(
                                                 "Delivery Tips",
                                                 style: TextStyle(
-                                                  fontFamily: AppThemeData.regular,
-                                                  color: themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
+                                                  fontFamily: 'Urbanist',
+                                                  color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
                                                   fontSize: 16,
                                                 ),
                                               ),
@@ -1003,7 +1001,7 @@ class OrderDetailsScreen extends StatelessWidget {
                                               //     child: TranslatedText(
                                               //       "Remove",
                                               //       style: TextStyle(
-                                              //         fontFamily: AppThemeData.medium,
+                                              //         fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
                                               //         color: AppThemeData.primary300,
                                               //       ),
                                               //     ),
@@ -1014,8 +1012,8 @@ class OrderDetailsScreen extends StatelessWidget {
                                         Text(
                                           Constant.amountShow(amount: controller.deliveryTips.toString()),
                                           style: TextStyle(
-                                            fontFamily: AppThemeData.regular,
-                                            color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                            fontFamily: 'Urbanist',
+                                            color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                             fontSize: 16,
                                           ),
                                         ),
@@ -1025,38 +1023,38 @@ class OrderDetailsScreen extends StatelessWidget {
                                   if (!(controller.orderModel.value.takeAway == true ||
                                       controller.orderModel.value.vendor!.isSelfDelivery == true ||
                                       controller.orderModel.value.isFreeDelivery == true))
-                                    sectionDivider(themeChange.getThem()),
+                                    sectionDivider(isDark),
 
                                   /// Platform Fee
                                   amountRow(
                                     title: "Platform fee",
                                     amount: Constant.amountShow(amount: controller.platformFee.value.toString()),
-                                    isDark: themeChange.getThem(),
+                                    isDark: isDark,
                                   ),
 
-                                  sectionDivider(themeChange.getThem()),
+                                  sectionDivider(isDark),
 
                                   /// Tax
                                   InkWell(
                                     onTap: () {
-                                      showBillBifurcationDialog(context, themeChange.getThem(), controller);
+                                      showBillBifurcationDialog(context, isDark, controller);
                                     },
                                     child: amountRow(
                                         title: "Tax amount",
                                         amount: Constant.amountShow(amount: controller.totalTaxAmount.value.toString()),
-                                        isDark: themeChange.getThem(),
+                                        isDark: isDark,
                                         textColour: AppThemeData.secondary300,
                                         underline: true),
                                   ),
 
-                                  sectionDivider(themeChange.getThem()),
+                                  sectionDivider(isDark),
 
                                   /// To Pay
                                   amountRow(
                                     title: "To Pay",
                                     amount: Constant.amountShow(amount: controller.totalAmount.value.toString()),
                                     amountColor: AppThemeData.primary300,
-                                    isDark: themeChange.getThem(),
+                                    isDark: isDark,
                                   ),
                                 ],
                               ),
@@ -1069,9 +1067,9 @@ class OrderDetailsScreen extends StatelessWidget {
                             "Order Details",
                             textAlign: TextAlign.start,
                             style: TextStyle(
-                              fontFamily: AppThemeData.semiBold,
+                              fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
                               fontSize: 16,
-                              color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                              color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                             ),
                           ),
                           const SizedBox(
@@ -1080,7 +1078,7 @@ class OrderDetailsScreen extends StatelessWidget {
                           Container(
                             width: Responsive.width(100, context),
                             decoration: ShapeDecoration(
-                              color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                              color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                             ),
                             child: Padding(
@@ -1095,8 +1093,8 @@ class OrderDetailsScreen extends StatelessWidget {
                                           "Delivery type",
                                           textAlign: TextAlign.start,
                                           style: TextStyle(
-                                            fontFamily: AppThemeData.regular,
-                                            color: themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
+                                            fontFamily: 'Urbanist',
+                                            color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
                                             fontSize: 16,
                                           ),
                                         ),
@@ -1109,10 +1107,10 @@ class OrderDetailsScreen extends StatelessWidget {
                                                 : "Schedule",
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
-                                          fontFamily: AppThemeData.medium,
+                                          fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
                                           color: controller.orderModel.value.scheduleTime != null
                                               ? AppThemeData.primary300
-                                              : themeChange.getThem()
+                                              : isDark
                                                   ? AppThemeData.grey50
                                                   : AppThemeData.grey900,
                                           fontSize: 16,
@@ -1131,8 +1129,8 @@ class OrderDetailsScreen extends StatelessWidget {
                                           "Payment Method",
                                           textAlign: TextAlign.start,
                                           style: TextStyle(
-                                            fontFamily: AppThemeData.regular,
-                                            color: themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
+                                            fontFamily: 'Urbanist',
+                                            color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
                                             fontSize: 16,
                                           ),
                                         ),
@@ -1141,8 +1139,8 @@ class OrderDetailsScreen extends StatelessWidget {
                                         controller.orderModel.value.paymentMethod.toString(),
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
-                                          fontFamily: AppThemeData.regular,
-                                          color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                          fontFamily: 'Urbanist',
+                                          color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                           fontSize: 16,
                                         ),
                                       ),
@@ -1159,8 +1157,8 @@ class OrderDetailsScreen extends StatelessWidget {
                                           "Date and Time",
                                           textAlign: TextAlign.start,
                                           style: TextStyle(
-                                            fontFamily: AppThemeData.regular,
-                                            color: themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
+                                            fontFamily: 'Urbanist',
+                                            color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
                                             fontSize: 16,
                                           ),
                                         ),
@@ -1169,8 +1167,8 @@ class OrderDetailsScreen extends StatelessWidget {
                                         Constant.timestampToDateTime(controller.orderModel.value.createdAt!),
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
-                                          fontFamily: AppThemeData.regular,
-                                          color: themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
+                                          fontFamily: 'Urbanist',
+                                          color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
                                           fontSize: 16,
                                         ),
                                       ),
@@ -1190,8 +1188,8 @@ class OrderDetailsScreen extends StatelessWidget {
                                               "Phone Number",
                                               textAlign: TextAlign.start,
                                               style: TextStyle(
-                                                fontFamily: AppThemeData.regular,
-                                                color: themeChange.getThem() ? AppThemeData.grey300 : AppThemeData.grey600,
+                                                fontFamily: 'Urbanist',
+                                                color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
                                                 fontSize: 16,
                                               ),
                                             ),
@@ -1202,8 +1200,8 @@ class OrderDetailsScreen extends StatelessWidget {
                                         controller.orderModel.value.author!.phoneNumber.toString(),
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
-                                          fontFamily: AppThemeData.regular,
-                                          color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                          fontFamily: 'Urbanist',
+                                          color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                           fontSize: 16,
                                         ),
                                       ),
@@ -1228,9 +1226,9 @@ class OrderDetailsScreen extends StatelessWidget {
                                       "Remarks",
                                       textAlign: TextAlign.start,
                                       style: TextStyle(
-                                        fontFamily: AppThemeData.semiBold,
+                                        fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
                                         fontSize: 16,
-                                        color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                        color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                       ),
                                     ),
                                     const SizedBox(
@@ -1239,7 +1237,7 @@ class OrderDetailsScreen extends StatelessWidget {
                                     Container(
                                       width: Responsive.width(100, context),
                                       decoration: ShapeDecoration(
-                                        color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                                        color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                       ),
                                       child: Padding(
@@ -1248,8 +1246,8 @@ class OrderDetailsScreen extends StatelessWidget {
                                           controller.orderModel.value.notes.toString(),
                                           textAlign: TextAlign.start,
                                           style: TextStyle(
-                                            fontFamily: AppThemeData.regular,
-                                            color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                            fontFamily: 'Urbanist',
+                                            color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                             fontSize: 16,
                                           ),
                                         ),
@@ -1263,7 +1261,7 @@ class OrderDetailsScreen extends StatelessWidget {
                   ),
             bottomNavigationBar: controller.orderModel.value.status == Constant.orderPlaced
                 ? Container(
-                    color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                    color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 20),
@@ -1304,7 +1302,7 @@ class OrderDetailsScreen extends StatelessWidget {
                         controller.orderModel.value.status == Constant.orderInTransit ||
                         controller.orderModel.value.status == Constant.orderCompleted
                     ? Container(
-                        color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                        color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
                         child: Padding(
                           padding: const EdgeInsets.only(bottom: 20),
@@ -1428,7 +1426,7 @@ class OrderDetailsScreen extends StatelessWidget {
                   TranslatedText(
                     "Tax Details",
                     style: TextStyle(
-                      fontFamily: AppThemeData.medium,
+                      fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
                       fontSize: 18,
                       color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                     ),
@@ -1546,7 +1544,7 @@ class OrderDetailsScreen extends StatelessWidget {
           child: TranslatedText(
             title,
             style: TextStyle(
-                fontFamily: AppThemeData.regular,
+                fontFamily: 'Urbanist',
                 color: textColour ?? (isDark ? AppThemeData.grey300 : AppThemeData.grey600),
                 fontSize: 16,
                 decoration: underline == true ? TextDecoration.underline : TextDecoration.none),
@@ -1556,7 +1554,7 @@ class OrderDetailsScreen extends StatelessWidget {
             Text(
               amount,
               style: TextStyle(
-                fontFamily: AppThemeData.regular,
+                fontFamily: 'Urbanist',
                 color: amountColor ?? (isDark ? AppThemeData.grey50 : AppThemeData.grey900),
                 fontSize: 16,
               ),

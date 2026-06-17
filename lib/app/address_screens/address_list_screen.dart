@@ -4,7 +4,6 @@ import 'package:eatsipy_customer/controllers/address_list_controller.dart';
 import 'package:eatsipy_customer/models/user_model.dart';
 import 'package:eatsipy_customer/themes/app_them_data.dart';
 import 'package:eatsipy_customer/themes/round_button_fill.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:eatsipy_customer/utils/fire_store_utils.dart';
 import 'package:eatsipy_customer/widget/osm_map/map_picker_page.dart';
 import 'package:eatsipy_customer/widget/place_picker/location_picker_screen.dart';
@@ -16,7 +15,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 import '../../themes/text_field_widget.dart';
 
@@ -25,7 +23,7 @@ class AddressListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GetX(
         init: AddressListController(),
         builder: (controller) {
@@ -33,13 +31,13 @@ class AddressListScreen extends StatelessWidget {
             appBar: AppBar(
               centerTitle: false,
               titleSpacing: 0,
-              backgroundColor: themeChange.getThem() ? AppThemeData.surfaceDark : AppThemeData.surface,
+              backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
               title: TranslatedText(
                 "Add Address",
                 style: TextStyle(
                   fontSize: 16,
-                  color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                  fontFamily: AppThemeData.medium,
+                  color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                  fontFamily: 'Urbanist',
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -90,8 +88,8 @@ class AddressListScreen extends StatelessWidget {
                           "Use my current location",
                           style: TextStyle(
                             fontSize: 16,
-                            color: themeChange.getThem() ? AppThemeData.primary300 : AppThemeData.primary300,
-                            fontFamily: AppThemeData.medium,
+                            color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
+                            fontFamily: 'Urbanist',
                             fontWeight: FontWeight.w500,
                           ),
                         )
@@ -108,7 +106,7 @@ class AddressListScreen extends StatelessWidget {
                     },
                     child: Row(
                       children: [
-                        SvgPicture.asset("assets/icons/ic_plus.svg", colorFilter: ColorFilter.mode(themeChange.getThem() ? AppThemeData.primary300 : AppThemeData.primary300, BlendMode.srcIn)),
+                        SvgPicture.asset("assets/icons/ic_plus.svg", colorFilter: ColorFilter.mode(isDark ? AppThemeData.primary300 : AppThemeData.primary300, BlendMode.srcIn)),
                         const SizedBox(
                           width: 10,
                         ),
@@ -116,8 +114,8 @@ class AddressListScreen extends StatelessWidget {
                           "Add Location",
                           style: TextStyle(
                             fontSize: 16,
-                            color: themeChange.getThem() ? AppThemeData.primary300 : AppThemeData.primary300,
-                            fontFamily: AppThemeData.medium,
+                            color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
+                            fontFamily: 'Urbanist',
                             fontWeight: FontWeight.w500,
                           ),
                         )
@@ -131,8 +129,8 @@ class AddressListScreen extends StatelessWidget {
                     "Saved Addresses",
                     style: TextStyle(
                       fontSize: 16,
-                      color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
-                      fontFamily: AppThemeData.semiBold,
+                      color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                      fontFamily: 'Urbanist',
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -155,7 +153,7 @@ class AddressListScreen extends StatelessWidget {
                                   padding: const EdgeInsets.symmetric(vertical: 5),
                                   child: Container(
                                     decoration: ShapeDecoration(
-                                      color: themeChange.getThem() ? AppThemeData.grey900 : AppThemeData.grey50,
+                                      color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                     ),
                                     child: Padding(
@@ -167,7 +165,7 @@ class AddressListScreen extends StatelessWidget {
                                             children: [
                                               SvgPicture.asset(
                                                 "assets/icons/ic_send_one.svg",
-                                                colorFilter: ColorFilter.mode(themeChange.getThem() ? AppThemeData.grey100 : AppThemeData.grey800, BlendMode.srcIn),
+                                                colorFilter: ColorFilter.mode(isDark ? AppThemeData.grey100 : AppThemeData.grey800, BlendMode.srcIn),
                                               ),
                                               const SizedBox(
                                                 width: 10,
@@ -179,8 +177,8 @@ class AddressListScreen extends StatelessWidget {
                                                       shippingAddress.addressAs.toString(),
                                                       style: TextStyle(
                                                         fontSize: 16,
-                                                        color: themeChange.getThem() ? AppThemeData.grey100 : AppThemeData.grey800,
-                                                        fontFamily: AppThemeData.semiBold,
+                                                        color: isDark ? AppThemeData.grey100 : AppThemeData.grey800,
+                                                        fontFamily: 'Urbanist',
                                                         fontWeight: FontWeight.w600,
                                                       ),
                                                     ),
@@ -191,7 +189,7 @@ class AddressListScreen extends StatelessWidget {
                                                         ? const SizedBox()
                                                         : Container(
                                                             decoration: ShapeDecoration(
-                                                              color: themeChange.getThem() ? AppThemeData.primary50 : AppThemeData.primary50,
+                                                              color: isDark ? AppThemeData.primary50 : AppThemeData.primary50,
                                                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                                                             ),
                                                             child: Padding(
@@ -200,8 +198,8 @@ class AddressListScreen extends StatelessWidget {
                                                                 "Default",
                                                                 style: TextStyle(
                                                                   fontSize: 12,
-                                                                  color: themeChange.getThem() ? AppThemeData.primary300 : AppThemeData.primary300,
-                                                                  fontFamily: AppThemeData.semiBold,
+                                                                  color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
+                                                                  fontFamily: 'Urbanist',
                                                                   fontWeight: FontWeight.w600,
                                                                 ),
                                                               ),
@@ -223,8 +221,8 @@ class AddressListScreen extends StatelessWidget {
                                           TranslatedText(
                                             shippingAddress.getFullAddress().toString(),
                                             style: TextStyle(
-                                              color: themeChange.getThem() ? AppThemeData.grey400 : AppThemeData.grey500,
-                                              fontFamily: AppThemeData.regular,
+                                              color: isDark ? AppThemeData.grey400 : AppThemeData.grey500,
+                                              fontFamily: 'Urbanist',
                                               fontWeight: FontWeight.w600,
                                             ),
                                           ),
@@ -323,7 +321,7 @@ class AddressListScreen extends StatelessWidget {
         builder: (context) => FractionallySizedBox(
               heightFactor: 0.6,
               child: StatefulBuilder(builder: (context1, setState) {
-                final themeChange = Provider.of<DarkThemeProvider>(context);
+                final isDark = Theme.of(context).brightness == Brightness.dark;
                 return Obx(
                   () => Scaffold(
                     body: SingleChildScrollView(
@@ -339,7 +337,7 @@ class AddressListScreen extends StatelessWidget {
                                 height: 5,
                                 margin: const EdgeInsets.only(bottom: 6),
                                 decoration: ShapeDecoration(
-                                  color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey800,
+                                  color: isDark ? AppThemeData.grey50 : AppThemeData.grey800,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(3),
                                   ),
@@ -385,8 +383,8 @@ class AddressListScreen extends StatelessWidget {
                                     "Choose Current Location",
                                     style: TextStyle(
                                       fontSize: 16,
-                                      color: themeChange.getThem() ? AppThemeData.primary300 : AppThemeData.primary300,
-                                      fontFamily: AppThemeData.medium,
+                                      color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
+                                      fontFamily: 'Urbanist',
                                       fontWeight: FontWeight.w500,
                                     ),
                                   )
@@ -406,8 +404,8 @@ class AddressListScreen extends StatelessWidget {
                                   'Save as',
                                   style: TextStyle(
                                     fontSize: 16,
-                                    fontFamily: AppThemeData.semiBold,
-                                    color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey900,
+                                    fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                    color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                                   ),
                                 ),
                                 const SizedBox(
@@ -433,7 +431,7 @@ class AddressListScreen extends StatelessWidget {
                                             decoration: BoxDecoration(
                                                 color: controller.selectedSaveAs.value == controller.saveAsList[index].toString()
                                                     ? AppThemeData.primary300
-                                                    : themeChange.getThem()
+                                                    : isDark
                                                         ? AppThemeData.grey800
                                                         : AppThemeData.grey100,
                                                 borderRadius: const BorderRadius.all(Radius.circular(20))),
@@ -454,7 +452,7 @@ class AddressListScreen extends StatelessWidget {
                                                     colorFilter: ColorFilter.mode(
                                                         controller.selectedSaveAs.value == controller.saveAsList[index].toString()
                                                             ? AppThemeData.grey50
-                                                            : themeChange.getThem()
+                                                            : isDark
                                                                 ? AppThemeData.grey700
                                                                 : AppThemeData.grey300,
                                                         BlendMode.srcIn),
@@ -466,11 +464,11 @@ class AddressListScreen extends StatelessWidget {
                                                     controller.saveAsList[index].toString(),
                                                     style: TextStyle(
                                                       fontSize: 14,
+                                                      fontFamily: 'Urbanist',
                                                       fontWeight: FontWeight.w500,
-                                                      fontFamily: AppThemeData.medium,
                                                       color: controller.selectedSaveAs.value == controller.saveAsList[index].toString()
                                                           ? AppThemeData.grey50
-                                                          : themeChange.getThem()
+                                                          : isDark
                                                               ? AppThemeData.grey700
                                                               : AppThemeData.grey300,
                                                     ),
@@ -509,7 +507,7 @@ class AddressListScreen extends StatelessWidget {
                       ),
                     ),
                     bottomNavigationBar: Container(
-                      color: themeChange.getThem() ? AppThemeData.grey800 : AppThemeData.grey100,
+                      color: isDark ? AppThemeData.grey800 : AppThemeData.grey100,
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 20),

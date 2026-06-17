@@ -1,18 +1,16 @@
 import 'package:eatsipy_customer/controllers/splash_controller.dart';
 import 'package:eatsipy_customer/themes/app_them_data.dart';
-import 'package:eatsipy_customer/utils/dark_theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GetBuilder<SplashController>(
       init: SplashController(),
       builder: (controller) {
@@ -34,11 +32,11 @@ class SplashScreen extends StatelessWidget {
                 ),
                 TranslatedText(
                   "Welcome to Eatsipy",
-                  style: TextStyle(color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey50, fontSize: 28, fontFamily: AppThemeData.bold),
+                  style: TextStyle(color: isDark ? AppThemeData.grey50 : AppThemeData.grey50, fontSize: 28, fontFamily: 'Urbanist', fontWeight: FontWeight.w700),
                 ),
                 TranslatedText(
                   "Your Favorite Food Delivered Fast!",
-                  style: TextStyle(color: themeChange.getThem() ? AppThemeData.grey50 : AppThemeData.grey50),
+                  style: TextStyle(color: isDark ? AppThemeData.grey50 : AppThemeData.grey50),
                 ),
               ],
             ),
