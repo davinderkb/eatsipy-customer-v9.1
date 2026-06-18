@@ -52,6 +52,7 @@ android/app/build/
 # iOS build artifacts
 ios/Pods/
 build/ios/
+**/xcshareddata/swiftpm/
 
 # Local IDE / tool caches
 .idea/
