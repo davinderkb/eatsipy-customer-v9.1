@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart' hide Constant;
 import 'package:eatsipy_customer/constant/constant.dart';
+import 'package:eatsipy_customer/models/payment/checkout_payment_models.dart';
 import 'package:eatsipy_customer/models/subscription_plan_model.dart';
 
 class UserModel {
@@ -35,6 +36,7 @@ class UserModel {
   Timestamp? subscriptionExpiryDate;
   SubscriptionPlanModel? subscriptionPlan;
   bool? isAutoVerify;
+  PaymentPreferences? paymentPreferences;
 
   UserModel(
       {this.id,
@@ -67,9 +69,10 @@ class UserModel {
       this.subscriptionPlanId,
       this.subscriptionExpiryDate,
       this.subscriptionPlan,
+      this.paymentPreferences,
       this.isAutoVerify});
 
-  fullName() {
+  String fullName() {
     return "${firstName ?? ''} ${lastName ?? ''}";
   }
 
@@ -89,8 +92,12 @@ class UserModel {
     isActive = json['isActive'];
     isDocumentVerify = json['isDocumentVerify'] ?? false;
     role = json['role'] ?? 'user';
-    location = json['location'] != null ? UserLocation.fromJson(json['location']) : null;
-    userBankDetails = json['userBankDetails'] != null ? UserBankDetails.fromJson(json['userBankDetails']) : null;
+    location = json['location'] != null
+        ? UserLocation.fromJson(json['location'])
+        : null;
+    userBankDetails = json['userBankDetails'] != null
+        ? UserBankDetails.fromJson(json['userBankDetails'])
+        : null;
     if (json['shippingAddress'] != null) {
       shippingAddress = <ShippingAddress>[];
       json['shippingAddress'].forEach((v) {
@@ -109,7 +116,13 @@ class UserModel {
     provider = json['provider'];
     subscriptionPlanId = json['subscriptionPlanId'];
     subscriptionExpiryDate = json['subscriptionExpiryDate'];
-    subscriptionPlan = json['subscription_plan'] != null ? SubscriptionPlanModel.fromJson(json['subscription_plan']) : null;
+    subscriptionPlan = json['subscription_plan'] != null
+        ? SubscriptionPlanModel.fromJson(json['subscription_plan'])
+        : null;
+    paymentPreferences = json['paymentPreferences'] != null
+        ? PaymentPreferences.fromJson(
+            Map<String, dynamic>.from(json['paymentPreferences']))
+        : null;
     isAutoVerify = json['isAutoVerify'];
   }
 
@@ -138,7 +151,8 @@ class UserModel {
       data['userBankDetails'] = userBankDetails!.toJson();
     }
     if (shippingAddress != null) {
-      data['shippingAddress'] = shippingAddress!.map((v) => v.toJson()).toList();
+      data['shippingAddress'] =
+          shippingAddress!.map((v) => v.toJson()).toList();
     }
     if (role == Constant.userRoleDriver) {
       data['vendorID'] = vendorID;
@@ -157,6 +171,9 @@ class UserModel {
     }
     data['appIdentifier'] = appIdentifier;
     data['provider'] = provider;
+    if (paymentPreferences != null) {
+      data['paymentPreferences'] = paymentPreferences!.toJson();
+    }
     data['isAutoVerify'] = isAutoVerify;
     return data;
   }
@@ -190,7 +207,14 @@ class ShippingAddress {
   UserLocation? location;
   bool? isDefault;
 
-  ShippingAddress({this.address, this.landmark, this.locality, this.location, this.isDefault, this.addressAs, this.id});
+  ShippingAddress(
+      {this.address,
+      this.landmark,
+      this.locality,
+      this.location,
+      this.isDefault,
+      this.addressAs,
+      this.id});
 
   ShippingAddress.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -199,7 +223,9 @@ class ShippingAddress {
     locality = json['locality'];
     isDefault = json['isDefault'];
     addressAs = json['addressAs'];
-    location = json['location'] == null ? null : UserLocation.fromJson(json['location']);
+    location = json['location'] == null
+        ? null
+        : UserLocation.fromJson(json['location']);
   }
 
   Map<String, dynamic> toJson() {

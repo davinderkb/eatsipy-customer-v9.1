@@ -8,6 +8,7 @@ import 'package:eatsipy_customer/constant/send_notification.dart';
 import 'package:eatsipy_customer/constant/show_toast_dialog.dart';
 import 'package:eatsipy_customer/controllers/order_details_controller.dart';
 import 'package:eatsipy_customer/models/cart_product_model.dart';
+import 'package:eatsipy_customer/models/payment/checkout_payment_models.dart';
 import 'package:eatsipy_customer/models/user_model.dart';
 import 'package:eatsipy_customer/models/vendor_model.dart';
 import 'package:eatsipy_customer/models/wallet_transaction_model.dart';
@@ -34,16 +35,19 @@ class OrderDetailsScreen extends StatelessWidget {
         init: OrderDetailsController(),
         builder: (controller) {
           return Scaffold(
-            backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
+            backgroundColor:
+                isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
             appBar: AppBar(
-              backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
+              backgroundColor:
+                  isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
               centerTitle: false,
               titleSpacing: 0,
               title: TranslatedText(
                 "Order Details",
                 textAlign: TextAlign.start,
                 style: TextStyle(
-                  fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
+                  fontFamily: 'Urbanist',
+                  fontWeight: FontWeight.w500,
                   fontSize: 16,
                   color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                 ),
@@ -68,21 +72,29 @@ class OrderDetailsScreen extends StatelessWidget {
                                       "${'Order'} ${Constant.orderId(orderId: controller.orderModel.value.id.toString())}",
                                       textAlign: TextAlign.start,
                                       style: TextStyle(
-                                        fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                        fontFamily: 'Urbanist',
+                                        fontWeight: FontWeight.w600,
                                         fontSize: 18,
-                                        color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                        color: isDark
+                                            ? AppThemeData.grey50
+                                            : AppThemeData.grey900,
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
                               RoundedButtonFill(
-                                title: controller.orderModel.value.status.toString(),
-                                color: Constant.statusColor(status: controller.orderModel.value.status.toString()),
+                                title: controller.orderModel.value.status
+                                    .toString(),
+                                color: Constant.statusColor(
+                                    status: controller.orderModel.value.status
+                                        .toString()),
                                 width: 32,
                                 height: 4.5,
                                 radius: 10,
-                                textColor: Constant.statusText(status: controller.orderModel.value.status.toString()),
+                                textColor: Constant.statusText(
+                                    status: controller.orderModel.value.status
+                                        .toString()),
                                 onPress: () async {},
                               ),
                             ],
@@ -93,36 +105,47 @@ class OrderDetailsScreen extends StatelessWidget {
                           controller.orderModel.value.isPosOrder == true
                               ? Container(
                                   decoration: ShapeDecoration(
-                                    color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
+                                    color: isDark
+                                        ? AppThemeData.grey900
+                                        : AppThemeData.grey50,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                   ),
                                   child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16, vertical: 10),
                                       child: Row(children: [
-                                        SvgPicture.asset("assets/icons/ic_location.svg"),
+                                        SvgPicture.asset(
+                                            "assets/icons/ic_location.svg"),
                                         SizedBox(width: 10),
                                         Expanded(
                                           child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               TranslatedText(
                                                 "${controller.orderModel.value.vendor!.title}",
                                                 textAlign: TextAlign.start,
                                                 style: TextStyle(
-                                                  fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                                  fontFamily: 'Urbanist',
+                                                  fontWeight: FontWeight.w600,
                                                   fontSize: 16,
-                                                  color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
+                                                  color: isDark
+                                                      ? AppThemeData.primary300
+                                                      : AppThemeData.primary300,
                                                 ),
                                               ),
                                               TranslatedText(
                                                 "${controller.orderModel.value.vendor!.location}",
                                                 textAlign: TextAlign.start,
                                                 style: TextStyle(
-                                                  fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
+                                                  fontFamily: 'Urbanist',
+                                                  fontWeight: FontWeight.w500,
                                                   fontSize: 14,
-                                                  color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
+                                                  color: isDark
+                                                      ? AppThemeData.grey300
+                                                      : AppThemeData.grey600,
                                                 ),
                                               ),
                                             ],
@@ -132,103 +155,206 @@ class OrderDetailsScreen extends StatelessWidget {
                               : controller.orderModel.value.takeAway == true
                                   ? Container(
                                       decoration: ShapeDecoration(
-                                        color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
+                                        color: isDark
+                                            ? AppThemeData.grey900
+                                            : AppThemeData.grey50,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(12),
+                                          borderRadius:
+                                              BorderRadius.circular(12),
                                         ),
                                       ),
                                       child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 16, vertical: 10),
                                         child: Row(
                                           children: [
                                             Expanded(
                                               child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
                                                   TranslatedText(
                                                     "${controller.orderModel.value.vendor!.title}",
                                                     textAlign: TextAlign.start,
                                                     style: TextStyle(
-                                                      fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                                      fontFamily: 'Urbanist',
+                                                      fontWeight:
+                                                          FontWeight.w600,
                                                       fontSize: 16,
-                                                      color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
+                                                      color: isDark
+                                                          ? AppThemeData
+                                                              .primary300
+                                                          : AppThemeData
+                                                              .primary300,
                                                     ),
                                                   ),
                                                   TranslatedText(
                                                     "${controller.orderModel.value.vendor!.location}",
                                                     textAlign: TextAlign.start,
                                                     style: TextStyle(
-                                                      fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
+                                                      fontFamily: 'Urbanist',
+                                                      fontWeight:
+                                                          FontWeight.w500,
                                                       fontSize: 14,
-                                                      color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
+                                                      color: isDark
+                                                          ? AppThemeData.grey300
+                                                          : AppThemeData
+                                                              .grey600,
                                                     ),
                                                   ),
                                                 ],
                                               ),
                                             ),
-                                            controller.orderModel.value.status == Constant.orderPlaced ||
-                                                    controller.orderModel.value.status == Constant.orderRejected ||
-                                                    controller.orderModel.value.status == Constant.orderCompleted
+                                            controller.orderModel.value
+                                                            .status ==
+                                                        Constant.orderPlaced ||
+                                                    controller.orderModel.value
+                                                            .status ==
+                                                        Constant
+                                                            .orderRejected ||
+                                                    controller.orderModel.value
+                                                            .status ==
+                                                        Constant.orderCompleted
                                                 ? const SizedBox()
                                                 : InkWell(
                                                     onTap: () {
-                                                      Constant.makePhoneCall(controller.orderModel.value.vendor!.phonenumber.toString());
+                                                      Constant.makePhoneCall(
+                                                          controller
+                                                              .orderModel
+                                                              .value
+                                                              .vendor!
+                                                              .phonenumber
+                                                              .toString());
                                                     },
                                                     child: Container(
                                                       width: 42,
                                                       height: 42,
-                                                      decoration: ShapeDecoration(
-                                                        shape: RoundedRectangleBorder(
-                                                          side: BorderSide(width: 1, color: isDark ? AppThemeData.grey700 : AppThemeData.grey200),
-                                                          borderRadius: BorderRadius.circular(120),
+                                                      decoration:
+                                                          ShapeDecoration(
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          side: BorderSide(
+                                                              width: 1,
+                                                              color: isDark
+                                                                  ? AppThemeData
+                                                                      .grey700
+                                                                  : AppThemeData
+                                                                      .grey200),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      120),
                                                         ),
                                                       ),
                                                       child: Padding(
-                                                        padding: const EdgeInsets.all(8.0),
-                                                        child: SvgPicture.asset("assets/icons/ic_phone_call.svg"),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: SvgPicture.asset(
+                                                            "assets/icons/ic_phone_call.svg"),
                                                       ),
                                                     ),
                                                   ),
                                             const SizedBox(
                                               width: 10,
                                             ),
-                                            controller.orderModel.value.status == Constant.orderPlaced ||
-                                                    controller.orderModel.value.status == Constant.orderRejected ||
-                                                    controller.orderModel.value.status == Constant.orderCompleted
+                                            controller.orderModel.value
+                                                            .status ==
+                                                        Constant.orderPlaced ||
+                                                    controller.orderModel.value
+                                                            .status ==
+                                                        Constant
+                                                            .orderRejected ||
+                                                    controller.orderModel.value
+                                                            .status ==
+                                                        Constant.orderCompleted
                                                 ? const SizedBox()
                                                 : InkWell(
                                                     onTap: () async {
-                                                      ShowToastDialog.showLoader("Please wait");
+                                                      ShowToastDialog
+                                                          .showLoader(
+                                                              "Please wait");
 
-                                                      UserModel? customer = await FireStoreUtils.getUserProfile(controller.orderModel.value.authorID.toString());
-                                                      UserModel? restaurantUser = await FireStoreUtils.getUserProfile(controller.orderModel.value.vendor!.author.toString());
-                                                      VendorModel? vendorModel = await FireStoreUtils.getVendorById(restaurantUser!.vendorID.toString());
-                                                      ShowToastDialog.closeLoader();
+                                                      UserModel? customer =
+                                                          await FireStoreUtils
+                                                              .getUserProfile(
+                                                                  controller
+                                                                      .orderModel
+                                                                      .value
+                                                                      .authorID
+                                                                      .toString());
+                                                      UserModel?
+                                                          restaurantUser =
+                                                          await FireStoreUtils
+                                                              .getUserProfile(
+                                                                  controller
+                                                                      .orderModel
+                                                                      .value
+                                                                      .vendor!
+                                                                      .author
+                                                                      .toString());
+                                                      VendorModel? vendorModel =
+                                                          await FireStoreUtils
+                                                              .getVendorById(
+                                                                  restaurantUser!
+                                                                      .vendorID
+                                                                      .toString());
+                                                      ShowToastDialog
+                                                          .closeLoader();
 
-                                                      Get.to(const ChatScreen(), arguments: {
-                                                        "senderName": '${customer!.fullName()}',
-                                                        "senderId": customer.id,
-                                                        "senderProfileUrl": customer.profilePictureURL,
-                                                        "receivedName": vendorModel!.title,
-                                                        "receivedId": restaurantUser.id,
-                                                        "receivedProfileUrl": vendorModel.photo,
-                                                        "orderId": "${Constant.userRoleVendor}${controller.orderModel.value.id}",
-                                                        "token": restaurantUser.fcmToken,
-                                                        "chatType": Constant.userRoleVendor,
-                                                      });
+                                                      Get.to(const ChatScreen(),
+                                                          arguments: {
+                                                            "senderName":
+                                                                '${customer!.fullName()}',
+                                                            "senderId":
+                                                                customer.id,
+                                                            "senderProfileUrl":
+                                                                customer
+                                                                    .profilePictureURL,
+                                                            "receivedName":
+                                                                vendorModel!
+                                                                    .title,
+                                                            "receivedId":
+                                                                restaurantUser
+                                                                    .id,
+                                                            "receivedProfileUrl":
+                                                                vendorModel
+                                                                    .photo,
+                                                            "orderId":
+                                                                "${Constant.userRoleVendor}${controller.orderModel.value.id}",
+                                                            "token":
+                                                                restaurantUser
+                                                                    .fcmToken,
+                                                            "chatType": Constant
+                                                                .userRoleVendor,
+                                                          });
                                                     },
                                                     child: Container(
                                                       width: 42,
                                                       height: 42,
-                                                      decoration: ShapeDecoration(
-                                                        shape: RoundedRectangleBorder(
-                                                          side: BorderSide(width: 1, color: isDark ? AppThemeData.grey700 : AppThemeData.grey200),
-                                                          borderRadius: BorderRadius.circular(120),
+                                                      decoration:
+                                                          ShapeDecoration(
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          side: BorderSide(
+                                                              width: 1,
+                                                              color: isDark
+                                                                  ? AppThemeData
+                                                                      .grey700
+                                                                  : AppThemeData
+                                                                      .grey200),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      120),
                                                         ),
                                                       ),
                                                       child: Padding(
-                                                        padding: const EdgeInsets.all(8.0),
-                                                        child: SvgPicture.asset("assets/icons/ic_wechat.svg"),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: SvgPicture.asset(
+                                                            "assets/icons/ic_wechat.svg"),
                                                       ),
                                                     ),
                                                   )
@@ -238,152 +364,294 @@ class OrderDetailsScreen extends StatelessWidget {
                                     )
                                   : Container(
                                       decoration: ShapeDecoration(
-                                        color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
+                                        color: isDark
+                                            ? AppThemeData.grey900
+                                            : AppThemeData.grey50,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(12),
+                                          borderRadius:
+                                              BorderRadius.circular(12),
                                         ),
                                       ),
                                       child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 16),
                                         child: Column(
                                           children: [
                                             Timeline.tileBuilder(
                                               shrinkWrap: true,
                                               padding: EdgeInsets.zero,
-                                              physics: const NeverScrollableScrollPhysics(),
+                                              physics:
+                                                  const NeverScrollableScrollPhysics(),
                                               theme: TimelineThemeData(
                                                 nodePosition: 0,
                                                 // indicatorPosition: 0,
                                               ),
-                                              builder: TimelineTileBuilder.connected(
-                                                contentsAlign: ContentsAlign.basic,
-                                                indicatorBuilder: (context, index) {
-                                                  return SvgPicture.asset("assets/icons/ic_location.svg");
+                                              builder:
+                                                  TimelineTileBuilder.connected(
+                                                contentsAlign:
+                                                    ContentsAlign.basic,
+                                                indicatorBuilder:
+                                                    (context, index) {
+                                                  return SvgPicture.asset(
+                                                      "assets/icons/ic_location.svg");
                                                 },
-                                                connectorBuilder: (context, index, connectorType) {
+                                                connectorBuilder: (context,
+                                                    index, connectorType) {
                                                   return const DashedLineConnector(
                                                     color: AppThemeData.grey300,
                                                     gap: 3,
                                                   );
                                                 },
-                                                contentsBuilder: (context, index) {
+                                                contentsBuilder:
+                                                    (context, index) {
                                                   return Padding(
-                                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 10,
+                                                        vertical: 10),
                                                     child: index == 0
                                                         ? Row(
                                                             children: [
                                                               Expanded(
                                                                 child: Column(
-                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
                                                                   children: [
                                                                     TranslatedText(
                                                                       "${controller.orderModel.value.vendor!.title}",
-                                                                      textAlign: TextAlign.start,
-                                                                      style: TextStyle(
-                                                                        fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
-                                                                        fontSize: 16,
-                                                                        color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .start,
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontFamily:
+                                                                            'Urbanist',
+                                                                        fontWeight:
+                                                                            FontWeight.w600,
+                                                                        fontSize:
+                                                                            16,
+                                                                        color: isDark
+                                                                            ? AppThemeData.primary300
+                                                                            : AppThemeData.primary300,
                                                                       ),
                                                                     ),
                                                                     TranslatedText(
                                                                       "${controller.orderModel.value.vendor!.location}",
-                                                                      textAlign: TextAlign.start,
-                                                                      style: TextStyle(
-                                                                        fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
-                                                                        fontSize: 14,
-                                                                        color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .start,
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontFamily:
+                                                                            'Urbanist',
+                                                                        fontWeight:
+                                                                            FontWeight.w500,
+                                                                        fontSize:
+                                                                            14,
+                                                                        color: isDark
+                                                                            ? AppThemeData.grey300
+                                                                            : AppThemeData.grey600,
                                                                       ),
                                                                     ),
                                                                   ],
                                                                 ),
                                                               ),
-                                                              controller.orderModel.value.status == Constant.orderPlaced ||
-                                                                      controller.orderModel.value.status == Constant.orderRejected ||
-                                                                      controller.orderModel.value.status == Constant.orderCompleted
+                                                              controller
+                                                                              .orderModel
+                                                                              .value
+                                                                              .status ==
+                                                                          Constant
+                                                                              .orderPlaced ||
+                                                                      controller
+                                                                              .orderModel
+                                                                              .value
+                                                                              .status ==
+                                                                          Constant
+                                                                              .orderRejected ||
+                                                                      controller
+                                                                              .orderModel
+                                                                              .value
+                                                                              .status ==
+                                                                          Constant
+                                                                              .orderCompleted
                                                                   ? const SizedBox()
                                                                   : InkWell(
-                                                                      onTap: () {
-                                                                        Constant.makePhoneCall(controller.orderModel.value.vendor!.phonenumber.toString());
+                                                                      onTap:
+                                                                          () {
+                                                                        Constant.makePhoneCall(controller
+                                                                            .orderModel
+                                                                            .value
+                                                                            .vendor!
+                                                                            .phonenumber
+                                                                            .toString());
                                                                       },
-                                                                      child: Container(
-                                                                        width: 42,
-                                                                        height: 42,
-                                                                        decoration: ShapeDecoration(
-                                                                          shape: RoundedRectangleBorder(
-                                                                            side: BorderSide(width: 1, color: isDark ? AppThemeData.grey700 : AppThemeData.grey200),
-                                                                            borderRadius: BorderRadius.circular(120),
+                                                                      child:
+                                                                          Container(
+                                                                        width:
+                                                                            42,
+                                                                        height:
+                                                                            42,
+                                                                        decoration:
+                                                                            ShapeDecoration(
+                                                                          shape:
+                                                                              RoundedRectangleBorder(
+                                                                            side:
+                                                                                BorderSide(width: 1, color: isDark ? AppThemeData.grey700 : AppThemeData.grey200),
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(120),
                                                                           ),
                                                                         ),
-                                                                        child: Padding(
-                                                                          padding: const EdgeInsets.all(8.0),
-                                                                          child: SvgPicture.asset("assets/icons/ic_phone_call.svg"),
+                                                                        child:
+                                                                            Padding(
+                                                                          padding: const EdgeInsets
+                                                                              .all(
+                                                                              8.0),
+                                                                          child:
+                                                                              SvgPicture.asset("assets/icons/ic_phone_call.svg"),
                                                                         ),
                                                                       ),
                                                                     ),
                                                               const SizedBox(
                                                                 width: 10,
                                                               ),
-                                                              controller.orderModel.value.status == Constant.orderPlaced ||
-                                                                      controller.orderModel.value.status == Constant.orderRejected ||
-                                                                      controller.orderModel.value.status == Constant.orderCompleted
+                                                              controller
+                                                                              .orderModel
+                                                                              .value
+                                                                              .status ==
+                                                                          Constant
+                                                                              .orderPlaced ||
+                                                                      controller
+                                                                              .orderModel
+                                                                              .value
+                                                                              .status ==
+                                                                          Constant
+                                                                              .orderRejected ||
+                                                                      controller
+                                                                              .orderModel
+                                                                              .value
+                                                                              .status ==
+                                                                          Constant
+                                                                              .orderCompleted
                                                                   ? const SizedBox()
                                                                   : InkWell(
-                                                                      onTap: () async {
-                                                                        ShowToastDialog.showLoader("Please wait");
+                                                                      onTap:
+                                                                          () async {
+                                                                        ShowToastDialog.showLoader(
+                                                                            "Please wait");
 
-                                                                        UserModel? customer = await FireStoreUtils.getUserProfile(controller.orderModel.value.authorID.toString());
-                                                                        UserModel? restaurantUser = await FireStoreUtils.getUserProfile(controller.orderModel.value.vendor!.author.toString());
-                                                                        VendorModel? vendorModel = await FireStoreUtils.getVendorById(restaurantUser!.vendorID.toString());
-                                                                        ShowToastDialog.closeLoader();
+                                                                        UserModel? customer = await FireStoreUtils.getUserProfile(controller
+                                                                            .orderModel
+                                                                            .value
+                                                                            .authorID
+                                                                            .toString());
+                                                                        UserModel? restaurantUser = await FireStoreUtils.getUserProfile(controller
+                                                                            .orderModel
+                                                                            .value
+                                                                            .vendor!
+                                                                            .author
+                                                                            .toString());
+                                                                        VendorModel?
+                                                                            vendorModel =
+                                                                            await FireStoreUtils.getVendorById(restaurantUser!.vendorID.toString());
+                                                                        ShowToastDialog
+                                                                            .closeLoader();
 
-                                                                        Get.to(const ChatScreen(), arguments: {
-                                                                          "senderName": '${customer!.fullName()}',
-                                                                          "senderId": customer.id,
-                                                                          "senderProfileUrl": customer.profilePictureURL,
-                                                                          "receivedName": vendorModel!.title,
-                                                                          "receivedId": restaurantUser.id,
-                                                                          "receivedProfileUrl": vendorModel.photo,
-                                                                          "orderId": "${Constant.userRoleVendor}${controller.orderModel.value.id}",
-                                                                          "token": restaurantUser.fcmToken,
-                                                                          "chatType": Constant.userRoleVendor,
-                                                                        });
+                                                                        Get.to(
+                                                                            const ChatScreen(),
+                                                                            arguments: {
+                                                                              "senderName": '${customer!.fullName()}',
+                                                                              "senderId": customer.id,
+                                                                              "senderProfileUrl": customer.profilePictureURL,
+                                                                              "receivedName": vendorModel!.title,
+                                                                              "receivedId": restaurantUser.id,
+                                                                              "receivedProfileUrl": vendorModel.photo,
+                                                                              "orderId": "${Constant.userRoleVendor}${controller.orderModel.value.id}",
+                                                                              "token": restaurantUser.fcmToken,
+                                                                              "chatType": Constant.userRoleVendor,
+                                                                            });
                                                                       },
-                                                                      child: Container(
-                                                                        width: 42,
-                                                                        height: 42,
-                                                                        decoration: ShapeDecoration(
-                                                                          shape: RoundedRectangleBorder(
-                                                                            side: BorderSide(width: 1, color: isDark ? AppThemeData.grey700 : AppThemeData.grey200),
-                                                                            borderRadius: BorderRadius.circular(120),
+                                                                      child:
+                                                                          Container(
+                                                                        width:
+                                                                            42,
+                                                                        height:
+                                                                            42,
+                                                                        decoration:
+                                                                            ShapeDecoration(
+                                                                          shape:
+                                                                              RoundedRectangleBorder(
+                                                                            side:
+                                                                                BorderSide(width: 1, color: isDark ? AppThemeData.grey700 : AppThemeData.grey200),
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(120),
                                                                           ),
                                                                         ),
-                                                                        child: Padding(
-                                                                          padding: const EdgeInsets.all(8.0),
-                                                                          child: SvgPicture.asset("assets/icons/ic_wechat.svg"),
+                                                                        child:
+                                                                            Padding(
+                                                                          padding: const EdgeInsets
+                                                                              .all(
+                                                                              8.0),
+                                                                          child:
+                                                                              SvgPicture.asset("assets/icons/ic_wechat.svg"),
                                                                         ),
                                                                       ),
                                                                     )
                                                             ],
                                                           )
                                                         : Column(
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
                                                             children: [
                                                               TranslatedText(
-                                                                controller.orderModel.value.address?.addressAs ?? '',
-                                                                textAlign: TextAlign.start,
-                                                                style: TextStyle(
-                                                                  fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                                                controller
+                                                                        .orderModel
+                                                                        .value
+                                                                        .address
+                                                                        ?.addressAs ??
+                                                                    '',
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .start,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'Urbanist',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
                                                                   fontSize: 16,
-                                                                  color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
+                                                                  color: isDark
+                                                                      ? AppThemeData
+                                                                          .primary300
+                                                                      : AppThemeData
+                                                                          .primary300,
                                                                 ),
                                                               ),
                                                               TranslatedText(
-                                                                controller.orderModel.value.address?.getFullAddress() ?? '',
-                                                                textAlign: TextAlign.start,
-                                                                style: TextStyle(
-                                                                  fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
+                                                                controller
+                                                                        .orderModel
+                                                                        .value
+                                                                        .address
+                                                                        ?.getFullAddress() ??
+                                                                    '',
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .start,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'Urbanist',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
                                                                   fontSize: 14,
-                                                                  color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
+                                                                  color: isDark
+                                                                      ? AppThemeData
+                                                                          .grey300
+                                                                      : AppThemeData
+                                                                          .grey600,
                                                                 ),
                                                               ),
                                                             ],
@@ -393,29 +661,63 @@ class OrderDetailsScreen extends StatelessWidget {
                                                 itemCount: 2,
                                               ),
                                             ),
-                                            controller.orderModel.value.status == Constant.orderRejected
+                                            controller.orderModel.value
+                                                        .status ==
+                                                    Constant.orderRejected
                                                 ? const SizedBox()
                                                 : Column(
                                                     children: [
                                                       Padding(
-                                                        padding: const EdgeInsets.symmetric(vertical: 10),
-                                                        child: MySeparator(color: isDark ? AppThemeData.grey700 : AppThemeData.grey200),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                vertical: 10),
+                                                        child: MySeparator(
+                                                            color: isDark
+                                                                ? AppThemeData
+                                                                    .grey700
+                                                                : AppThemeData
+                                                                    .grey200),
                                                       ),
-                                                      controller.orderModel.value.status == Constant.orderCompleted && controller.orderModel.value.driver != null
+                                                      controller.orderModel.value
+                                                                      .status ==
+                                                                  Constant
+                                                                      .orderCompleted &&
+                                                              controller
+                                                                      .orderModel
+                                                                      .value
+                                                                      .driver !=
+                                                                  null
                                                           ? Row(
                                                               children: [
-                                                                SvgPicture.asset("assets/icons/ic_check_small.svg"),
+                                                                SvgPicture.asset(
+                                                                    "assets/icons/ic_check_small.svg"),
                                                                 const SizedBox(
                                                                   width: 5,
                                                                 ),
                                                                 TranslatedText(
-                                                                  controller.orderModel.value.driver!.fullName(),
-                                                                  textAlign: TextAlign.right,
-                                                                  style: TextStyle(
-                                                                    color: isDark ? AppThemeData.grey100 : AppThemeData.grey800,
-                                                                    fontFamily: 'Urbanist',
-                                                                    fontWeight: FontWeight.w600,
-                                                                    fontSize: 14,
+                                                                  controller
+                                                                      .orderModel
+                                                                      .value
+                                                                      .driver!
+                                                                      .fullName(),
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .right,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: isDark
+                                                                        ? AppThemeData
+                                                                            .grey100
+                                                                        : AppThemeData
+                                                                            .grey800,
+                                                                    fontFamily:
+                                                                        'Urbanist',
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                    fontSize:
+                                                                        14,
                                                                   ),
                                                                 ),
                                                                 const SizedBox(
@@ -423,55 +725,101 @@ class OrderDetailsScreen extends StatelessWidget {
                                                                 ),
                                                                 TranslatedText(
                                                                   "Order Delivered.",
-                                                                  textAlign: TextAlign.right,
-                                                                  style: TextStyle(
-                                                                    color: isDark ? AppThemeData.grey100 : AppThemeData.grey800,
-                                                                    fontFamily: 'Urbanist',
-                                                                    fontWeight: FontWeight.w500,
-                                                                    fontSize: 14,
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .right,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: isDark
+                                                                        ? AppThemeData
+                                                                            .grey100
+                                                                        : AppThemeData
+                                                                            .grey800,
+                                                                    fontFamily:
+                                                                        'Urbanist',
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    fontSize:
+                                                                        14,
                                                                   ),
                                                                 ),
                                                               ],
                                                             )
-                                                          : controller.orderModel.value.status == Constant.orderAccepted || controller.orderModel.value.status == Constant.driverPending
+                                                          : controller
+                                                                          .orderModel
+                                                                          .value
+                                                                          .status ==
+                                                                      Constant
+                                                                          .orderAccepted ||
+                                                                  controller
+                                                                          .orderModel
+                                                                          .value
+                                                                          .status ==
+                                                                      Constant
+                                                                          .driverPending
                                                               ? Row(
-                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
                                                                   children: [
-                                                                    SvgPicture.asset("assets/icons/ic_timer.svg"),
+                                                                    SvgPicture
+                                                                        .asset(
+                                                                            "assets/icons/ic_timer.svg"),
                                                                     const SizedBox(
                                                                       width: 5,
                                                                     ),
                                                                     Expanded(
-                                                                      child: TranslatedText(
+                                                                      child:
+                                                                          TranslatedText(
                                                                         "${'Your Order has been Preparing and assign to the driver'}\n${'Preparation Time'} ${controller.orderModel.value.estimatedTimeToPrepare}",
-                                                                        textAlign: TextAlign.start,
-                                                                        style: TextStyle(
-                                                                          color: isDark ? AppThemeData.warning400 : AppThemeData.warning400,
-                                                                          fontFamily: 'Urbanist',
-                                                                          fontWeight: FontWeight.w600,
-                                                                          fontSize: 14,
+                                                                        textAlign:
+                                                                            TextAlign.start,
+                                                                        style:
+                                                                            TextStyle(
+                                                                          color: isDark
+                                                                              ? AppThemeData.warning400
+                                                                              : AppThemeData.warning400,
+                                                                          fontFamily:
+                                                                              'Urbanist',
+                                                                          fontWeight:
+                                                                              FontWeight.w600,
+                                                                          fontSize:
+                                                                              14,
                                                                         ),
                                                                       ),
                                                                     ),
                                                                   ],
                                                                 )
-                                                              : controller.orderModel.value.driver != null
+                                                              : controller
+                                                                          .orderModel
+                                                                          .value
+                                                                          .driver !=
+                                                                      null
                                                                   ? Row(
                                                                       children: [
                                                                         ClipOval(
-                                                                          child: NetworkImageWidget(
-                                                                            imageUrl: controller.orderModel.value.author!.profilePictureURL.toString(),
-                                                                            fit: BoxFit.cover,
-                                                                            height: Responsive.height(5, context),
-                                                                            width: Responsive.width(10, context),
+                                                                          child:
+                                                                              NetworkImageWidget(
+                                                                            imageUrl:
+                                                                                controller.orderModel.value.author!.profilePictureURL.toString(),
+                                                                            fit:
+                                                                                BoxFit.cover,
+                                                                            height:
+                                                                                Responsive.height(5, context),
+                                                                            width:
+                                                                                Responsive.width(10, context),
                                                                           ),
                                                                         ),
                                                                         const SizedBox(
-                                                                          width: 10,
+                                                                          width:
+                                                                              10,
                                                                         ),
                                                                         Expanded(
-                                                                          child: Column(
-                                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                                          child:
+                                                                              Column(
+                                                                            crossAxisAlignment:
+                                                                                CrossAxisAlignment.start,
                                                                             children: [
                                                                               TranslatedText(
                                                                                 controller.orderModel.value.driver!.fullName().toString(),
@@ -497,33 +845,45 @@ class OrderDetailsScreen extends StatelessWidget {
                                                                           ),
                                                                         ),
                                                                         InkWell(
-                                                                          onTap: () {
+                                                                          onTap:
+                                                                              () {
                                                                             Constant.makePhoneCall(controller.orderModel.value.driver!.phoneNumber.toString());
                                                                           },
-                                                                          child: Container(
-                                                                            width: 42,
-                                                                            height: 42,
-                                                                            decoration: ShapeDecoration(
+                                                                          child:
+                                                                              Container(
+                                                                            width:
+                                                                                42,
+                                                                            height:
+                                                                                42,
+                                                                            decoration:
+                                                                                ShapeDecoration(
                                                                               shape: RoundedRectangleBorder(
                                                                                 side: BorderSide(width: 1, color: isDark ? AppThemeData.grey700 : AppThemeData.grey200),
                                                                                 borderRadius: BorderRadius.circular(120),
                                                                               ),
                                                                             ),
-                                                                            child: Padding(
+                                                                            child:
+                                                                                Padding(
                                                                               padding: const EdgeInsets.all(8.0),
                                                                               child: SvgPicture.asset("assets/icons/ic_phone_call.svg"),
                                                                             ),
                                                                           ),
                                                                         ),
                                                                         const SizedBox(
-                                                                          width: 10,
+                                                                          width:
+                                                                              10,
                                                                         ),
                                                                         InkWell(
-                                                                          onTap: () async {
+                                                                          onTap:
+                                                                              () async {
                                                                             ShowToastDialog.showLoader("Please wait");
 
-                                                                            UserModel? customer = await FireStoreUtils.getUserProfile(controller.orderModel.value.authorID.toString());
-                                                                            UserModel? driverUser = await FireStoreUtils.getUserProfile(controller.orderModel.value.driverID.toString());
+                                                                            UserModel?
+                                                                                customer =
+                                                                                await FireStoreUtils.getUserProfile(controller.orderModel.value.authorID.toString());
+                                                                            UserModel?
+                                                                                driverUser =
+                                                                                await FireStoreUtils.getUserProfile(controller.orderModel.value.driverID.toString());
 
                                                                             ShowToastDialog.closeLoader();
 
@@ -539,16 +899,21 @@ class OrderDetailsScreen extends StatelessWidget {
                                                                               "chatType": Constant.userRoleDriver,
                                                                             });
                                                                           },
-                                                                          child: Container(
-                                                                            width: 42,
-                                                                            height: 42,
-                                                                            decoration: ShapeDecoration(
+                                                                          child:
+                                                                              Container(
+                                                                            width:
+                                                                                42,
+                                                                            height:
+                                                                                42,
+                                                                            decoration:
+                                                                                ShapeDecoration(
                                                                               shape: RoundedRectangleBorder(
                                                                                 side: BorderSide(width: 1, color: isDark ? AppThemeData.grey700 : AppThemeData.grey200),
                                                                                 borderRadius: BorderRadius.circular(120),
                                                                               ),
                                                                             ),
-                                                                            child: Padding(
+                                                                            child:
+                                                                                Padding(
                                                                               padding: const EdgeInsets.all(8.0),
                                                                               child: SvgPicture.asset("assets/icons/ic_wechat.svg"),
                                                                             ),
@@ -573,9 +938,12 @@ class OrderDetailsScreen extends StatelessWidget {
                             "Your Order",
                             textAlign: TextAlign.start,
                             style: TextStyle(
-                              fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                              fontFamily: 'Urbanist',
+                              fontWeight: FontWeight.w600,
                               fontSize: 16,
-                              color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                              color: isDark
+                                  ? AppThemeData.grey50
+                                  : AppThemeData.grey900,
                             ),
                           ),
                           const SizedBox(
@@ -583,45 +951,67 @@ class OrderDetailsScreen extends StatelessWidget {
                           ),
                           Container(
                             decoration: ShapeDecoration(
-                              color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
+                              color: isDark
+                                  ? AppThemeData.grey900
+                                  : AppThemeData.grey50,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 10),
                               child: ListView.separated(
                                 shrinkWrap: true,
                                 padding: EdgeInsets.zero,
-                                itemCount: controller.orderModel.value.products!.length,
+                                itemCount: controller
+                                    .orderModel.value.products!.length,
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemBuilder: (context, index) {
-                                  CartProductModel cartProductModel = controller.orderModel.value.products![index];
+                                  CartProductModel cartProductModel = controller
+                                      .orderModel.value.products![index];
                                   return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           ClipRRect(
-                                            borderRadius: const BorderRadius.all(Radius.circular(14)),
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(14)),
                                             child: Stack(
                                               children: [
                                                 NetworkImageWidget(
-                                                  imageUrl: cartProductModel.photo.toString(),
-                                                  height: Responsive.height(8, context),
-                                                  width: Responsive.width(16, context),
+                                                  imageUrl: cartProductModel
+                                                      .photo
+                                                      .toString(),
+                                                  height: Responsive.height(
+                                                      8, context),
+                                                  width: Responsive.width(
+                                                      16, context),
                                                   fit: BoxFit.cover,
                                                 ),
                                                 Container(
-                                                  height: Responsive.height(8, context),
-                                                  width: Responsive.width(16, context),
+                                                  height: Responsive.height(
+                                                      8, context),
+                                                  width: Responsive.width(
+                                                      16, context),
                                                   decoration: BoxDecoration(
                                                     gradient: LinearGradient(
-                                                      begin: const Alignment(-0.00, -1.00),
-                                                      end: const Alignment(0, 1),
-                                                      colors: [Colors.black.withValues(alpha: 0), AppThemeData.grey900],
+                                                      begin: const Alignment(
+                                                          -0.00, -1.00),
+                                                      end:
+                                                          const Alignment(0, 1),
+                                                      colors: [
+                                                        Colors.black.withValues(
+                                                            alpha: 0),
+                                                        AppThemeData.grey900
+                                                      ],
                                                     ),
                                                   ),
                                                 ),
@@ -633,86 +1023,155 @@ class OrderDetailsScreen extends StatelessWidget {
                                           ),
                                           Expanded(
                                             child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 Row(
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                   children: [
                                                     Expanded(
                                                       child: TranslatedText(
                                                         "${cartProductModel.name}",
-                                                        textAlign: TextAlign.start,
+                                                        textAlign:
+                                                            TextAlign.start,
                                                         style: TextStyle(
-                                                          fontFamily: 'Urbanist',
-                                                          color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                          fontFamily:
+                                                              'Urbanist',
+                                                          color: isDark
+                                                              ? AppThemeData
+                                                                  .grey50
+                                                              : AppThemeData
+                                                                  .grey900,
                                                           fontSize: 16,
                                                         ),
                                                       ),
                                                     ),
                                                     TranslatedText(
                                                       "x ${cartProductModel.quantity}",
-                                                      textAlign: TextAlign.start,
+                                                      textAlign:
+                                                          TextAlign.start,
                                                       style: TextStyle(
                                                         fontFamily: 'Urbanist',
-                                                        color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                        color: isDark
+                                                            ? AppThemeData
+                                                                .grey50
+                                                            : AppThemeData
+                                                                .grey900,
                                                         fontSize: 16,
                                                       ),
                                                     ),
                                                   ],
                                                 ),
-                                                double.parse(cartProductModel.discountPrice == null || cartProductModel.discountPrice?.isEmpty == true
+                                                double.parse(cartProductModel
+                                                                        .discountPrice ==
+                                                                    null ||
+                                                                cartProductModel
+                                                                        .discountPrice
+                                                                        ?.isEmpty ==
+                                                                    true
                                                             ? "0.0"
-                                                            : cartProductModel.discountPrice.toString()) <=
+                                                            : cartProductModel
+                                                                .discountPrice
+                                                                .toString()) <=
                                                         0
                                                     ? Text(
-                                                        Constant.amountShow(amount: cartProductModel.price),
+                                                        Constant.amountShow(
+                                                            amount:
+                                                                cartProductModel
+                                                                    .price),
                                                         style: TextStyle(
                                                           fontSize: 16,
-                                                          color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
-                                                          fontFamily: 'Urbanist',
-                                                          fontWeight: FontWeight.w600,
+                                                          color: isDark
+                                                              ? AppThemeData
+                                                                  .grey50
+                                                              : AppThemeData
+                                                                  .grey900,
+                                                          fontFamily:
+                                                              'Urbanist',
+                                                          fontWeight:
+                                                              FontWeight.w600,
                                                         ),
                                                       )
                                                     : Row(
                                                         children: [
                                                           Text(
-                                                            Constant.amountShow(amount: cartProductModel.discountPrice.toString()),
+                                                            Constant.amountShow(
+                                                                amount: cartProductModel
+                                                                    .discountPrice
+                                                                    .toString()),
                                                             style: TextStyle(
                                                               fontSize: 16,
-                                                              color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
-                                                              fontFamily: 'Urbanist',
-                                                              fontWeight: FontWeight.w600,
+                                                              color: isDark
+                                                                  ? AppThemeData
+                                                                      .grey50
+                                                                  : AppThemeData
+                                                                      .grey900,
+                                                              fontFamily:
+                                                                  'Urbanist',
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
                                                             ),
                                                           ),
                                                           const SizedBox(
                                                             width: 5,
                                                           ),
                                                           Text(
-                                                            Constant.amountShow(amount: cartProductModel.price),
+                                                            Constant.amountShow(
+                                                                amount:
+                                                                    cartProductModel
+                                                                        .price),
                                                             style: TextStyle(
                                                               fontSize: 14,
-                                                              decoration: TextDecoration.lineThrough,
-                                                              decorationColor: isDark ? AppThemeData.grey500 : AppThemeData.grey400,
-                                                              color: isDark ? AppThemeData.grey500 : AppThemeData.grey400,
-                                                              fontFamily: 'Urbanist',
-                                                              fontWeight: FontWeight.w600,
+                                                              decoration:
+                                                                  TextDecoration
+                                                                      .lineThrough,
+                                                              decorationColor: isDark
+                                                                  ? AppThemeData
+                                                                      .grey500
+                                                                  : AppThemeData
+                                                                      .grey400,
+                                                              color: isDark
+                                                                  ? AppThemeData
+                                                                      .grey500
+                                                                  : AppThemeData
+                                                                      .grey400,
+                                                              fontFamily:
+                                                                  'Urbanist',
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
                                                             ),
                                                           ),
                                                         ],
                                                       ),
-                                                if (Constant.taxScope == "product")
-                                                  cartProductModel.taxSetting?.isEmpty == true
+                                                if (Constant.taxScope ==
+                                                    "product")
+                                                  cartProductModel.taxSetting
+                                                              ?.isEmpty ==
+                                                          true
                                                       ? SizedBox()
                                                       : TranslatedText(
                                                           "${'Tax:'} ${Constant.getTaxDisplayText(cartProductModel.taxSetting)}",
                                                           maxLines: 2,
-                                                          overflow: TextOverflow.ellipsis,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
                                                           style: TextStyle(
                                                             fontSize: 12,
-                                                            color: isDark ? AppThemeData.secondary300 : AppThemeData.secondary300,
-                                                            fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                                            color: isDark
+                                                                ? AppThemeData
+                                                                    .secondary300
+                                                                : AppThemeData
+                                                                    .secondary300,
+                                                            fontFamily:
+                                                                'Urbanist',
+                                                            fontWeight:
+                                                                FontWeight.w600,
                                                           ),
                                                         ),
                                               ],
@@ -720,19 +1179,30 @@ class OrderDetailsScreen extends StatelessWidget {
                                           ),
                                         ],
                                       ),
-                                      cartProductModel.variantInfo == null || cartProductModel.variantInfo!.variantOptions!.isEmpty
+                                      cartProductModel.variantInfo == null ||
+                                              cartProductModel.variantInfo!
+                                                  .variantOptions!.isEmpty
                                           ? Container()
                                           : Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 5,
+                                                      vertical: 10),
                                               child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
                                                   TranslatedText(
                                                     "Variants",
                                                     textAlign: TextAlign.start,
                                                     style: TextStyle(
-                                                      fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
-                                                      color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
+                                                      fontFamily: 'Urbanist',
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color: isDark
+                                                          ? AppThemeData.grey300
+                                                          : AppThemeData
+                                                              .grey600,
                                                       fontSize: 16,
                                                     ),
                                                   ),
@@ -743,21 +1213,50 @@ class OrderDetailsScreen extends StatelessWidget {
                                                     spacing: 6.0,
                                                     runSpacing: 6.0,
                                                     children: List.generate(
-                                                      cartProductModel.variantInfo!.variantOptions!.length,
+                                                      cartProductModel
+                                                          .variantInfo!
+                                                          .variantOptions!
+                                                          .length,
                                                       (i) {
                                                         return Container(
-                                                          decoration: ShapeDecoration(
-                                                            color: isDark ? AppThemeData.grey800 : AppThemeData.grey100,
-                                                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                                          decoration:
+                                                              ShapeDecoration(
+                                                            color: isDark
+                                                                ? AppThemeData
+                                                                    .grey800
+                                                                : AppThemeData
+                                                                    .grey100,
+                                                            shape: RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            8)),
                                                           ),
                                                           child: Padding(
-                                                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-                                                            child: TranslatedText(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .symmetric(
+                                                                    horizontal:
+                                                                        16,
+                                                                    vertical:
+                                                                        5),
+                                                            child:
+                                                                TranslatedText(
                                                               "${cartProductModel.variantInfo!.variantOptions!.keys.elementAt(i)} : ${cartProductModel.variantInfo!.variantOptions![cartProductModel.variantInfo!.variantOptions!.keys.elementAt(i)]}",
-                                                              textAlign: TextAlign.start,
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .start,
                                                               style: TextStyle(
-                                                                fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
-                                                                color: isDark ? AppThemeData.grey500 : AppThemeData.grey400,
+                                                                fontFamily:
+                                                                    'Urbanist',
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                color: isDark
+                                                                    ? AppThemeData
+                                                                        .grey500
+                                                                    : AppThemeData
+                                                                        .grey400,
                                                               ),
                                                             ),
                                                           ),
@@ -768,31 +1267,56 @@ class OrderDetailsScreen extends StatelessWidget {
                                                 ],
                                               ),
                                             ),
-                                      cartProductModel.extras == null || cartProductModel.extras!.isEmpty
+                                      cartProductModel.extras == null ||
+                                              cartProductModel.extras!.isEmpty
                                           ? const SizedBox()
                                           : Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 Row(
                                                   children: [
                                                     Expanded(
                                                       child: TranslatedText(
                                                         "Addons",
-                                                        textAlign: TextAlign.start,
+                                                        textAlign:
+                                                            TextAlign.start,
                                                         style: TextStyle(
-                                                          fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
-                                                          color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
+                                                          fontFamily:
+                                                              'Urbanist',
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          color: isDark
+                                                              ? AppThemeData
+                                                                  .grey300
+                                                              : AppThemeData
+                                                                  .grey600,
                                                           fontSize: 16,
                                                         ),
                                                       ),
                                                     ),
                                                     Text(
                                                       Constant.amountShow(
-                                                          amount: (double.parse(cartProductModel.extrasPrice.toString()) * double.parse(cartProductModel.quantity.toString())).toString()),
-                                                      textAlign: TextAlign.start,
+                                                          amount: (double.parse(
+                                                                      cartProductModel
+                                                                          .extrasPrice
+                                                                          .toString()) *
+                                                                  double.parse(
+                                                                      cartProductModel
+                                                                          .quantity
+                                                                          .toString()))
+                                                              .toString()),
+                                                      textAlign:
+                                                          TextAlign.start,
                                                       style: TextStyle(
-                                                        fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
-                                                        color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
+                                                        fontFamily: 'Urbanist',
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: isDark
+                                                            ? AppThemeData
+                                                                .primary300
+                                                            : AppThemeData
+                                                                .primary300,
                                                         fontSize: 16,
                                                       ),
                                                     ),
@@ -802,21 +1326,47 @@ class OrderDetailsScreen extends StatelessWidget {
                                                   spacing: 6.0,
                                                   runSpacing: 6.0,
                                                   children: List.generate(
-                                                    cartProductModel.extras!.length,
+                                                    cartProductModel
+                                                        .extras!.length,
                                                     (i) {
                                                       return Container(
-                                                        decoration: ShapeDecoration(
-                                                          color: isDark ? AppThemeData.grey800 : AppThemeData.grey100,
-                                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                                        decoration:
+                                                            ShapeDecoration(
+                                                          color: isDark
+                                                              ? AppThemeData
+                                                                  .grey800
+                                                              : AppThemeData
+                                                                  .grey100,
+                                                          shape: RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8)),
                                                         ),
                                                         child: Padding(
-                                                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                                  horizontal:
+                                                                      16,
+                                                                  vertical: 5),
                                                           child: TranslatedText(
-                                                            cartProductModel.extras![i].toString(),
-                                                            textAlign: TextAlign.start,
+                                                            cartProductModel
+                                                                .extras![i]
+                                                                .toString(),
+                                                            textAlign:
+                                                                TextAlign.start,
                                                             style: TextStyle(
-                                                              fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
-                                                              color: isDark ? AppThemeData.grey500 : AppThemeData.grey400,
+                                                              fontFamily:
+                                                                  'Urbanist',
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              color: isDark
+                                                                  ? AppThemeData
+                                                                      .grey500
+                                                                  : AppThemeData
+                                                                      .grey400,
                                                             ),
                                                           ),
                                                         ),
@@ -832,10 +1382,20 @@ class OrderDetailsScreen extends StatelessWidget {
                                           title: "Rate us",
                                           height: 3.8,
                                           width: 20,
-                                          color: isDark ? AppThemeData.warning300 : AppThemeData.warning300,
-                                          textColor: isDark ? AppThemeData.grey100 : AppThemeData.grey800,
+                                          color: isDark
+                                              ? AppThemeData.warning300
+                                              : AppThemeData.warning300,
+                                          textColor: isDark
+                                              ? AppThemeData.grey100
+                                              : AppThemeData.grey800,
                                           onPress: () async {
-                                            Get.to(const RateProductScreen(), arguments: {"orderModel": controller.orderModel.value, "productId": cartProductModel.id});
+                                            Get.to(const RateProductScreen(),
+                                                arguments: {
+                                                  "orderModel": controller
+                                                      .orderModel.value,
+                                                  "productId":
+                                                      cartProductModel.id
+                                                });
                                           },
                                         ),
                                       )
@@ -844,8 +1404,12 @@ class OrderDetailsScreen extends StatelessWidget {
                                 },
                                 separatorBuilder: (context, index) {
                                   return Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 10),
-                                    child: MySeparator(color: isDark ? AppThemeData.grey700 : AppThemeData.grey200),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10),
+                                    child: MySeparator(
+                                        color: isDark
+                                            ? AppThemeData.grey700
+                                            : AppThemeData.grey200),
                                   );
                                 },
                               ),
@@ -883,9 +1447,12 @@ class OrderDetailsScreen extends StatelessWidget {
                             "Bill Details",
                             textAlign: TextAlign.start,
                             style: TextStyle(
-                              fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                              fontFamily: 'Urbanist',
+                              fontWeight: FontWeight.w600,
                               fontSize: 16,
-                              color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                              color: isDark
+                                  ? AppThemeData.grey50
+                                  : AppThemeData.grey900,
                             ),
                           ),
                           const SizedBox(
@@ -894,8 +1461,11 @@ class OrderDetailsScreen extends StatelessWidget {
                           Container(
                             width: Responsive.width(100, context),
                             decoration: ShapeDecoration(
-                              color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                              color: isDark
+                                  ? AppThemeData.grey900
+                                  : AppThemeData.grey50,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)),
                               shadows: const [
                                 BoxShadow(
                                   color: Color(0x14000000),
@@ -904,13 +1474,16 @@ class OrderDetailsScreen extends StatelessWidget {
                               ],
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 14),
                               child: Column(
                                 children: [
                                   /// Item Total
                                   amountRow(
                                     title: "Item totals",
-                                    amount: Constant.amountShow(amount: controller.subTotal.value.toString()),
+                                    amount: Constant.amountShow(
+                                        amount: controller.subTotal.value
+                                            .toString()),
                                     isDark: isDark,
                                   ),
 
@@ -919,7 +1492,8 @@ class OrderDetailsScreen extends StatelessWidget {
                                   /// Coupon Discount
                                   amountRow(
                                     title: "Coupon Discount",
-                                    amount: "- (${Constant.amountShow(amount: controller.couponAmount.value.toString())})",
+                                    amount:
+                                        "- (${Constant.amountShow(amount: controller.couponAmount.value.toString())})",
                                     isDark: isDark,
                                     amountColor: AppThemeData.danger300,
                                   ),
@@ -927,32 +1501,45 @@ class OrderDetailsScreen extends StatelessWidget {
                                   sectionDivider(isDark),
 
                                   /// Special Discount
-                                  if (controller.orderModel.value.vendor!.specialDiscountEnable == true) ...[
+                                  if (controller.orderModel.value.vendor!
+                                          .specialDiscountEnable ==
+                                      true) ...[
                                     // const SizedBox(height: 5),
                                     amountRow(
                                       title: "Special Discount",
-                                      amount: "- (${Constant.amountShow(amount: controller.specialDiscountAmount.value.toString())})",
+                                      amount:
+                                          "- (${Constant.amountShow(amount: controller.specialDiscountAmount.value.toString())})",
                                       isDark: isDark,
                                       amountColor: AppThemeData.danger300,
                                     ),
                                   ],
-                                  if (controller.specialDiscountAmount.value > 0.0) const SizedBox(height: 5),
+                                  if (controller.specialDiscountAmount.value >
+                                      0.0)
+                                    const SizedBox(height: 5),
 
                                   /// Packaging
                                   amountRow(
                                     title: "Packaging charge",
-                                    amount: Constant.amountShow(amount: controller.packagingCharge.value.toString()),
+                                    amount: Constant.amountShow(
+                                        amount: controller.packagingCharge.value
+                                            .toString()),
                                     isDark: isDark,
                                   ),
 
                                   sectionDivider(isDark),
 
                                   /// Delivery Fee
-                                  if (controller.orderModel.value.takeAway == false)
+                                  if (controller.orderModel.value.takeAway ==
+                                      false)
                                     amountRow(
                                       title: "Delivery Fee",
                                       isDark: isDark,
-                                      trailing: (controller.orderModel.value.vendor!.isSelfDelivery == true || controller.orderModel.value.isFreeDelivery == true)
+                                      trailing: (controller.orderModel.value
+                                                      .vendor!.isSelfDelivery ==
+                                                  true ||
+                                              controller.orderModel.value
+                                                      .isFreeDelivery ==
+                                                  true)
                                           ? TranslatedText(
                                               'Free Delivery',
                                               style: TextStyle(
@@ -962,10 +1549,15 @@ class OrderDetailsScreen extends StatelessWidget {
                                               ),
                                             )
                                           : Text(
-                                              Constant.amountShow(amount: controller.deliveryCharges.value.toString()),
+                                              Constant.amountShow(
+                                                  amount: controller
+                                                      .deliveryCharges.value
+                                                      .toString()),
                                               style: TextStyle(
                                                 fontFamily: 'Urbanist',
-                                                color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                color: isDark
+                                                    ? AppThemeData.grey50
+                                                    : AppThemeData.grey900,
                                                 fontSize: 16,
                                               ),
                                             ),
@@ -973,22 +1565,31 @@ class OrderDetailsScreen extends StatelessWidget {
                                     ),
 
                                   /// Delivery Tips
-                                  if (!(controller.orderModel.value.takeAway == true ||
-                                      controller.orderModel.value.vendor!.isSelfDelivery == true ||
-                                      controller.orderModel.value.isFreeDelivery == true)) ...[
+                                  if (!(controller.orderModel.value.takeAway ==
+                                          true ||
+                                      controller.orderModel.value.vendor!
+                                              .isSelfDelivery ==
+                                          true ||
+                                      controller.orderModel.value
+                                              .isFreeDelivery ==
+                                          true)) ...[
                                     const SizedBox(height: 10),
                                     Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Expanded(
                                           child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               TranslatedText(
                                                 "Delivery Tips",
                                                 style: TextStyle(
                                                   fontFamily: 'Urbanist',
-                                                  color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
+                                                  color: isDark
+                                                      ? AppThemeData.grey300
+                                                      : AppThemeData.grey600,
                                                   fontSize: 16,
                                                 ),
                                               ),
@@ -1010,25 +1611,36 @@ class OrderDetailsScreen extends StatelessWidget {
                                           ),
                                         ),
                                         Text(
-                                          Constant.amountShow(amount: controller.deliveryTips.toString()),
+                                          Constant.amountShow(
+                                              amount: controller.deliveryTips
+                                                  .toString()),
                                           style: TextStyle(
                                             fontFamily: 'Urbanist',
-                                            color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                            color: isDark
+                                                ? AppThemeData.grey50
+                                                : AppThemeData.grey900,
                                             fontSize: 16,
                                           ),
                                         ),
                                       ],
                                     ),
                                   ],
-                                  if (!(controller.orderModel.value.takeAway == true ||
-                                      controller.orderModel.value.vendor!.isSelfDelivery == true ||
-                                      controller.orderModel.value.isFreeDelivery == true))
+                                  if (!(controller.orderModel.value.takeAway ==
+                                          true ||
+                                      controller.orderModel.value.vendor!
+                                              .isSelfDelivery ==
+                                          true ||
+                                      controller.orderModel.value
+                                              .isFreeDelivery ==
+                                          true))
                                     sectionDivider(isDark),
 
                                   /// Platform Fee
                                   amountRow(
                                     title: "Platform fee",
-                                    amount: Constant.amountShow(amount: controller.platformFee.value.toString()),
+                                    amount: Constant.amountShow(
+                                        amount: controller.platformFee.value
+                                            .toString()),
                                     isDark: isDark,
                                   ),
 
@@ -1037,11 +1649,15 @@ class OrderDetailsScreen extends StatelessWidget {
                                   /// Tax
                                   InkWell(
                                     onTap: () {
-                                      showBillBifurcationDialog(context, isDark, controller);
+                                      showBillBifurcationDialog(
+                                          context, isDark, controller);
                                     },
                                     child: amountRow(
                                         title: "Tax amount",
-                                        amount: Constant.amountShow(amount: controller.totalTaxAmount.value.toString()),
+                                        amount: Constant.amountShow(
+                                            amount: controller
+                                                .totalTaxAmount.value
+                                                .toString()),
                                         isDark: isDark,
                                         textColour: AppThemeData.secondary300,
                                         underline: true),
@@ -1052,7 +1668,9 @@ class OrderDetailsScreen extends StatelessWidget {
                                   /// To Pay
                                   amountRow(
                                     title: "To Pay",
-                                    amount: Constant.amountShow(amount: controller.totalAmount.value.toString()),
+                                    amount: Constant.amountShow(
+                                        amount: controller.totalAmount.value
+                                            .toString()),
                                     amountColor: AppThemeData.primary300,
                                     isDark: isDark,
                                   ),
@@ -1067,9 +1685,12 @@ class OrderDetailsScreen extends StatelessWidget {
                             "Order Details",
                             textAlign: TextAlign.start,
                             style: TextStyle(
-                              fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                              fontFamily: 'Urbanist',
+                              fontWeight: FontWeight.w600,
                               fontSize: 16,
-                              color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                              color: isDark
+                                  ? AppThemeData.grey50
+                                  : AppThemeData.grey900,
                             ),
                           ),
                           const SizedBox(
@@ -1078,15 +1699,20 @@ class OrderDetailsScreen extends StatelessWidget {
                           Container(
                             width: Responsive.width(100, context),
                             decoration: ShapeDecoration(
-                              color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                              color: isDark
+                                  ? AppThemeData.grey900
+                                  : AppThemeData.grey50,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)),
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 14),
                               child: Column(
                                 children: [
                                   Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Expanded(
                                         child: TranslatedText(
@@ -1094,21 +1720,29 @@ class OrderDetailsScreen extends StatelessWidget {
                                           textAlign: TextAlign.start,
                                           style: TextStyle(
                                             fontFamily: 'Urbanist',
-                                            color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
+                                            color: isDark
+                                                ? AppThemeData.grey300
+                                                : AppThemeData.grey600,
                                             fontSize: 16,
                                           ),
                                         ),
                                       ),
                                       TranslatedText(
-                                        controller.orderModel.value.takeAway == true
+                                        controller.orderModel.value.takeAway ==
+                                                true
                                             ? "TakeAway".tr
-                                            : controller.orderModel.value.scheduleTime == null
+                                            : controller.orderModel.value
+                                                        .scheduleTime ==
+                                                    null
                                                 ? "Standard".tr
                                                 : "Schedule",
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
-                                          fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
-                                          color: controller.orderModel.value.scheduleTime != null
+                                          fontFamily: 'Urbanist',
+                                          fontWeight: FontWeight.w500,
+                                          color: controller.orderModel.value
+                                                      .scheduleTime !=
+                                                  null
                                               ? AppThemeData.primary300
                                               : isDark
                                                   ? AppThemeData.grey50
@@ -1122,7 +1756,8 @@ class OrderDetailsScreen extends StatelessWidget {
                                     height: 10,
                                   ),
                                   Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Expanded(
                                         child: TranslatedText(
@@ -1130,17 +1765,23 @@ class OrderDetailsScreen extends StatelessWidget {
                                           textAlign: TextAlign.start,
                                           style: TextStyle(
                                             fontFamily: 'Urbanist',
-                                            color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
+                                            color: isDark
+                                                ? AppThemeData.grey300
+                                                : AppThemeData.grey600,
                                             fontSize: 16,
                                           ),
                                         ),
                                       ),
                                       TranslatedText(
-                                        controller.orderModel.value.paymentMethod.toString(),
+                                        controller
+                                            .orderModel.value.paymentMethod
+                                            .toString(),
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
                                           fontFamily: 'Urbanist',
-                                          color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                          color: isDark
+                                              ? AppThemeData.grey50
+                                              : AppThemeData.grey900,
                                           fontSize: 16,
                                         ),
                                       ),
@@ -1150,7 +1791,8 @@ class OrderDetailsScreen extends StatelessWidget {
                                     height: 10,
                                   ),
                                   Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Expanded(
                                         child: TranslatedText(
@@ -1158,17 +1800,22 @@ class OrderDetailsScreen extends StatelessWidget {
                                           textAlign: TextAlign.start,
                                           style: TextStyle(
                                             fontFamily: 'Urbanist',
-                                            color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
+                                            color: isDark
+                                                ? AppThemeData.grey300
+                                                : AppThemeData.grey600,
                                             fontSize: 16,
                                           ),
                                         ),
                                       ),
                                       TranslatedText(
-                                        Constant.timestampToDateTime(controller.orderModel.value.createdAt!),
+                                        Constant.timestampToDateTime(controller
+                                            .orderModel.value.createdAt!),
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
                                           fontFamily: 'Urbanist',
-                                          color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
+                                          color: isDark
+                                              ? AppThemeData.grey300
+                                              : AppThemeData.grey600,
                                           fontSize: 16,
                                         ),
                                       ),
@@ -1178,18 +1825,22 @@ class OrderDetailsScreen extends StatelessWidget {
                                     height: 10,
                                   ),
                                   Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Expanded(
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             TranslatedText(
                                               "Phone Number",
                                               textAlign: TextAlign.start,
                                               style: TextStyle(
                                                 fontFamily: 'Urbanist',
-                                                color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
+                                                color: isDark
+                                                    ? AppThemeData.grey300
+                                                    : AppThemeData.grey600,
                                                 fontSize: 16,
                                               ),
                                             ),
@@ -1197,11 +1848,15 @@ class OrderDetailsScreen extends StatelessWidget {
                                         ),
                                       ),
                                       TranslatedText(
-                                        controller.orderModel.value.author!.phoneNumber.toString(),
+                                        controller.orderModel.value.author!
+                                            .phoneNumber
+                                            .toString(),
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
                                           fontFamily: 'Urbanist',
-                                          color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                          color: isDark
+                                              ? AppThemeData.grey50
+                                              : AppThemeData.grey900,
                                           fontSize: 16,
                                         ),
                                       ),
@@ -1217,7 +1872,8 @@ class OrderDetailsScreen extends StatelessWidget {
                           const SizedBox(
                             height: 20,
                           ),
-                          controller.orderModel.value.notes == null || controller.orderModel.value.notes!.isEmpty
+                          controller.orderModel.value.notes == null ||
+                                  controller.orderModel.value.notes!.isEmpty
                               ? const SizedBox()
                               : Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1226,9 +1882,12 @@ class OrderDetailsScreen extends StatelessWidget {
                                       "Remarks",
                                       textAlign: TextAlign.start,
                                       style: TextStyle(
-                                        fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                        fontFamily: 'Urbanist',
+                                        fontWeight: FontWeight.w600,
                                         fontSize: 16,
-                                        color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                        color: isDark
+                                            ? AppThemeData.grey50
+                                            : AppThemeData.grey900,
                                       ),
                                     ),
                                     const SizedBox(
@@ -1237,17 +1896,25 @@ class OrderDetailsScreen extends StatelessWidget {
                                     Container(
                                       width: Responsive.width(100, context),
                                       decoration: ShapeDecoration(
-                                        color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                        color: isDark
+                                            ? AppThemeData.grey900
+                                            : AppThemeData.grey50,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
                                       ),
                                       child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 14),
                                         child: TranslatedText(
-                                          controller.orderModel.value.notes.toString(),
+                                          controller.orderModel.value.notes
+                                              .toString(),
                                           textAlign: TextAlign.start,
                                           style: TextStyle(
                                             fontFamily: 'Urbanist',
-                                            color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                            color: isDark
+                                                ? AppThemeData.grey50
+                                                : AppThemeData.grey900,
                                             fontSize: 16,
                                           ),
                                         ),
@@ -1259,10 +1926,12 @@ class OrderDetailsScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-            bottomNavigationBar: controller.orderModel.value.status == Constant.orderPlaced
+            bottomNavigationBar: controller.orderModel.value.status ==
+                    Constant.orderPlaced
                 ? Container(
                     color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 20),
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 20),
                       child: RoundedButtonFill(
@@ -1271,55 +1940,73 @@ class OrderDetailsScreen extends StatelessWidget {
                         textColor: AppThemeData.grey50,
                         height: 5,
                         onPress: () async {
-                          ShowToastDialog.showLoader('Please wait...');
-                          controller.orderModel.value.status = Constant.orderCancelled;
-                          await FireStoreUtils.setOrder(controller.orderModel.value);
-                          UserModel? vendorUserModel = await FireStoreUtils.getUserProfile(controller.orderModel.value.vendor?.author ?? '');
-                          SendNotification.sendFcmMessage(Constant.customerCancelled, vendorUserModel?.fcmToken ?? '', {});
-                          if (controller.orderModel.value.paymentMethod!.toLowerCase() != 'cod') {
-                            WalletTransactionModel historyModel = WalletTransactionModel(
-                                amount: controller.totalAmount.value,
-                                id: const Uuid().v4(),
-                                orderId: controller.orderModel.value.id,
-                                userId: controller.orderModel.value.author?.id,
-                                date: Timestamp.now(),
-                                isTopup: true,
-                                paymentMethod: "Wallet",
-                                paymentStatus: "success",
-                                note: "Order Refund success",
-                                transactionUser: "user");
-
-                            await FireStoreUtils.fireStore.collection(CollectionName.wallet).doc(historyModel.id).set(historyModel.toJson());
-                            await FireStoreUtils.updateUserWallet(amount: controller.totalAmount.value.toString(), userId: controller.orderModel.value.author!.id.toString());
+                          final refundDestination =
+                              await _showRefundChoiceSheet(
+                            context,
+                            controller,
+                            isDark,
+                          );
+                          if (refundDestination == null) {
+                            return;
                           }
+                          ShowToastDialog.showLoader('Please wait...');
+                          controller.orderModel.value.status =
+                              Constant.orderCancelled;
+                          await _applyCancellationRefund(
+                            controller,
+                            refundDestination,
+                          );
+                          await FireStoreUtils.setOrder(
+                              controller.orderModel.value);
+                          UserModel? vendorUserModel =
+                              await FireStoreUtils.getUserProfile(
+                                  controller.orderModel.value.vendor?.author ??
+                                      '');
+                          SendNotification.sendFcmMessage(
+                              Constant.customerCancelled,
+                              vendorUserModel?.fcmToken ?? '', {});
                           ShowToastDialog.closeLoader();
-                          ShowToastDialog.showToast("You have successfully canceled your order.");
+                          ShowToastDialog.showToast(
+                              "You have successfully canceled your order.");
                           Get.back(result: true);
                         },
                       ),
                     ))
                 : controller.orderModel.value.status == Constant.orderShipped ||
-                        controller.orderModel.value.status == Constant.orderInTransit ||
-                        controller.orderModel.value.status == Constant.orderCompleted
+                        controller.orderModel.value.status ==
+                            Constant.orderInTransit ||
+                        controller.orderModel.value.status ==
+                            Constant.orderCompleted
                     ? Container(
-                        color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                        color:
+                            isDark ? AppThemeData.grey900 : AppThemeData.grey50,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 20),
                         child: Padding(
                           padding: const EdgeInsets.only(bottom: 20),
-                          child: controller.orderModel.value.status == Constant.orderShipped || controller.orderModel.value.status == Constant.orderInTransit
+                          child: controller.orderModel.value.status ==
+                                      Constant.orderShipped ||
+                                  controller.orderModel.value.status ==
+                                      Constant.orderInTransit
                               ? RoundedButtonFill(
                                   title: "Track Order",
                                   height: 5.5,
                                   color: AppThemeData.warning300,
                                   textColor: AppThemeData.grey900,
                                   onPress: () async {
-                                    Get.to(const LiveTrackingScreen(), arguments: {"orderModel": controller.orderModel.value});
+                                    Get.to(const LiveTrackingScreen(),
+                                        arguments: {
+                                          "orderModel":
+                                              controller.orderModel.value
+                                        });
                                   },
                                 )
                               : FutureBuilder<bool>(
-                                  future: controller.hasAnyPublishedProduct(controller.orderModel.value.products),
+                                  future: controller.hasAnyPublishedProduct(
+                                      controller.orderModel.value.products),
                                   builder: (context, snapshot) {
-                                    if (snapshot.connectionState == ConnectionState.waiting) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
                                       return const SizedBox();
                                     } else {
                                       if (snapshot.hasError) {
@@ -1331,44 +2018,94 @@ class OrderDetailsScreen extends StatelessWidget {
                                           return const SizedBox();
                                         } else {
                                           return FutureBuilder(
-                                              future: FireStoreUtils.getVendorById(controller.orderModel.value.vendorID!),
+                                              future:
+                                                  FireStoreUtils.getVendorById(
+                                                      controller.orderModel
+                                                          .value.vendorID!),
                                               builder: (context, snapshot) {
-                                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                                if (snapshot.connectionState ==
+                                                    ConnectionState.waiting) {
                                                   return const SizedBox();
                                                 } else {
                                                   if (snapshot.hasError) {
                                                     return const SizedBox();
-                                                  } else if (snapshot.data == null) {
+                                                  } else if (snapshot.data ==
+                                                      null) {
                                                     return const SizedBox();
                                                   } else {
-                                                    VendorModel vendorModel = snapshot.data!;
-                                                    if ((Constant.isSubscriptionModelApplied == true || Constant.adminCommission?.isEnabled == true) && vendorModel.subscriptionPlan != null) {
-                                                      if (vendorModel.subscriptionTotalOrders == "-1") {
+                                                    VendorModel vendorModel =
+                                                        snapshot.data!;
+                                                    if ((Constant.isSubscriptionModelApplied ==
+                                                                true ||
+                                                            Constant.adminCommission
+                                                                    ?.isEnabled ==
+                                                                true) &&
+                                                        vendorModel
+                                                                .subscriptionPlan !=
+                                                            null) {
+                                                      if (vendorModel
+                                                              .subscriptionTotalOrders ==
+                                                          "-1") {
                                                         return RoundedButtonFill(
                                                           title: "Reorder",
                                                           height: 5.5,
-                                                          color: AppThemeData.warning300,
-                                                          textColor: AppThemeData.grey900,
+                                                          color: AppThemeData
+                                                              .warning300,
+                                                          textColor:
+                                                              AppThemeData
+                                                                  .grey900,
                                                           onPress: () async {
-                                                            for (var element in controller.orderModel.value.products!) {
-                                                              controller.addToCart(cartProductModel: element);
-                                                              ShowToastDialog.showToast("Item Added In a cart");
+                                                            for (var element
+                                                                in controller
+                                                                    .orderModel
+                                                                    .value
+                                                                    .products!) {
+                                                              controller.addToCart(
+                                                                  cartProductModel:
+                                                                      element);
+                                                              ShowToastDialog
+                                                                  .showToast(
+                                                                      "Item Added In a cart");
                                                             }
                                                           },
                                                         );
                                                       } else {
-                                                        if ((vendorModel.subscriptionExpiryDate != null && vendorModel.subscriptionExpiryDate!.toDate().isBefore(DateTime.now()) == false) ||
-                                                            vendorModel.subscriptionPlan?.expiryDay == '-1') {
-                                                          if (vendorModel.subscriptionTotalOrders != '0') {
+                                                        if ((vendorModel.subscriptionExpiryDate !=
+                                                                    null &&
+                                                                vendorModel
+                                                                        .subscriptionExpiryDate!
+                                                                        .toDate()
+                                                                        .isBefore(DateTime
+                                                                            .now()) ==
+                                                                    false) ||
+                                                            vendorModel
+                                                                    .subscriptionPlan
+                                                                    ?.expiryDay ==
+                                                                '-1') {
+                                                          if (vendorModel
+                                                                  .subscriptionTotalOrders !=
+                                                              '0') {
                                                             return RoundedButtonFill(
                                                               title: "Reorder",
                                                               height: 5.5,
-                                                              color: AppThemeData.warning300,
-                                                              textColor: AppThemeData.grey900,
-                                                              onPress: () async {
-                                                                for (var element in controller.orderModel.value.products!) {
-                                                                  controller.addToCart(cartProductModel: element);
-                                                                  ShowToastDialog.showToast("Item Added In a cart");
+                                                              color: AppThemeData
+                                                                  .warning300,
+                                                              textColor:
+                                                                  AppThemeData
+                                                                      .grey900,
+                                                              onPress:
+                                                                  () async {
+                                                                for (var element
+                                                                    in controller
+                                                                        .orderModel
+                                                                        .value
+                                                                        .products!) {
+                                                                  controller.addToCart(
+                                                                      cartProductModel:
+                                                                          element);
+                                                                  ShowToastDialog
+                                                                      .showToast(
+                                                                          "Item Added In a cart");
                                                                 }
                                                               },
                                                             );
@@ -1383,12 +2120,22 @@ class OrderDetailsScreen extends StatelessWidget {
                                                       return RoundedButtonFill(
                                                         title: "Reorder",
                                                         height: 5.5,
-                                                        color: AppThemeData.warning300,
-                                                        textColor: AppThemeData.grey900,
+                                                        color: AppThemeData
+                                                            .warning300,
+                                                        textColor: AppThemeData
+                                                            .grey900,
                                                         onPress: () async {
-                                                          for (var element in controller.orderModel.value.products!) {
-                                                            controller.addToCart(cartProductModel: element);
-                                                            ShowToastDialog.showToast("Item Added In a cart");
+                                                          for (var element
+                                                              in controller
+                                                                  .orderModel
+                                                                  .value
+                                                                  .products!) {
+                                                            controller.addToCart(
+                                                                cartProductModel:
+                                                                    element);
+                                                            ShowToastDialog
+                                                                .showToast(
+                                                                    "Item Added In a cart");
                                                           }
                                                         },
                                                       );
@@ -1407,14 +2154,17 @@ class OrderDetailsScreen extends StatelessWidget {
         });
   }
 
-  void showBillBifurcationDialog(BuildContext context, bool isDark, OrderDetailsController controller) {
+  void showBillBifurcationDialog(
+      BuildContext context, bool isDark, OrderDetailsController controller) {
     showDialog(
       context: context,
       builder: (context) {
         return Dialog(
           backgroundColor: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
-          insetPadding: const EdgeInsets.symmetric(horizontal: 10), // 🔥 KEY FIX
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          insetPadding:
+              const EdgeInsets.symmetric(horizontal: 10), // 🔥 KEY FIX
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: SizedBox(
             width: Responsive.width(100, context), // ✅ 90% width
             child: Padding(
@@ -1426,9 +2176,11 @@ class OrderDetailsScreen extends StatelessWidget {
                   TranslatedText(
                     "Tax Details",
                     style: TextStyle(
-                      fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
+                      fontFamily: 'Urbanist',
+                      fontWeight: FontWeight.w500,
                       fontSize: 18,
-                      color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                      color:
+                          isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                     ),
                   ),
                   const SizedBox(height: 5),
@@ -1437,7 +2189,8 @@ class OrderDetailsScreen extends StatelessWidget {
                       ? amountRow(
                           title: "Tax on item total",
                           amount: Constant.amountShow(
-                            amount: controller.productTaxAmount.value.toString(),
+                            amount:
+                                controller.productTaxAmount.value.toString(),
                           ),
                           isDark: isDark,
                         )
@@ -1449,56 +2202,77 @@ class OrderDetailsScreen extends StatelessWidget {
                           isDark: isDark,
                         ),
                   sectionDivider(isDark),
-                  if (controller.orderModel.value.takeAway != true && controller.orderModel.value.vendor?.isSelfDelivery != true)
+                  if (controller.orderModel.value.takeAway != true &&
+                      controller.orderModel.value.vendor?.isSelfDelivery !=
+                          true)
                     ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: controller.orderModel.value.driverDeliveryTax?.length,
+                      itemCount:
+                          controller.orderModel.value.driverDeliveryTax?.length,
                       itemBuilder: (context, index) {
                         return amountRow(
-                          title: "${controller.orderModel.value.driverDeliveryTax![index].title} ${'Tax on Delivery Fee'}",
+                          title:
+                              "${controller.orderModel.value.driverDeliveryTax![index].title} ${'Tax on Delivery Fee'}",
                           amount: Constant.amountShow(
                               amount: Constant.calculateTax(
-                            taxModel: controller.orderModel.value.driverDeliveryTax![index],
-                            amount: (controller.deliveryCharges.value).toString(),
+                            taxModel: controller
+                                .orderModel.value.driverDeliveryTax![index],
+                            amount:
+                                (controller.deliveryCharges.value).toString(),
                           ).toString()),
                           isDark: isDark,
                         );
                       },
                     ),
-                  if (controller.orderModel.value.packagingTax?.isNotEmpty == true) sectionDivider(isDark),
+                  if (controller.orderModel.value.packagingTax?.isNotEmpty ==
+                      true)
+                    sectionDivider(isDark),
                   ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: controller.orderModel.value.packagingTax!.length,
                     itemBuilder: (context, index) {
                       return amountRow(
-                        title: "${controller.orderModel.value.packagingTax![index].title} ${'Tax on Packaging Fee'}",
+                        title:
+                            "${controller.orderModel.value.packagingTax![index].title} ${'Tax on Packaging Fee'}",
                         amount: controller.packagingCharge.value == 0.0
-                            ? Constant.amountShow(amount: controller.packagingCharge.value.toString())
+                            ? Constant.amountShow(
+                                amount:
+                                    controller.packagingCharge.value.toString())
                             : Constant.amountShow(
                                 amount: Constant.calculateTax(
-                                taxModel: controller.orderModel.value.packagingTax![index],
-                                amount: controller.packagingCharge.value.toString(),
+                                taxModel: controller
+                                    .orderModel.value.packagingTax![index],
+                                amount:
+                                    controller.packagingCharge.value.toString(),
                               ).toString()),
                         isDark: isDark,
                       );
                     },
                   ),
-                  if (controller.orderModel.value.platformTax?.isNotEmpty == true) sectionDivider(isDark),
+                  if (controller.orderModel.value.platformTax?.isNotEmpty ==
+                      true)
+                    sectionDivider(isDark),
                   ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: controller.orderModel.value.platformTax!.length,
                     itemBuilder: (context, index) {
                       return amountRow(
-                        title: "${controller.orderModel.value.platformTax?[index].title} ${'Tax on Platform Fee'}",
+                        title:
+                            "${controller.orderModel.value.platformTax?[index].title} ${'Tax on Platform Fee'}",
                         amount: Constant.amountShow(
                             amount: controller.platformFee.value == 0.0
-                                ? Constant.calculateTax(amount: controller.platformFee.value.toString()).toString()
+                                ? Constant.calculateTax(
+                                        amount: controller.platformFee.value
+                                            .toString())
+                                    .toString()
                                 : Constant.calculateTax(
-                                    taxModel: controller.orderModel.value.platformTax![index],
-                                    amount: controller.platformFee.value.toString(),
+                                    taxModel: controller
+                                        .orderModel.value.platformTax![index],
+                                    amount:
+                                        controller.platformFee.value.toString(),
                                   ).toString()),
                         isDark: isDark,
                       );
@@ -1507,7 +2281,8 @@ class OrderDetailsScreen extends StatelessWidget {
                   sectionDivider(isDark),
                   amountRow(
                     title: "Total Tax Amount",
-                    amount: Constant.amountShow(amount: controller.totalTaxAmount.value.toString()),
+                    amount: Constant.amountShow(
+                        amount: controller.totalTaxAmount.value.toString()),
                     amountColor: AppThemeData.primary300,
                     isDark: isDark,
                   ),
@@ -1528,6 +2303,267 @@ class OrderDetailsScreen extends StatelessWidget {
     );
   }
 
+  Future<RefundDestination?> _showRefundChoiceSheet(
+    BuildContext context,
+    OrderDetailsController controller,
+    bool isDark,
+  ) async {
+    final hasOnlineRefund = _hasOnlineRefundComponent(controller);
+    if (!hasOnlineRefund) {
+      return RefundDestination.wallet;
+    }
+    return showModalBottomSheet<RefundDestination>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: Colors.transparent,
+      barrierColor: Colors.black.withValues(alpha: 0.5),
+      builder: (context) {
+        return Container(
+          decoration: BoxDecoration(
+            color: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
+            borderRadius: const BorderRadius.vertical(
+              top: Radius.circular(24),
+            ),
+          ),
+          padding: const EdgeInsets.fromLTRB(16, 10, 16, 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: isDark ? AppThemeData.grey600 : AppThemeData.grey200,
+                    borderRadius: BorderRadius.circular(99),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 18),
+              TranslatedText(
+                "Choose refund method",
+                style: TextStyle(
+                  fontFamily: 'Urbanist',
+                  fontWeight: FontWeight.w700,
+                  fontSize: 18,
+                  color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                ),
+              ),
+              const SizedBox(height: 12),
+              _refundChoiceTile(
+                context: context,
+                isDark: isDark,
+                title: "Instant Eatsipy Wallet refund",
+                subtitle:
+                    "Fastest option. Prepaid online amount is credited to wallet.",
+                icon: Icons.account_balance_wallet,
+                destination: RefundDestination.wallet,
+              ),
+              const SizedBox(height: 10),
+              _refundChoiceTile(
+                context: context,
+                isDark: isDark,
+                title: "Refund to original source",
+                subtitle:
+                    "Online amount will be marked for manual review until gateway refund automation is available.",
+                icon: Icons.replay_circle_filled_outlined,
+                destination: RefundDestination.originalSource,
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _refundChoiceTile({
+    required BuildContext context,
+    required bool isDark,
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required RefundDestination destination,
+  }) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: () => Navigator.pop(context, destination),
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isDark ? AppThemeData.grey700 : AppThemeData.grey200,
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: AppThemeData.primary300),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TranslatedText(
+                    title,
+                    style: TextStyle(
+                      fontFamily: 'Urbanist',
+                      fontWeight: FontWeight.w700,
+                      color:
+                          isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontFamily: 'Urbanist',
+                      fontWeight: FontWeight.w500,
+                      color:
+                          isDark ? AppThemeData.grey400 : AppThemeData.grey500,
+                      fontSize: 13,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(
+              Icons.chevron_right,
+              color: isDark ? AppThemeData.grey400 : AppThemeData.grey500,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  bool _hasOnlineRefundComponent(OrderDetailsController controller) {
+    final breakdown = controller.orderModel.value.paymentBreakdown;
+    if (breakdown == null) {
+      final paymentMethod =
+          controller.orderModel.value.paymentMethod?.toLowerCase() ?? '';
+      return paymentMethod != 'cod' && paymentMethod != 'wallet';
+    }
+    return breakdown.components.any(
+      (component) =>
+          component.amount > 0 &&
+          component.mode != PaymentMode.wallet &&
+          component.mode != PaymentMode.cod,
+    );
+  }
+
+  Future<void> _applyCancellationRefund(
+    OrderDetailsController controller,
+    RefundDestination onlineRefundDestination,
+  ) async {
+    final order = controller.orderModel.value;
+    final breakdown = order.paymentBreakdown;
+    if (breakdown == null) {
+      await _applyLegacyWalletRefund(controller, onlineRefundDestination);
+      return;
+    }
+
+    final updatedComponents = <PaymentComponent>[];
+    for (final component in breakdown.components) {
+      if (component.amount <= 0 || component.mode == PaymentMode.cod) {
+        updatedComponents.add(component);
+        continue;
+      }
+
+      if (component.mode == PaymentMode.wallet) {
+        final refunded = await _creditRefundToWallet(
+          controller: controller,
+          amount: component.amount,
+          note: "Wallet portion refunded",
+        );
+        updatedComponents.add(
+          component.copyWith(
+            refundStatus: refunded ? RefundStatus.success : RefundStatus.failed,
+            refundDestination: RefundDestination.wallet,
+            refundedAmount: refunded ? component.amount : 0,
+          ),
+        );
+      } else if (onlineRefundDestination == RefundDestination.wallet) {
+        final refunded = await _creditRefundToWallet(
+          controller: controller,
+          amount: component.amount,
+          note: "Online portion refunded to wallet",
+        );
+        updatedComponents.add(
+          component.copyWith(
+            refundStatus: refunded ? RefundStatus.success : RefundStatus.failed,
+            refundDestination: RefundDestination.wallet,
+            refundedAmount: refunded ? component.amount : 0,
+          ),
+        );
+      } else {
+        updatedComponents.add(
+          component.copyWith(
+            refundStatus: RefundStatus.pendingManualReview,
+            refundDestination: RefundDestination.originalSource,
+            refundedAmount: 0,
+          ),
+        );
+      }
+    }
+
+    order.paymentBreakdown = breakdown.copyWith(components: updatedComponents);
+  }
+
+  Future<void> _applyLegacyWalletRefund(
+    OrderDetailsController controller,
+    RefundDestination onlineRefundDestination,
+  ) async {
+    final paymentMethod =
+        controller.orderModel.value.paymentMethod?.toLowerCase() ?? '';
+    if (paymentMethod == 'cod') {
+      return;
+    }
+    if (paymentMethod != 'wallet' &&
+        onlineRefundDestination == RefundDestination.originalSource) {
+      return;
+    }
+    await _creditRefundToWallet(
+      controller: controller,
+      amount: controller.totalAmount.value,
+      note: "Order Refund success",
+    );
+  }
+
+  Future<bool> _creditRefundToWallet({
+    required OrderDetailsController controller,
+    required double amount,
+    required String note,
+  }) async {
+    if (amount <= 0) {
+      return true;
+    }
+    final historyModel = WalletTransactionModel(
+      amount: amount,
+      id: const Uuid().v4(),
+      orderId: controller.orderModel.value.id,
+      userId: controller.orderModel.value.author?.id,
+      date: Timestamp.now(),
+      isTopup: true,
+      paymentMethod: "Wallet",
+      paymentStatus: "success",
+      note: note,
+      transactionUser: "user",
+    );
+
+    await FireStoreUtils.fireStore
+        .collection(CollectionName.wallet)
+        .doc(historyModel.id)
+        .set(historyModel.toJson());
+    final updated = await FireStoreUtils.updateUserWallet(
+      amount: amount.toString(),
+      userId: controller.orderModel.value.author!.id.toString(),
+    );
+    return updated == true;
+  }
+
   Widget amountRow({
     required String title,
     required String amount,
@@ -1545,9 +2581,12 @@ class OrderDetailsScreen extends StatelessWidget {
             title,
             style: TextStyle(
                 fontFamily: 'Urbanist',
-                color: textColour ?? (isDark ? AppThemeData.grey300 : AppThemeData.grey600),
+                color: textColour ??
+                    (isDark ? AppThemeData.grey300 : AppThemeData.grey600),
                 fontSize: 16,
-                decoration: underline == true ? TextDecoration.underline : TextDecoration.none),
+                decoration: underline == true
+                    ? TextDecoration.underline
+                    : TextDecoration.none),
           ),
         ),
         trailing ??
@@ -1555,7 +2594,8 @@ class OrderDetailsScreen extends StatelessWidget {
               amount,
               style: TextStyle(
                 fontFamily: 'Urbanist',
-                color: amountColor ?? (isDark ? AppThemeData.grey50 : AppThemeData.grey900),
+                color: amountColor ??
+                    (isDark ? AppThemeData.grey50 : AppThemeData.grey900),
                 fontSize: 16,
               ),
             ),
@@ -1567,7 +2607,8 @@ class OrderDetailsScreen extends StatelessWidget {
     return Column(
       children: [
         const SizedBox(height: 10),
-        MySeparator(color: isDark ? AppThemeData.grey700 : AppThemeData.grey200),
+        MySeparator(
+            color: isDark ? AppThemeData.grey700 : AppThemeData.grey200),
         const SizedBox(height: 10),
       ],
     );

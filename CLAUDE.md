@@ -28,6 +28,13 @@ Flutter food delivery customer app. Firebase/Firestore backend. GetX state manag
 - Restaurant menu items without photos still reserve the trailing action column so text and ADD/quantity placement aligns with photo items.
 - Restaurant menu search uses a local in-memory index; never query Firebase per keystroke. Search mode hides the floating menu navigator/cart strip, scrolls the search section into view, and adds keyboard-aware bottom spacing for reachable results.
 - Home and restaurant menu quality coverage now lives under `test/unit`, `test/widget`, and `test/golden`. Keep logic that affects image priority, home section visibility, menu search, category metadata, floating menu visibility, keyboard-safe search layouts, no-photo card alignment, and cart badge placement covered by tests.
+- Checkout supports PhonePe, Cashfree, and Razorpay in code, but admin selects exactly one active online gateway through `settings/paymentGatewayConfig`. Customers must choose payment modes only: UPI, Wallet, Card, Net Banking, or COD.
+- Checkout should load only Wallet, COD, and the admin-selected active gateway settings. Do not initialize unused payment SDKs during checkout.
+- Wallet split tender is a first-class scenario: wallet-only, COD-only, online-only, wallet + COD, and wallet + online must parse and serialize through `paymentBreakdown`. Debit wallet only after online success and immediately before order creation.
+- New order/user payment fields must stay backward-compatible. Old orders with only `payment_method` and users without `paymentPreferences` must continue to parse safely.
+- Online checkout routing goes through `PaymentGatewayAdapterRegistry` and the PhonePe/Cashfree/Razorpay adapters. Keep gateway-specific SDK/link creation out of cart UI.
+- Cart checkout uses a compact bill summary with a draggable bill details bottom sheet, a mode-only payment bottom sheet, optional suggested add-ons, one remarks section, and one tip section.
+- Refund cancellation UX should offer wallet refund vs original-source/manual-review when prepaid online components exist.
 
 ## Quality Checks
 - For focused changes, run scoped format/analyze checks on the touched Dart files plus `test`, then run `flutter test`.
@@ -37,6 +44,7 @@ Flutter food delivery customer app. Firebase/Firestore backend. GetX state manag
   - `flutter test`
 - Do not rely on live Firebase, network, or Firestore initialization in these tests; use local fakes/helpers.
 - Golden coverage should stay limited to stable UI surfaces such as cart badge placement and menu/item layout states.
+- Payment quality coverage lives in `test/unit/payment`. Keep resolver, payment JSON, wallet split, refund state, and "no wallet debit on failure" logic covered as implementation expands.
 
 ## Context Files
 Detailed architecture documentation is in `.claude/context/`:

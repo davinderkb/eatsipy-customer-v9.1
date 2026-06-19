@@ -17,6 +17,8 @@ void main() {
       ),
     );
 
+    await tester.pumpAndSettle();
+
     await expectLater(
       find.byType(HomeCartButton),
       matchesGoldenFile('goldens/home_cart_button.png'),

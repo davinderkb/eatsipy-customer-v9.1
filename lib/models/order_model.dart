@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eatsipy_customer/models/cart_product_model.dart';
 import 'package:eatsipy_customer/models/cashbackModel.dart';
+import 'package:eatsipy_customer/models/payment/checkout_payment_models.dart';
 import 'package:eatsipy_customer/models/tax_model.dart';
 import 'package:eatsipy_customer/models/user_model.dart';
 import 'package:eatsipy_customer/models/vendor_model.dart';
@@ -41,6 +42,7 @@ class OrderModel {
   bool? isPosOrder;
   String? taxScope;
   String? platformFee;
+  PaymentBreakdown? paymentBreakdown;
 
   OrderModel(
       {this.address,
@@ -77,10 +79,13 @@ class OrderModel {
       this.platformTax,
       this.taxScope,
       this.platformFee,
+      this.paymentBreakdown,
       this.isPosOrder});
 
   OrderModel.fromJson(Map<String, dynamic> json) {
-    address = json['address'] != null ? ShippingAddress.fromJson(json['address']) : null;
+    address = json['address'] != null
+        ? ShippingAddress.fromJson(json['address'])
+        : null;
     status = json['status'];
     couponId = json['couponId'];
     vendorID = json['vendorID'];
@@ -98,20 +103,27 @@ class OrderModel {
       });
     }
     adminCommissionType = json['adminCommissionType'];
-    vendor = json['vendor'] != null ? VendorModel.fromJson(json['vendor']) : null;
+    vendor =
+        json['vendor'] != null ? VendorModel.fromJson(json['vendor']) : null;
     id = json['id'];
     adminCommission = json['adminCommission'];
     couponCode = json['couponCode'];
     specialDiscount = json['specialDiscount'];
-    deliveryCharge = json['deliveryCharge'].toString().isEmpty ? "0.0" : json['deliveryCharge'] ?? '0.0';
+    deliveryCharge = json['deliveryCharge'].toString().isEmpty
+        ? "0.0"
+        : json['deliveryCharge'] ?? '0.0';
     scheduleTime = json['scheduleTime'];
-    tipAmount = json['tip_amount'].toString().isEmpty ? "0.0" : json['tip_amount'] ?? "0.0";
+    tipAmount = json['tip_amount'].toString().isEmpty
+        ? "0.0"
+        : json['tip_amount'] ?? "0.0";
     notes = json['notes'];
     author = json['author'] != null ? UserModel.fromJson(json['author']) : null;
     driver = json['driver'] != null ? UserModel.fromJson(json['driver']) : null;
     takeAway = json['takeAway'];
     rejectedByDrivers = json['rejectedByDrivers'] ?? [];
-    cashback = json['cashback'] != null ? CashbackModel.fromJson(json['cashback']) : null;
+    cashback = json['cashback'] != null
+        ? CashbackModel.fromJson(json['cashback'])
+        : null;
     isFreeDelivery = json['isFreeDelivery'] ?? false;
     if (json['taxSetting'] != null) {
       taxSetting = <TaxModel>[];
@@ -140,6 +152,10 @@ class OrderModel {
     }
     taxScope = json['taxScope'];
     platformFee = json['platformFee'];
+    paymentBreakdown = json['paymentBreakdown'] != null
+        ? PaymentBreakdown.fromJson(
+            Map<String, dynamic>.from(json['paymentBreakdown']))
+        : null;
     isPosOrder = json['isPosOrder'] ?? false;
   }
 
@@ -193,10 +209,14 @@ class OrderModel {
       data['packagingTax'] = packagingTax!.map((v) => v.toJson()).toList();
     }
     if (driverDeliveryTax != null) {
-      data['driverDeliveryTax'] = driverDeliveryTax!.map((v) => v.toJson()).toList();
+      data['driverDeliveryTax'] =
+          driverDeliveryTax!.map((v) => v.toJson()).toList();
     }
     data['taxScope'] = taxScope;
     data['platformFee'] = platformFee;
+    if (paymentBreakdown != null) {
+      data['paymentBreakdown'] = paymentBreakdown!.toJson();
+    }
     data['isPosOrder'] = isPosOrder ?? false;
     return data;
   }

@@ -1,6 +1,7 @@
 import 'package:eatsipy_customer/app/wallet_screen/wallet_screen.dart';
 import 'package:eatsipy_customer/constant/constant.dart';
 import 'package:eatsipy_customer/controllers/cart_controller.dart';
+import 'package:eatsipy_customer/models/payment/checkout_payment_models.dart';
 import 'package:eatsipy_customer/themes/app_them_data.dart';
 import 'package:eatsipy_customer/themes/round_button_fill.dart';
 import 'package:flutter/material.dart';
@@ -17,16 +18,19 @@ class SelectPaymentScreen extends StatelessWidget {
       init: CartController(),
       builder: (controller) {
         return Scaffold(
-          backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
+          backgroundColor:
+              isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
           appBar: AppBar(
-            backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
+            backgroundColor:
+                isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
             centerTitle: false,
             titleSpacing: 0,
             title: TranslatedText(
               "Payment Option",
               textAlign: TextAlign.start,
               style: TextStyle(
-                fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
+                fontFamily: 'Urbanist',
+                fontWeight: FontWeight.w500,
                 fontSize: 16,
                 color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
               ),
@@ -39,9 +43,11 @@ class SelectPaymentScreen extends StatelessWidget {
                     "Loading, please wait...",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                      fontFamily: 'Urbanist',
+                      fontWeight: FontWeight.w600,
                       fontSize: 16,
-                      color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                      color:
+                          isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                     ),
                   ),
                 )
@@ -52,12 +58,15 @@ class SelectPaymentScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         TranslatedText(
-                          "Preferred Payment",
+                          "Payment Method",
                           textAlign: TextAlign.start,
                           style: TextStyle(
-                            fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                            fontFamily: 'Urbanist',
+                            fontWeight: FontWeight.w600,
                             fontSize: 16,
-                            color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                            color: isDark
+                                ? AppThemeData.grey50
+                                : AppThemeData.grey900,
                           ),
                         ),
                         const SizedBox(
@@ -65,7 +74,9 @@ class SelectPaymentScreen extends StatelessWidget {
                         ),
                         Container(
                           decoration: ShapeDecoration(
-                            color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
+                            color: isDark
+                                ? AppThemeData.grey900
+                                : AppThemeData.grey50,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16),
                             ),
@@ -82,140 +93,52 @@ class SelectPaymentScreen extends StatelessWidget {
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
                               children: [
-                                Visibility(
-                                  visible: controller.walletSettingModel.value.isEnabled == true,
-                                  child: cardDecoration(controller, PaymentGateway.wallet, isDark, "assets/images/ic_wallet.png"),
-                                ),
-                                Visibility(
-                                  visible: controller.cashOnDeliverySettingModel.value.isEnabled == true,
-                                  child: cardDecoration(controller, PaymentGateway.cod, isDark, "assets/images/ic_cash.png"),
-                                ),
+                                if (controller.isWalletEnabled &&
+                                    controller.walletBalance > 0)
+                                  walletToggle(controller, isDark),
+                                ...controller.selectablePaymentModes
+                                    .where((mode) =>
+                                        mode != PaymentMode.wallet ||
+                                        controller
+                                            .walletSplitResult.isWalletOnly)
+                                    .map((mode) =>
+                                        modeCard(controller, mode, isDark)),
                               ],
                             ),
                           ),
                         ),
-                        Column(
-                          children: [
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            TranslatedText(
-                              "Other Payment Options",
-                              textAlign: TextAlign.start,
+                        if (controller.selectablePaymentModes.isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 16),
+                            child: TranslatedText(
+                              "No payment methods are available right now.",
                               style: TextStyle(
-                                fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
-                                fontSize: 16,
-                                color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                fontFamily: 'Urbanist',
+                                fontWeight: FontWeight.w500,
+                                color: isDark
+                                    ? AppThemeData.grey300
+                                    : AppThemeData.grey600,
                               ),
                             ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                          ],
-                        ),
-                        Container(
-                          decoration: ShapeDecoration(
-                            color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            shadows: const [
-                              BoxShadow(
-                                color: Color(0x07000000),
-                                blurRadius: 20,
-                                offset: Offset(0, 0),
-                                spreadRadius: 0,
-                              )
-                            ],
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                Visibility(
-                                  visible: controller.flutterWaveModel.value.isEnable == true,
-                                  child: cardDecoration(controller, PaymentGateway.stripe, isDark, "assets/images/stripe.png"),
-                                ),
-                                Visibility(
-                                  visible: controller.paytmModel.value.isEnabled == true,
-                                  child: cardDecoration(controller, PaymentGateway.paypal, isDark, "assets/images/paypal.png"),
-                                ),
-                                Visibility(
-                                  visible: controller.payStackModel.value.isEnable == true,
-                                  child: cardDecoration(controller, PaymentGateway.payStack, isDark, "assets/images/paystack.png"),
-                                ),
-                                Visibility(
-                                  visible: controller.mercadoPagoModel.value.isEnabled == true,
-                                  child: cardDecoration(controller, PaymentGateway.mercadoPago, isDark, "assets/images/mercado-pago.png"),
-                                ),
-                                Visibility(
-                                  visible: controller.flutterWaveModel.value.isEnable == true,
-                                  child: cardDecoration(controller, PaymentGateway.flutterWave, isDark, "assets/images/flutterwave_logo.png"),
-                                ),
-                                Visibility(
-                                  visible: controller.payFastModel.value.isEnable == true,
-                                  child: cardDecoration(controller, PaymentGateway.payFast, isDark, "assets/images/payfast.png"),
-                                ),
-                                Visibility(
-                                  visible: controller.paytmModel.value.isEnabled == true,
-                                  child: cardDecoration(controller, PaymentGateway.paytm, isDark, "assets/images/paytm.png"),
-                                ),
-                                Visibility(
-                                  visible: controller.razorPayModel.value.isEnabled == true,
-                                  child: cardDecoration(controller, PaymentGateway.razorpay, isDark, "assets/images/razorpay.png"),
-                                ),
-                                Visibility(
-                                  visible: controller.midTransModel.value.enable == true,
-                                  child: cardDecoration(controller, PaymentGateway.midTrans, isDark, "assets/images/midtrans.png"),
-                                ),
-                                Visibility(
-                                  visible: controller.orangeMoneyModel.value.enable == true,
-                                  child: cardDecoration(controller, PaymentGateway.orangeMoney, isDark, "assets/images/orange_money.png"),
-                                ),
-                                Visibility(
-                                  visible: controller.xenditModel.value.enable == true,
-                                  child: cardDecoration(controller, PaymentGateway.xendit, isDark, "assets/images/xendit.png"),
-                                ),
-                                Visibility(
-                                  visible: controller.mtnMomoModel.value.enable == true,
-                                  child: cardDecoration(controller, PaymentGateway.mtnMomo, isDark, "assets/images/mtnmom.png"),
-                                ),
-                                Visibility(
-                                  visible: controller.phonePeModel.value.enable == true,
-                                  child: cardDecoration(controller, PaymentGateway.phonePe, isDark, "assets/images/phonepe.png"),
-                                ),
-                                Visibility(
-                                  visible: controller.cashfreeModel.value.enable == true,
-                                  child: cardDecoration(controller, PaymentGateway.cashfree, isDark, "assets/images/cashfree.png"),
-                                ),
-                                Visibility(
-                                  visible: controller.instamojoModel.value.enable == true,
-                                  child: cardDecoration(controller, PaymentGateway.instamojo, isDark, "assets/images/instamojo.png"),
-                                ),
-                                Visibility(
-                                  visible: controller.foloosiModel.value.enable == true,
-                                  child: cardDecoration(controller, PaymentGateway.foloosi, isDark, "assets/images/foloosi.png"),
-                                ),
-                                Visibility(
-                                  visible: controller.payMongoModel.value.enable == true,
-                                  child: cardDecoration(controller, PaymentGateway.payMongo, isDark, "assets/images/payMongo.png"),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
                       ],
                     ),
                   ),
                 ),
           bottomNavigationBar: Container(
             decoration: BoxDecoration(
-                color: isDark ? AppThemeData.grey900 : AppThemeData.grey50, borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+                color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
+                borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20))),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
             child: Padding(
               padding: const EdgeInsets.only(bottom: 20),
               child: RoundedButtonFill(
-                title: "${'Pay Now'} | ${Constant.amountShow(amount: controller.totalAmount.value.toString())}",
+                title: controller.remainingPayableAmount <= 0 ||
+                        controller.isSelectedModeCod
+                    ? "Done"
+                    : "Done | ${Constant.amountShow(amount: controller.remainingPayableAmount.toString())}",
                 height: 5,
                 color: AppThemeData.primary300,
                 textColor: AppThemeData.grey50,
@@ -231,7 +154,107 @@ class SelectPaymentScreen extends StatelessWidget {
     );
   }
 
-  Obx cardDecoration(CartController controller, PaymentGateway value, isDark, String image) {
+  Obx walletToggle(CartController controller, bool isDark) {
+    return Obx(
+      () => SwitchListTile(
+        contentPadding: EdgeInsets.zero,
+        value: controller.isWalletApplied.value,
+        activeColor: AppThemeData.primary300,
+        onChanged: controller.setWalletApplied,
+        secondary: Icon(
+          controller.paymentModeIcon(PaymentMode.wallet),
+          color: AppThemeData.primary300,
+        ),
+        title: TranslatedText(
+          "Use Eatsipy Wallet",
+          style: TextStyle(
+            fontFamily: 'Urbanist',
+            fontWeight: FontWeight.w600,
+            color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+          ),
+        ),
+        subtitle: Text(
+          "${Constant.amountShow(amount: controller.walletAppliedAmount.toString())} will be applied from ${Constant.amountShow(amount: controller.walletBalance.toString())}",
+          style: TextStyle(
+            fontFamily: 'Urbanist',
+            fontWeight: FontWeight.w500,
+            color: isDark ? AppThemeData.grey400 : AppThemeData.grey500,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Obx modeCard(CartController controller, PaymentMode mode, bool isDark) {
+    return Obx(
+      () => InkWell(
+        onTap: () => controller.selectPaymentMode(mode),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5),
+          child: Row(
+            children: [
+              Container(
+                width: 50,
+                height: 50,
+                decoration: ShapeDecoration(
+                  color: isDark ? AppThemeData.grey800 : AppThemeData.grey100,
+                  shape: RoundedRectangleBorder(
+                    side:
+                        const BorderSide(width: 1, color: AppThemeData.grey200),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: Icon(
+                  controller.paymentModeIcon(mode),
+                  color: AppThemeData.primary300,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TranslatedText(
+                      controller.paymentModeLabel(mode),
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        fontFamily: 'Urbanist',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                        color:
+                            isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                      ),
+                    ),
+                    Text(
+                      controller.paymentModeSubtitle(mode),
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        fontFamily: 'Urbanist',
+                        fontWeight: FontWeight.w500,
+                        fontSize: 13,
+                        color: isDark
+                            ? AppThemeData.grey400
+                            : AppThemeData.grey500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Radio<String>(
+                value: mode.name,
+                groupValue: controller.selectedPaymentMethod.value,
+                activeColor: AppThemeData.primary300,
+                onChanged: (_) => controller.selectPaymentMode(mode),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Obx cardDecoration(
+      CartController controller, PaymentGateway value, isDark, String image) {
     return Obx(
       () => Padding(
         padding: const EdgeInsets.symmetric(vertical: 5),
@@ -248,12 +271,14 @@ class SelectPaymentScreen extends StatelessWidget {
                     height: 50,
                     decoration: ShapeDecoration(
                       shape: RoundedRectangleBorder(
-                        side: const BorderSide(width: 1, color: AppThemeData.grey200),
+                        side: const BorderSide(
+                            width: 1, color: AppThemeData.grey200),
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
                     child: Padding(
-                      padding: EdgeInsets.all(value.name == "payFast" ? 0 : 8.0),
+                      padding:
+                          EdgeInsets.all(value.name == "payFast" ? 0 : 8.0),
                       child: Image.asset(
                         image,
                       ),
@@ -271,18 +296,31 @@ class SelectPaymentScreen extends StatelessWidget {
                                 value.name.toString().capitalizeFirst ?? '',
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
-                                  fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
+                                  fontFamily: 'Urbanist',
+                                  fontWeight: FontWeight.w500,
                                   fontSize: 16,
-                                  color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                  color: isDark
+                                      ? AppThemeData.grey50
+                                      : AppThemeData.grey900,
                                 ),
                               ),
                               Text(
-                                Constant.amountShow(amount: controller.userModel.value.walletAmount == null ? '0.0' : controller.userModel.value.walletAmount.toString()),
+                                Constant.amountShow(
+                                    amount: controller
+                                                .userModel.value.walletAmount ==
+                                            null
+                                        ? '0.0'
+                                        : controller
+                                            .userModel.value.walletAmount
+                                            .toString()),
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
-                                  fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                  fontFamily: 'Urbanist',
+                                  fontWeight: FontWeight.w600,
                                   fontSize: 16,
-                                  color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
+                                  color: isDark
+                                      ? AppThemeData.primary300
+                                      : AppThemeData.primary300,
                                 ),
                               ),
                             ],
@@ -293,9 +331,12 @@ class SelectPaymentScreen extends StatelessWidget {
                             value.name.toString().capitalizeFirst ?? '',
                             textAlign: TextAlign.start,
                             style: TextStyle(
-                              fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
+                              fontFamily: 'Urbanist',
+                              fontWeight: FontWeight.w500,
                               fontSize: 16,
-                              color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                              color: isDark
+                                  ? AppThemeData.grey50
+                                  : AppThemeData.grey900,
                             ),
                           ),
                         ),
@@ -305,7 +346,9 @@ class SelectPaymentScreen extends StatelessWidget {
                   Radio(
                     value: value.name,
                     groupValue: controller.selectedPaymentMethod.value,
-                    activeColor: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
+                    activeColor: isDark
+                        ? AppThemeData.primary300
+                        : AppThemeData.primary300,
                     onChanged: (value) {
                       controller.selectedPaymentMethod.value = value.toString();
                     },

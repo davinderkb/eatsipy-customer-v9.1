@@ -236,6 +236,18 @@ For Eatsipy customer, current primary nav is Home, Favourites, Orders, Profile. 
 - Replace any `WillPopScope` with `PopScope`
 - Replace `MaterialStateProperty` with `WidgetStateProperty`
 
+### Checkout / Payment Modernization
+For food delivery checkout, keep the UX mode-centric and never gateway-centric:
+- Users choose UPI, Wallet, Card, Net Banking, or COD.
+- Gateway names stay internal. Admin config selects exactly one active online gateway that powers online modes.
+- Load only the active online gateway SDK/settings plus Wallet and COD.
+- Use a sticky bottom CTA, compact bill row, bill-details bottom sheet, payment-method bottom sheet, and one remarks/tip section each.
+- Keep gateway-specific SDK/link creation behind an adapter interface so checkout UI and cart coordination stay mode-centric.
+- Suggested add-ons should use existing menu/product data, be limited, and disappear completely when there are no safe local recommendations.
+- Auto-apply wallet when enabled and balance is positive, but allow the user to turn it off.
+- Support full wallet, full COD, full online, wallet + COD, and wallet + online without changing old order parsing.
+- Refund UX must separate wallet and online/COD portions; source refunds can be `pending_manual_review` when automation is not available.
+
 ---
 
 ## Step 5: Screen-by-Screen Modernization

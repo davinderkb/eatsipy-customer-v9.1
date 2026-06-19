@@ -159,3 +159,37 @@ No nested card container. Name + price stacked vertically on left (name 14px w50
 - Compact header: veg/nonveg icon (16px) + item name (18px w700, Expanded) + heart toggle + close (X) button
 - Description: 13px w400 `grey400`/`grey500`, maxLines: 2
 - Footer: `grey50`/`grey900` bg, top border `grey200`/`grey700`, quantity counter bg `grey100`/`grey800`
+
+---
+
+## UI Patterns (Cart / Checkout / Payments)
+
+### Customer-Facing Payment Modes
+- Customers choose payment modes only: UPI, Wallet, Card, Net Banking, COD.
+- Do not show gateway names such as PhonePe, Cashfree, or Razorpay in checkout UI.
+- Admin selects exactly one active online gateway. That gateway internally powers UPI/card/net-banking modes.
+- If the active online gateway is missing, disabled, unhealthy, or does not support a mode, hide affected online modes and keep Wallet/COD independent.
+
+### Checkout Hierarchy
+- Preferred checkout order: delivery address, restaurant/item summary, offers/coupons, compact bill row, payment row, remarks, tip, sticky CTA.
+- Remove duplicate remarks or tip sections. Each should appear once.
+- Keep the primary payment action in a sticky bottom CTA with the selected mode on the left and amount/action on the right.
+- Disable the CTA while payment/order processing is active to prevent duplicate payments.
+- Suggested add-ons may appear after the cart item summary when safe simple products are available; hide the section completely when empty.
+
+### Wallet Split Tender
+- Wallet auto-applies by default when enabled and balance is positive.
+- Users may turn wallet off.
+- Show wallet deduction only when an amount is applied.
+- Support full wallet, full COD, full online, wallet + COD, and wallet + online.
+- Wallet debit should happen only after online payment success and immediately before order creation.
+
+### Bill Details
+- Main cart should show a compact "To Pay" row with a "View Bill Details" action.
+- Full breakdown opens in a draggable bottom sheet and includes item total, discounts, packaging, delivery, platform fee, taxes, tip, wallet deduction, and final payable.
+- The cart body should not show the full bill table inline.
+
+### Refund UX
+- For prepaid/split payments, show refund destination choices when applicable: instant Eatsipy Wallet refund or original source refund with expected delay copy.
+- COD has no prepaid source refund except any wallet portion.
+- If source refund automation is unavailable, show `pending_manual_review` state instead of implying instant completion.

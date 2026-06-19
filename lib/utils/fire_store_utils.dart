@@ -29,6 +29,7 @@ import 'package:eatsipy_customer/models/mail_setting.dart';
 import 'package:eatsipy_customer/models/notification_model.dart';
 import 'package:eatsipy_customer/models/on_boarding_model.dart';
 import 'package:eatsipy_customer/models/order_model.dart';
+import 'package:eatsipy_customer/models/payment/checkout_payment_models.dart';
 import 'package:eatsipy_customer/models/payment_model/cashfree_model.dart';
 import 'package:eatsipy_customer/models/payment_model/cod_setting_model.dart';
 import 'package:eatsipy_customer/models/payment_model/flutter_wave_model.dart';
@@ -698,6 +699,46 @@ class FireStoreUtils {
       _loadPaymentSetting("instamojo_settings", Preferences.instamojoSettings,
           (d) => Instamojo.fromJson(d).toJson()),
     ]);
+  }
+
+  static Future getCheckoutPaymentSettingsData(
+      PaymentGatewayType? activeGateway) async {
+    final loaders = <Future>[
+      _loadPaymentSetting("walletSettings", Preferences.walletSettings,
+          (d) => WalletSettingModel.fromJson(d).toJson()),
+      _loadPaymentSetting("CODSettings", Preferences.codSettings,
+          (d) => CodSettingModel.fromJson(d).toJson()),
+    ];
+
+    if (activeGateway == PaymentGatewayType.phonePe) {
+      loaders.add(_loadPaymentSetting("phonepay_settings",
+          Preferences.phonePaySettings, (d) => PhonePe.fromJson(d).toJson()));
+    } else if (activeGateway == PaymentGatewayType.cashfree) {
+      loaders.add(_loadPaymentSetting("cashfree_settings",
+          Preferences.cashFreeSettings, (d) => Cashfree.fromJson(d).toJson()));
+    } else if (activeGateway == PaymentGatewayType.razorpay) {
+      loaders.add(_loadPaymentSetting(
+          "razorpaySettings",
+          Preferences.razorpaySettings,
+          (d) => RazorPayModel.fromJson(d).toJson()));
+    }
+
+    await Future.wait(loaders);
+  }
+
+  static Future<PaymentGatewayConfig> getCheckoutPaymentGatewayConfig() async {
+    try {
+      final value = await fireStore
+          .collection(CollectionName.settings)
+          .doc("paymentGatewayConfig")
+          .get();
+      if (value.exists && value.data() != null) {
+        return PaymentGatewayConfig.fromJson(value.data());
+      }
+    } catch (error) {
+      log("Failed to load paymentGatewayConfig: $error");
+    }
+    return PaymentGatewayConfig.noOnlineGateway();
   }
 
   static Future<Map<String, VendorModel>> getVendorsByIds(

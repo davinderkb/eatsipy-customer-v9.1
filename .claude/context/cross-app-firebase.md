@@ -56,6 +56,88 @@ Map of lowercase category keyword → list of image URLs:
 
 ---
 
+## New Settings Document (`settings/paymentGatewayConfig`)
+
+Customer checkout supports PhonePe, Cashfree, and Razorpay in code, but admin selects exactly one active online gateway at a time. Users choose payment modes, not gateways.
+
+### Schema
+
+```json
+{
+  "activeGateway": "cashfree",
+  "gateways": {
+    "phonePe": {
+      "isEnabled": true,
+      "healthStatus": "healthy",
+      "supportedMethods": ["upi"]
+    },
+    "cashfree": {
+      "isEnabled": true,
+      "healthStatus": "healthy",
+      "supportedMethods": ["upi", "card", "netBanking"]
+    },
+    "razorpay": {
+      "isEnabled": true,
+      "healthStatus": "healthy",
+      "supportedMethods": ["upi", "card", "netBanking"]
+    }
+  },
+  "modes": {
+    "upi": true,
+    "wallet": true,
+    "card": true,
+    "netBanking": true,
+    "cod": true
+  }
+}
+```
+
+- `activeGateway` must be one of `phonePe`, `cashfree`, `razorpay`
+- If missing/invalid/unhealthy, online modes are hidden; wallet/COD remain independent
+- Customer UI must never display gateway names
+- Customer app does not silently choose an online gateway when this document is missing; admin must select one active online gateway
+
+---
+
+## New Fields on User Document (`users/{userId}`)
+
+| Field | Type | Default | Purpose |
+|-------|------|---------|---------|
+| `paymentPreferences.lastUsedPaymentMode` | String | `null` | Last successful customer-facing mode: `upi`, `wallet`, `card`, `netBanking`, `cod` |
+| `paymentPreferences.lastUsedUpiApp` | String | `null` | Last successful UPI app label if available |
+| `paymentPreferences.lastUsedCard` | String | `null` | Last successful masked/saved card label if available |
+| `paymentPreferences.lastUsedGateway` | String | `null` | Internal gateway used: `phonePe`, `cashfree`, `razorpay` |
+| `paymentPreferences.lastSuccessfulPaymentTimestamp` | Timestamp | `null` | Updated only after successful payment/order completion |
+
+---
+
+## New Fields on Order Document (`restaurant_orders/{orderId}`)
+
+| Field | Type | Default | Purpose |
+|-------|------|---------|---------|
+| `paymentBreakdown.totalAmount` | number | `0` | Full bill total |
+| `paymentBreakdown.walletAppliedAmount` | number | `0` | Wallet amount used for checkout |
+| `paymentBreakdown.remainingPayableAmount` | number | `0` | Amount paid by COD or online mode after wallet |
+| `paymentBreakdown.components` | List\<Map\> | `[]` | Split tender components for wallet/COD/online |
+
+### `paymentBreakdown.components` Item Schema
+
+| Field | Type | Purpose |
+|-------|------|---------|
+| `mode` | String | `wallet`, `cod`, `upi`, `card`, `netBanking` |
+| `gateway` | String | Internal gateway for online components only |
+| `amount` | number | Amount for this component |
+| `status` | String | `pending`, `success`, `failed`, `cancelled` |
+| `transactionId` | String | Gateway/wallet transaction reference |
+| `refundStatus` | String | `none`, `pending`, `success`, `failed`, `pendingManualReview` |
+| `refundDestination` | String | `wallet` or `originalSource` |
+| `refundedAmount` | number | Amount refunded for this component |
+| `refundReference` | String | Gateway/admin refund reference |
+
+Existing orders with only `payment_method` remain valid. No migration is required; new fields parse as null/defaults.
+
+---
+
 ## Cloud Functions (Recommended)
 
 | Function | Trigger | Purpose | Priority |
@@ -79,3 +161,13 @@ Map of lowercase category keyword → list of image URLs:
 ## Backward Compatibility
 
 All new vendor fields default to `null` or `false`. Existing vendor documents without these fields will render using the category stock image fallback (tier 4) or the neutral placeholder. No migration of existing documents is required — fields are populated as admin enables features per vendor.
+
+Payment fields are also backward-compatible:
+
+- Existing orders with only `payment_method` remain valid.
+- New orders may add `paymentBreakdown`; missing breakdown should parse as `null`/defaults.
+- Existing users without `paymentPreferences` remain valid.
+- `settings/paymentGatewayConfig` can be added without migrating old gateway setting documents.
+- If `settings/paymentGatewayConfig` is missing, online modes are hidden until admin selects one active gateway.
+- Wallet and COD settings remain independent of online gateway health/config.
+- The customer app supports PhonePe, Cashfree, and Razorpay in code, but admin config should select exactly one active online gateway at a time.

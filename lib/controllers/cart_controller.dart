@@ -18,6 +18,7 @@ import 'package:eatsipy_customer/models/cashback_redeem_model.dart';
 import 'package:eatsipy_customer/models/coupon_model.dart';
 import 'package:eatsipy_customer/models/free_delivery_model.dart';
 import 'package:eatsipy_customer/models/order_model.dart';
+import 'package:eatsipy_customer/models/payment/checkout_payment_models.dart';
 import 'package:eatsipy_customer/models/payment_model/cashfree_model.dart';
 import 'package:eatsipy_customer/models/payment_model/cod_setting_model.dart';
 import 'package:eatsipy_customer/models/payment_model/flutter_wave_model.dart';
@@ -53,6 +54,9 @@ import 'package:eatsipy_customer/payment/paystack/paystack_url_genrater.dart';
 import 'package:eatsipy_customer/payment/weburlservicescreen.dart';
 import 'package:eatsipy_customer/payment/xenditModel.dart';
 import 'package:eatsipy_customer/payment/xenditScreen.dart';
+import 'package:eatsipy_customer/services/payment/active_payment_gateway_resolver.dart';
+import 'package:eatsipy_customer/services/payment/payment_gateway_adapter.dart';
+import 'package:eatsipy_customer/services/payment/wallet_split_calculator.dart';
 import 'package:eatsipy_customer/services/cart_provider.dart';
 import 'package:eatsipy_customer/themes/app_them_data.dart';
 import 'package:eatsipy_customer/utils/fire_store_utils.dart';
@@ -79,7 +83,8 @@ class CartController extends GetxController {
 
   Rx<ShippingAddress> selectedAddress = ShippingAddress().obs;
   Rx<VendorModel> vendorModel = VendorModel().obs;
-  Rx<FreeDeliveryByAdminModel> freeDeliveryByAdminModel = FreeDeliveryByAdminModel().obs;
+  Rx<FreeDeliveryByAdminModel> freeDeliveryByAdminModel =
+      FreeDeliveryByAdminModel().obs;
   RxBool isEnableFreeDeliveryByAdmin = false.obs;
   Rx<DeliveryCharge> deliveryChargeModel = DeliveryCharge().obs;
   Rx<UserModel> userModel = UserModel().obs;
@@ -89,6 +94,7 @@ class CartController extends GetxController {
 
   RxString selectedPaymentMethod = ''.obs;
   RxBool isOrderPlaced = false.obs;
+  RxBool isWalletApplied = true.obs;
 
   RxString deliveryType = "instant".obs;
   Rx<DateTime> scheduleDateTime = DateTime.now().obs;
@@ -114,6 +120,13 @@ class CartController extends GetxController {
 
   RxDouble totalAmount = 0.0.obs;
   Rx<CouponModel> selectedCouponModel = CouponModel().obs;
+  RxList<ProductModel> suggestedAddOnItems = <ProductModel>[].obs;
+  RxBool isSuggestedAddOnsLoading = false.obs;
+  String? _suggestedAddOnsVendorId;
+  final WalletSplitCalculator walletSplitCalculator =
+      const WalletSplitCalculator();
+  final PaymentGatewayAdapterRegistry paymentGatewayAdapterRegistry =
+      PaymentGatewayAdapterRegistry();
 
   @override
   void onInit() {
@@ -131,18 +144,21 @@ class CartController extends GetxController {
         cartItem.addAll(event);
 
         if (cartItem.isNotEmpty) {
-          await FireStoreUtils.getVendorById(cartItem.first.vendorID.toString()).then(
+          await FireStoreUtils.getVendorById(cartItem.first.vendorID.toString())
+              .then(
             (value) {
               if (value != null) {
                 vendorModel.value = value;
               }
             },
           );
+          await loadSuggestedAddOns();
         }
         calculatePrice();
       },
     );
-    selectedFoodType.value = Preferences.getString(Preferences.foodDeliveryType, defaultValue: "Delivery");
+    selectedFoodType.value = Preferences.getString(Preferences.foodDeliveryType,
+        defaultValue: "Delivery");
     if (!Constant.takeawayEnabled && selectedFoodType.value == 'TakeAway') {
       selectedFoodType.value = 'Delivery';
     }
@@ -151,6 +167,7 @@ class CartController extends GetxController {
       (value) {
         if (value != null) {
           userModel.value = value;
+          syncCheckoutPaymentSelection();
         }
       },
     );
@@ -172,13 +189,16 @@ class CartController extends GetxController {
       },
     );
 
-    await FireStoreUtils.getAllVendorPublicCoupons(vendorModel.value.id.toString()).then(
+    await FireStoreUtils.getAllVendorPublicCoupons(
+            vendorModel.value.id.toString())
+        .then(
       (value) {
         couponList.value = value;
       },
     );
 
-    await FireStoreUtils.getAllVendorCoupons(vendorModel.value.id.toString()).then(
+    await FireStoreUtils.getAllVendorCoupons(vendorModel.value.id.toString())
+        .then(
       (value) {
         allCouponList.value = value;
       },
@@ -213,27 +233,41 @@ class CartController extends GetxController {
           lng2: vendorModel.value.longitude.toString(),
         ));
 
-        if (vendorModel.value.isSelfDelivery == true && Constant.isSelfDeliveryFeature == true) {
+        if (vendorModel.value.isSelfDelivery == true &&
+            Constant.isSelfDeliveryFeature == true) {
           deliveryCharges.value = 0.0;
         } else if (deliveryChargeModel.value.vendorCanModify == false) {
-          deliveryCharges.value = totalDistance.value > deliveryChargeModel.value.minimumDeliveryChargesWithinKm!
-              ? totalDistance.value * deliveryChargeModel.value.deliveryChargesPerKm!
+          deliveryCharges.value = totalDistance.value >
+                  deliveryChargeModel.value.minimumDeliveryChargesWithinKm!
+              ? totalDistance.value *
+                  deliveryChargeModel.value.deliveryChargesPerKm!
               : deliveryChargeModel.value.minimumDeliveryCharges!.toDouble();
         } else {
-          final charge = vendorModel.value.deliveryCharge ?? deliveryChargeModel.value;
-          deliveryCharges.value = totalDistance.value > charge.minimumDeliveryChargesWithinKm! ? totalDistance.value * charge.deliveryChargesPerKm! : charge.minimumDeliveryCharges!.toDouble();
+          final charge =
+              vendorModel.value.deliveryCharge ?? deliveryChargeModel.value;
+          deliveryCharges.value =
+              totalDistance.value > charge.minimumDeliveryChargesWithinKm!
+                  ? totalDistance.value * charge.deliveryChargesPerKm!
+                  : charge.minimumDeliveryCharges!.toDouble();
         }
       }
     }
 
     /// ---------------- PACKAGING & PLATFORM ----------------
-    packagingCharge.value = Constant.packagingChargeEnable == true && vendorModel.value.packagingCharge != null ? double.parse(vendorModel.value.packagingCharge.toString()) : 0.0;
+    packagingCharge.value = Constant.packagingChargeEnable == true &&
+            vendorModel.value.packagingCharge != null
+        ? double.parse(vendorModel.value.packagingCharge.toString())
+        : 0.0;
 
-    platformFee.value = Constant.calculatePlatFormMeModel(platFromFeeModel: Constant.platformFeeModel);
+    platformFee.value = Constant.calculatePlatFormMeModel(
+        platFromFeeModel: Constant.platformFeeModel);
 
     /// ---------------- SUBTOTAL ----------------
     for (var element in cartItem) {
-      final price = double.parse((element.discountPrice != null && double.parse(element.discountPrice.toString()) > 0) ? element.discountPrice.toString() : element.price.toString());
+      final price = double.parse((element.discountPrice != null &&
+              double.parse(element.discountPrice.toString()) > 0)
+          ? element.discountPrice.toString()
+          : element.price.toString());
 
       final qty = double.parse(element.quantity.toString());
       final extras = double.parse(element.extrasPrice.toString());
@@ -250,7 +284,8 @@ class CartController extends GetxController {
     }
 
     /// ---------------- SPECIAL DISCOUNT ----------------
-    if (vendorModel.value.specialDiscountEnable == true && Constant.specialDiscountOffer == true) {
+    if (vendorModel.value.specialDiscountEnable == true &&
+        Constant.specialDiscountOffer == true) {
       final now = DateTime.now();
       final day = DateFormat('EEEE', 'en_US').format(now);
       final date = DateFormat('dd-MM-yyyy').format(now);
@@ -259,14 +294,18 @@ class CartController extends GetxController {
         if (day == element.day.toString()) {
           for (var slot in element.timeslot ?? []) {
             if (slot.discountType == "delivery") {
-              final start = DateFormat("dd-MM-yyyy HH:mm").parse("$date ${slot.from}");
-              final end = DateFormat("dd-MM-yyyy HH:mm").parse("$date ${slot.to}");
+              final start =
+                  DateFormat("dd-MM-yyyy HH:mm").parse("$date ${slot.from}");
+              final end =
+                  DateFormat("dd-MM-yyyy HH:mm").parse("$date ${slot.to}");
 
               if (isCurrentDateInRange(start, end)) {
                 specialDiscount.value = double.parse(slot.discount.toString());
                 specialType.value = slot.type.toString();
 
-                specialDiscountAmount.value = slot.type == "percentage" ? (subTotal.value * specialDiscount.value / 100) : specialDiscount.value;
+                specialDiscountAmount.value = slot.type == "percentage"
+                    ? (subTotal.value * specialDiscount.value / 100)
+                    : specialDiscount.value;
               }
             }
           }
@@ -285,7 +324,10 @@ class CartController extends GetxController {
     /// ---------------- PRODUCT TAX (AFTER DISCOUNT) ----------------
     if (Constant.taxScope == "product") {
       for (var element in cartItem) {
-        final price = double.parse((element.discountPrice != null && double.parse(element.discountPrice.toString()) > 0) ? element.discountPrice.toString() : element.price.toString());
+        final price = double.parse((element.discountPrice != null &&
+                double.parse(element.discountPrice.toString()) > 0)
+            ? element.discountPrice.toString()
+            : element.price.toString());
 
         final qty = double.parse(element.quantity.toString());
         final extras = double.parse(element.extrasPrice.toString());
@@ -321,7 +363,8 @@ class CartController extends GetxController {
     }
 
     /// ---------------- DELIVERY TAX ----------------
-    if (selectedFoodType.value != 'TakeAway' && vendorModel.value.isSelfDelivery != true) {
+    if (selectedFoodType.value != 'TakeAway' &&
+        vendorModel.value.isSelfDelivery != true) {
       for (var taxElement in Constant.driverDeliveryTaxList ?? []) {
         driverDeliveryTaxAmount.value += Constant.calculateTax(
           amount: deliveryCharges.value.toString(),
@@ -351,11 +394,20 @@ class CartController extends GetxController {
     }
 
     /// ---------------- TOTAL ----------------
-    totalTaxAmount.value = productTaxAmount.value + orderTaxAmount.value + driverDeliveryTaxAmount.value + packagingTaxAmount.value + platformTaxAmount.value;
+    totalTaxAmount.value = productTaxAmount.value +
+        orderTaxAmount.value +
+        driverDeliveryTaxAmount.value +
+        packagingTaxAmount.value +
+        platformTaxAmount.value;
 
-    totalAmount.value =
-        (subTotal.value - totalDiscount) + totalTaxAmount.value + (isEnableFreeDeliveryByAdmin.value ? 0 : deliveryCharges.value) + deliveryTips.value + packagingCharge.value + platformFee.value;
+    totalAmount.value = (subTotal.value - totalDiscount) +
+        totalTaxAmount.value +
+        (isEnableFreeDeliveryByAdmin.value ? 0 : deliveryCharges.value) +
+        deliveryTips.value +
+        packagingCharge.value +
+        platformFee.value;
 
+    syncCheckoutPaymentSelection();
     getCashback();
   }
 
@@ -564,7 +616,8 @@ class CartController extends GetxController {
 
   Future<void> getCashback() async {
     if (Constant.isCashbackActive == true) {
-      final paymentMethod = selectedPaymentMethod.value;
+      final paymentMethod = legacyCheckoutPaymentMethod;
+      final activeGatewayMethod = activeGatewayPaymentMethodName;
       final orderTotal = subTotal.value;
       final now = DateTime.now();
 
@@ -579,17 +632,30 @@ class CartController extends GetxController {
 
         if (startDate == null || endDate == null) continue;
 
-        final withinDateRange = startDate.toDate().isBefore(now) && endDate.toDate().isAfter(now);
-        final meetsMinAmount = orderTotal >= (cashback.minimumPurchaseAmount ?? 0);
+        final withinDateRange =
+            startDate.toDate().isBefore(now) && endDate.toDate().isAfter(now);
+        final meetsMinAmount =
+            orderTotal >= (cashback.minimumPurchaseAmount ?? 0);
         final allPayment = cashback.allPayment ?? false;
-        final paymentMatch = allPayment || (cashback.paymentMethods ?? []).contains(paymentMethod);
+        final configuredPaymentMethods = cashback.paymentMethods ?? [];
+        final paymentMatch = allPayment ||
+            configuredPaymentMethods.contains(paymentMethod) ||
+            (activeGatewayMethod.isNotEmpty &&
+                configuredPaymentMethods.contains(activeGatewayMethod));
         final allCustomer = cashback.allCustomer ?? false;
-        final customerMatch = allCustomer || (cashback.customerIds ?? []).contains(FireStoreUtils.getCurrentUid());
+        final customerMatch = allCustomer ||
+            (cashback.customerIds ?? [])
+                .contains(FireStoreUtils.getCurrentUid());
 
-        final redeemData = await FireStoreUtils.getRedeemedCashbacks(cashback.id ?? '');
+        final redeemData =
+            await FireStoreUtils.getRedeemedCashbacks(cashback.id ?? '');
         final underLimit = redeemData.length < (cashback.redeemLimit ?? 0);
 
-        if (withinDateRange && meetsMinAmount && paymentMatch && customerMatch && underLimit) {
+        if (withinDateRange &&
+            meetsMinAmount &&
+            paymentMatch &&
+            customerMatch &&
+            underLimit) {
           eligibleCashbacks.add(cashback);
         }
       }
@@ -627,7 +693,10 @@ class CartController extends GetxController {
     }
   }
 
-  void addToCart({required CartProductModel cartProductModel, required bool isIncrement, required int quantity}) {
+  void addToCart(
+      {required CartProductModel cartProductModel,
+      required bool isIncrement,
+      required int quantity}) {
     if (isIncrement) {
       cartProvider.addToCart(Get.context!, cartProductModel, quantity);
     } else {
@@ -636,35 +705,425 @@ class CartController extends GetxController {
     update();
   }
 
+  Future<void> loadSuggestedAddOns() async {
+    final vendorId = vendorModel.value.id;
+    if (vendorId == null || vendorId.isEmpty) {
+      suggestedAddOnItems.clear();
+      return;
+    }
+    final cartProductIds =
+        cartItem.map((item) => item.id?.split('~').first).whereType<String>();
+    if (_suggestedAddOnsVendorId == vendorId &&
+        suggestedAddOnItems.isNotEmpty) {
+      suggestedAddOnItems
+          .removeWhere((item) => cartProductIds.contains(item.id));
+      return;
+    }
+
+    isSuggestedAddOnsLoading.value = true;
+    _suggestedAddOnsVendorId = vendorId;
+    final products = await FireStoreUtils.getProductByVendorId(vendorId);
+    final cartIds = cartProductIds.toSet();
+    final suggestions = products.where((product) {
+      final hasVariants = product.itemAttribute?.variants?.isNotEmpty == true;
+      final hasAddons = product.addOnsTitle?.isNotEmpty == true;
+      final isInCart = cartIds.contains(product.id);
+      final hasStock = product.quantity == null || product.quantity != 0;
+      return product.publish == true &&
+          !isInCart &&
+          !hasVariants &&
+          !hasAddons &&
+          hasStock;
+    }).toList()
+      ..sort(
+        (a, b) => (b.reviewsCount ?? 0).compareTo(a.reviewsCount ?? 0),
+      );
+    suggestedAddOnItems.value = suggestions.take(8).toList();
+    isSuggestedAddOnsLoading.value = false;
+  }
+
+  Future<void> addSuggestedAddOn(ProductModel productModel) async {
+    final price = Constant.productCommissionPrice(
+      vendorModel.value,
+      productModel.price ?? '0',
+    ).toString();
+    final discountPrice = Constant.productCommissionPrice(
+      vendorModel.value,
+      productModel.disPrice ?? '0',
+    ).toString();
+    final cartProductModel = CartProductModel(
+      id: productModel.id,
+      name: productModel.name,
+      photo: productModel.photo,
+      categoryId: productModel.categoryID,
+      price: price,
+      discountPrice: discountPrice,
+      vendorID: vendorModel.value.id,
+      quantity: 1,
+      variantInfo: VariantInfo(),
+      extrasPrice: '0',
+      extras: [],
+      taxSetting: Constant.taxScope == "order"
+          ? []
+          : Constant.taxProductList
+              ?.where((activeTax) =>
+                  productModel.taxSetting
+                      ?.any((productTax) => productTax.id == activeTax.id) ??
+                  false)
+              .toList(),
+    );
+    addToCart(
+      cartProductModel: cartProductModel,
+      isIncrement: true,
+      quantity: 1,
+    );
+    suggestedAddOnItems.removeWhere((item) => item.id == productModel.id);
+  }
+
   List<CartProductModel> tempProduc = [];
+
+  double get walletBalance =>
+      double.tryParse(userModel.value.walletAmount?.toString() ?? '0') ?? 0;
+
+  bool get isWalletEnabled => walletSettingModel.value.isEnabled == true;
+
+  PaymentMode? get selectedMode =>
+      PaymentMode.fromJson(selectedPaymentMethod.value);
+
+  bool get isSelectedModeOnline {
+    final mode = selectedMode;
+    return mode == PaymentMode.upi ||
+        mode == PaymentMode.card ||
+        mode == PaymentMode.netBanking;
+  }
+
+  bool get isSelectedModeCod => selectedMode == PaymentMode.cod;
+
+  bool get isSelectedModeWallet => selectedMode == PaymentMode.wallet;
+
+  WalletSplitResult get walletSplitResult => walletSplitCalculator.calculate(
+        billTotal: totalAmount.value,
+        walletBalance: walletBalance,
+        walletEnabled: isWalletEnabled,
+        walletApplied: isWalletApplied.value,
+        selectedRemainingPaymentMode: selectedMode,
+      );
+
+  double get walletAppliedAmount => walletSplitResult.walletAppliedAmount;
+
+  double get remainingPayableAmount => walletSplitResult.remainingPayableAmount;
+
+  List<PaymentMode> get availableRemainingPaymentModes {
+    final modes = <PaymentMode>[];
+    if (cashOnDeliverySettingModel.value.isEnabled == true &&
+        checkoutPaymentGatewayConfig.value.modes[PaymentMode.cod] != false) {
+      modes.add(PaymentMode.cod);
+    }
+    modes.addAll(activeGatewayResolution.value.availableOnlineModes.toList()
+      ..sort((a, b) => _paymentModeSortIndex(a).compareTo(
+            _paymentModeSortIndex(b),
+          )));
+    return modes;
+  }
+
+  List<PaymentMode> get selectablePaymentModes {
+    final split = walletSplitResult;
+    if (split.isWalletOnly) {
+      return const [PaymentMode.wallet];
+    }
+    return availableRemainingPaymentModes;
+  }
+
+  String get checkoutPaymentLabel {
+    final split = walletSplitResult;
+    if (split.isWalletOnly) return 'Eatsipy Wallet';
+    final modeLabel = paymentModeLabel(selectedMode);
+    if (split.walletAppliedAmount > 0 && modeLabel.isNotEmpty) {
+      return 'Wallet + $modeLabel';
+    }
+    return modeLabel;
+  }
+
+  String get activeGatewayPaymentMethodName {
+    final gateway = activeGatewayResolution.value.gateway;
+    if (gateway == PaymentGatewayType.phonePe) {
+      return PaymentGateway.phonePe.name;
+    }
+    if (gateway == PaymentGatewayType.cashfree) {
+      return PaymentGateway.cashfree.name;
+    }
+    if (gateway == PaymentGatewayType.razorpay) {
+      return PaymentGateway.razorpay.name;
+    }
+    return '';
+  }
+
+  String get legacyCheckoutPaymentMethod {
+    final split = walletSplitResult;
+    final mode = selectedMode;
+    if (split.walletAppliedAmount > 0 && split.remainingPayableAmount <= 0) {
+      return PaymentMode.wallet.name;
+    }
+    if (split.walletAppliedAmount > 0 && mode != null) {
+      return '${PaymentMode.wallet.name}+${mode.name}';
+    }
+    return mode?.name ?? selectedPaymentMethod.value;
+  }
+
+  String paymentModeLabel(PaymentMode? mode) {
+    switch (mode) {
+      case PaymentMode.upi:
+        return 'UPI';
+      case PaymentMode.wallet:
+        return 'Eatsipy Wallet';
+      case PaymentMode.card:
+        return 'Card';
+      case PaymentMode.netBanking:
+        return 'Net Banking';
+      case PaymentMode.cod:
+        return 'Cash on Delivery';
+      case null:
+        return '';
+    }
+  }
+
+  IconData paymentModeIcon(PaymentMode? mode) {
+    switch (mode) {
+      case PaymentMode.upi:
+        return Icons.account_balance_wallet_outlined;
+      case PaymentMode.wallet:
+        return Icons.account_balance_wallet;
+      case PaymentMode.card:
+        return Icons.credit_card;
+      case PaymentMode.netBanking:
+        return Icons.account_balance;
+      case PaymentMode.cod:
+        return Icons.payments_outlined;
+      case null:
+        return Icons.payment;
+    }
+  }
+
+  String paymentModeSubtitle(PaymentMode mode) {
+    switch (mode) {
+      case PaymentMode.upi:
+        return 'Google Pay, PhonePe, Paytm UPI, BHIM or any UPI app';
+      case PaymentMode.wallet:
+        return Constant.amountShow(amount: walletBalance.toString());
+      case PaymentMode.card:
+        return 'Credit and debit cards';
+      case PaymentMode.netBanking:
+        return 'All supported banks';
+      case PaymentMode.cod:
+        return 'Pay when your order is delivered';
+    }
+  }
+
+  void setWalletApplied(bool value) {
+    isWalletApplied.value = value;
+    syncCheckoutPaymentSelection();
+    getCashback();
+  }
+
+  void selectPaymentMode(PaymentMode mode) {
+    selectedPaymentMethod.value = mode.name;
+    syncCheckoutPaymentSelection();
+    getCashback();
+  }
+
+  void syncCheckoutPaymentSelection() {
+    if (!isWalletEnabled || walletBalance <= 0) {
+      isWalletApplied.value = false;
+    }
+
+    final split = walletSplitResult;
+    if (split.isWalletOnly) {
+      selectedPaymentMethod.value = PaymentMode.wallet.name;
+      return;
+    }
+
+    final modes = availableRemainingPaymentModes;
+    if (modes.isEmpty) {
+      selectedPaymentMethod.value = '';
+      return;
+    }
+
+    final currentMode = PaymentMode.fromJson(selectedPaymentMethod.value);
+    if (currentMode == PaymentMode.wallet || !modes.contains(currentMode)) {
+      selectedPaymentMethod.value = modes.first.name;
+    }
+  }
+
+  PaymentBreakdown buildPaymentBreakdown({
+    required PaymentComponentStatus onlineStatus,
+    String? onlineTransactionId,
+  }) {
+    final split = walletSplitResult;
+    final components = <PaymentComponent>[];
+    if (split.walletAppliedAmount > 0) {
+      components.add(
+        PaymentComponent(
+          mode: PaymentMode.wallet,
+          amount: split.walletAppliedAmount,
+          status: PaymentComponentStatus.success,
+          refundStatus: RefundStatus.none,
+          refundDestination: RefundDestination.wallet,
+        ),
+      );
+    }
+    if (split.remainingPayableAmount > 0 && selectedMode != null) {
+      final mode = selectedMode!;
+      components.add(
+        PaymentComponent(
+          mode: mode,
+          gateway: isSelectedModeOnline
+              ? activeGatewayResolution.value.gateway
+              : null,
+          amount: split.remainingPayableAmount,
+          status: mode == PaymentMode.cod
+              ? PaymentComponentStatus.pending
+              : onlineStatus,
+          transactionId: onlineTransactionId,
+          refundStatus: RefundStatus.none,
+          refundDestination:
+              isSelectedModeOnline ? RefundDestination.originalSource : null,
+        ),
+      );
+    }
+    return PaymentBreakdown(
+      components: components,
+      totalAmount: split.billTotal,
+      walletAppliedAmount: split.walletAppliedAmount,
+      remainingPayableAmount: split.remainingPayableAmount,
+    );
+  }
+
+  Future<void> startSelectedPayment(BuildContext context) async {
+    syncCheckoutPaymentSelection();
+    final split = walletSplitResult;
+    if (selectedPaymentMethod.value.isEmpty) {
+      isOrderPlaced.value = false;
+      ShowToastDialog.closeLoader();
+      ShowToastDialog.showToast("Please select payment method");
+      return;
+    }
+
+    if (split.isWalletOnly || selectedMode == PaymentMode.cod) {
+      await placeOrder();
+      return;
+    }
+
+    if (!isSelectedModeOnline) {
+      isOrderPlaced.value = false;
+      ShowToastDialog.closeLoader();
+      ShowToastDialog.showToast("Please select payment method");
+      return;
+    }
+
+    if (!activeGatewayResolution.value.isOnlineAvailable ||
+        activeGatewayResolution.value.gateway == null) {
+      isOrderPlaced.value = false;
+      ShowToastDialog.closeLoader();
+      ShowToastDialog.showToast("Online payments are currently unavailable.");
+      return;
+    }
+
+    final activeGateway = activeGatewayResolution.value.gateway;
+    final adapter = paymentGatewayAdapterRegistry.adapterFor(activeGateway);
+    if (adapter == null || !adapter.supportsPaymentMode(selectedMode!)) {
+      isOrderPlaced.value = false;
+      ShowToastDialog.closeLoader();
+      ShowToastDialog.showToast("Online payments are currently unavailable.");
+      return;
+    }
+
+    ShowToastDialog.showLoader("Please wait");
+    try {
+      await adapter.initialize();
+      if (!context.mounted) {
+        isOrderPlaced.value = false;
+        ShowToastDialog.closeLoader();
+        return;
+      }
+      final result = await adapter.startPayment(
+        PaymentGatewayStartRequest(
+          context: context,
+          amount: split.remainingPayableAmount,
+          description: "Order Payment",
+          user: userModel.value,
+          phonePe: phonePeModel.value,
+          cashfree: cashfreeModel.value,
+          razorpay: razorPayModel.value,
+          openRazorpayCheckout: openCheckout,
+        ),
+      );
+      if (result.status == PaymentGatewayStartStatus.success) {
+        ShowToastDialog.showToast("Payment Successful!!");
+        await placeOrder();
+      } else if (result.status == PaymentGatewayStartStatus.launched) {
+        ShowToastDialog.closeLoader();
+      } else {
+        isOrderPlaced.value = false;
+        ShowToastDialog.closeLoader();
+        ShowToastDialog.showToast(
+          result.message ?? "Payment failed or was cancelled.",
+        );
+      }
+    } catch (error) {
+      isOrderPlaced.value = false;
+      ShowToastDialog.closeLoader();
+      debugPrint('Payment failed to start: $error');
+      ShowToastDialog.showToast("Unable to start payment. Please try again.");
+    }
+  }
+
+  int _paymentModeSortIndex(PaymentMode mode) {
+    switch (mode) {
+      case PaymentMode.upi:
+        return 0;
+      case PaymentMode.wallet:
+        return 1;
+      case PaymentMode.cod:
+        return 2;
+      case PaymentMode.card:
+        return 3;
+      case PaymentMode.netBanking:
+        return 4;
+    }
+  }
 
   Future<void> placeOrder() async {
     ShowToastDialog.showLoader("Please wait");
-    if (selectedPaymentMethod.value == PaymentGateway.wallet.name) {
-      if (double.parse(userModel.value.walletAmount.toString()) >= totalAmount.value) {
-        setOrder();
-      } else {
-        ShowToastDialog.closeLoader();
-        ShowToastDialog.showToast("You don't have sufficient wallet balance to place order");
-      }
+    final split = walletSplitResult;
+    if (split.walletAppliedAmount > walletBalance) {
+      isOrderPlaced.value = false;
+      ShowToastDialog.closeLoader();
+      ShowToastDialog.showToast(
+          "You don't have sufficient wallet balance to place order");
     } else {
-      setOrder();
+      await setOrder();
     }
   }
 
   Future<void> setOrder() async {
     ShowToastDialog.closeLoader();
     ShowToastDialog.showLoader("Please wait");
-    if ((Constant.isSubscriptionModelApplied == true || Constant.adminCommission?.isEnabled == true) && vendorModel.value.subscriptionPlan != null) {
-      await FireStoreUtils.getVendorById(vendorModel.value.id!).then((vender) async {
-        if (vender?.subscriptionTotalOrders == '0' || vender?.subscriptionTotalOrders == null) {
+    if ((Constant.isSubscriptionModelApplied == true ||
+            Constant.adminCommission?.isEnabled == true) &&
+        vendorModel.value.subscriptionPlan != null) {
+      await FireStoreUtils.getVendorById(vendorModel.value.id!)
+          .then((vender) async {
+        if (vender?.subscriptionTotalOrders == '0' ||
+            vender?.subscriptionTotalOrders == null) {
           ShowToastDialog.closeLoader();
-          ShowToastDialog.showToast("This vendor has reached their maximum order capacity. Please select a different vendor or try again later.");
+          ShowToastDialog.showToast(
+              "This vendor has reached their maximum order capacity. Please select a different vendor or try again later.");
           return;
         }
       });
     }
 
+    tempProduc.clear();
     for (CartProductModel cartProduct in cartItem) {
       CartProductModel tempCart = cartProduct;
       if (cartProduct.extrasPrice == '0') {
@@ -673,7 +1132,16 @@ class CartController extends GetxController {
       tempProduc.add(tempCart);
     }
 
-    Map<String, dynamic> specialDiscountMap = {'special_discount': specialDiscountAmount.value, 'special_discount_label': specialDiscount.value, 'specialType': specialType.value};
+    Map<String, dynamic> specialDiscountMap = {
+      'special_discount': specialDiscountAmount.value,
+      'special_discount_label': specialDiscount.value,
+      'specialType': specialType.value
+    };
+    final paymentBreakdown = buildPaymentBreakdown(
+      onlineStatus: isSelectedModeOnline
+          ? PaymentComponentStatus.success
+          : PaymentComponentStatus.pending,
+    );
 
     OrderModel orderModel = OrderModel();
     orderModel.id = Constant.getUuid();
@@ -682,12 +1150,17 @@ class CartController extends GetxController {
     orderModel.author = userModel.value;
     orderModel.vendorID = vendorModel.value.id;
     orderModel.vendor = vendorModel.value;
-    orderModel.adminCommission = vendorModel.value.adminCommission != null ? vendorModel.value.adminCommission!.amount : Constant.adminCommission!.amount;
-    orderModel.adminCommissionType = vendorModel.value.adminCommission != null ? vendorModel.value.adminCommission!.commissionType : Constant.adminCommission!.commissionType;
+    orderModel.adminCommission = vendorModel.value.adminCommission != null
+        ? vendorModel.value.adminCommission!.amount
+        : Constant.adminCommission!.amount;
+    orderModel.adminCommissionType = vendorModel.value.adminCommission != null
+        ? vendorModel.value.adminCommission!.commissionType
+        : Constant.adminCommission!.commissionType;
     orderModel.status = Constant.orderPlaced;
     orderModel.discount = couponAmount.value;
     orderModel.couponId = selectedCouponModel.value.id;
-    orderModel.paymentMethod = selectedPaymentMethod.value;
+    orderModel.paymentMethod = legacyCheckoutPaymentMethod;
+    orderModel.paymentBreakdown = paymentBreakdown;
     orderModel.products = cartItem;
     orderModel.specialDiscount = specialDiscountMap;
     orderModel.couponCode = selectedCouponModel.value.code;
@@ -696,10 +1169,14 @@ class CartController extends GetxController {
     orderModel.notes = reMarkController.value.text;
     orderModel.takeAway = selectedFoodType.value == "Delivery" ? false : true;
     orderModel.createdAt = Timestamp.now();
-    orderModel.scheduleTime = deliveryType.value == "schedule" ? Timestamp.fromDate(scheduleDateTime.value) : null;
-    orderModel.cashback = bestCashback.value.id == null ? null : bestCashback.value;
+    orderModel.scheduleTime = deliveryType.value == "schedule"
+        ? Timestamp.fromDate(scheduleDateTime.value)
+        : null;
+    orderModel.cashback =
+        bestCashback.value.id == null ? null : bestCashback.value;
     orderModel.isFreeDelivery = isEnableFreeDeliveryByAdmin.value;
-    orderModel.taxSetting = Constant.taxScope == "order" ? Constant.orderProductTaxList : [];
+    orderModel.taxSetting =
+        Constant.taxScope == "order" ? Constant.orderProductTaxList : [];
     orderModel.driverDeliveryTax = Constant.driverDeliveryTaxList;
     orderModel.packagingTax = Constant.packagingTaxList;
     orderModel.platformTax = Constant.platformTaxList;
@@ -708,10 +1185,10 @@ class CartController extends GetxController {
     orderModel.isPosOrder = false;
     orderModel.vendor?.packagingCharge = packagingCharge.value.toString();
 
-    if (selectedPaymentMethod.value == PaymentGateway.wallet.name) {
+    if (paymentBreakdown.walletAppliedAmount > 0) {
       WalletTransactionModel transactionModel = WalletTransactionModel(
           id: Constant.getUuid(),
-          amount: double.parse(totalAmount.value.toString()),
+          amount: paymentBreakdown.walletAppliedAmount,
           date: Timestamp.now(),
           paymentMethod: PaymentGateway.wallet.name,
           transactionUser: "user",
@@ -721,32 +1198,60 @@ class CartController extends GetxController {
           note: "Order Amount debited",
           paymentStatus: "success");
 
-      await FireStoreUtils.setWalletTransaction(transactionModel).then((value) async {
-        if (value == true) {
-          await FireStoreUtils.updateUserWallet(amount: "-${totalAmount.value.toString()}", userId: FireStoreUtils.getCurrentUid()).then((value) {});
+      final transactionAdded =
+          await FireStoreUtils.setWalletTransaction(transactionModel);
+      if (transactionAdded == true) {
+        final walletUpdated = await FireStoreUtils.updateUserWallet(
+          amount: "-${paymentBreakdown.walletAppliedAmount.toString()}",
+          userId: FireStoreUtils.getCurrentUid(),
+        );
+        if (walletUpdated != true) {
+          isOrderPlaced.value = false;
+          ShowToastDialog.closeLoader();
+          ShowToastDialog.showToast(
+              "Unable to debit wallet. Please try another payment method.");
+          return;
         }
-      });
+      } else {
+        isOrderPlaced.value = false;
+        ShowToastDialog.closeLoader();
+        ShowToastDialog.showToast(
+            "Unable to debit wallet. Please try another payment method.");
+        return;
+      }
     }
     for (int i = 0; i < tempProduc.length; i++) {
-      await FireStoreUtils.getProductById(tempProduc[i].id!.split('~').first).then((value) async {
+      await FireStoreUtils.getProductById(tempProduc[i].id!.split('~').first)
+          .then((value) async {
         ProductModel? productModel = value;
         if (tempProduc[i].variantInfo != null) {
           if (productModel!.itemAttribute != null) {
-            for (int j = 0; j < productModel.itemAttribute!.variants!.length; j++) {
-              if (productModel.itemAttribute!.variants![j].variantId == tempProduc[i].id!.split('~').last) {
-                if (productModel.itemAttribute!.variants![j].variantQuantity != "-1") {
-                  productModel.itemAttribute!.variants![j].variantQuantity = (int.parse(productModel.itemAttribute!.variants![j].variantQuantity.toString()) - tempProduc[i].quantity!).toString();
+            for (int j = 0;
+                j < productModel.itemAttribute!.variants!.length;
+                j++) {
+              if (productModel.itemAttribute!.variants![j].variantId ==
+                  tempProduc[i].id!.split('~').last) {
+                if (productModel.itemAttribute!.variants![j].variantQuantity !=
+                    "-1") {
+                  productModel.itemAttribute!.variants![j].variantQuantity =
+                      (int.parse(productModel
+                                  .itemAttribute!.variants![j].variantQuantity
+                                  .toString()) -
+                              tempProduc[i].quantity!)
+                          .toString();
                 }
               }
             }
           } else {
             if (productModel.quantity != -1) {
-              productModel.quantity = (productModel.quantity! - tempProduc[i].quantity!);
+              productModel.quantity =
+                  (productModel.quantity! - tempProduc[i].quantity!);
             }
           }
         } else {
           if (productModel!.quantity != -1) {
-            productModel.quantity = (productModel.quantity! - tempProduc[i].quantity!);
+            productModel.quantity =
+                (productModel.quantity! - tempProduc[i].quantity!);
           }
         }
 
@@ -764,13 +1269,16 @@ class CartController extends GetxController {
       await FireStoreUtils.setCashbackRedeemModel(cashbackRedeemModel);
     }
     Constant.sendOrderEmail(orderModel: orderModel);
-    await FireStoreUtils.getUserProfile(orderModel.vendor!.author.toString()).then(
+    await FireStoreUtils.getUserProfile(orderModel.vendor!.author.toString())
+        .then(
       (value) async {
         if (value != null) {
           if (orderModel.scheduleTime != null) {
-            SendNotification.sendFcmMessage(Constant.scheduleOrder, value.fcmToken ?? '', {});
+            SendNotification.sendFcmMessage(
+                Constant.scheduleOrder, value.fcmToken ?? '', {});
           } else {
-            SendNotification.sendFcmMessage(Constant.newOrderPlaced, value.fcmToken ?? '', {});
+            SendNotification.sendFcmMessage(
+                Constant.newOrderPlaced, value.fcmToken ?? '', {});
           }
         }
       },
@@ -778,7 +1286,8 @@ class CartController extends GetxController {
     await FireStoreUtils.setOrder(orderModel).then(
       (value) async {
         ShowToastDialog.closeLoader();
-        Get.off(const OrderPlacingScreen(), arguments: {"orderModel": orderModel});
+        Get.off(const OrderPlacingScreen(),
+            arguments: {"orderModel": orderModel});
       },
     );
   }
@@ -803,85 +1312,90 @@ class CartController extends GetxController {
   Rx<Foloosi> foloosiModel = Foloosi().obs;
   Rx<PayMongo> payMongoModel = PayMongo().obs;
   Rx<Cashfree> cashfreeModel = Cashfree().obs;
+  Rx<PaymentGatewayConfig> checkoutPaymentGatewayConfig =
+      PaymentGatewayConfig.noOnlineGateway().obs;
+  Rx<ActiveGatewayResolution> activeGatewayResolution =
+      const ActiveGatewayResolution().obs;
+  final ActivePaymentGatewayResolver activeGatewayResolver =
+      const ActivePaymentGatewayResolver();
   RxBool isLoading = true.obs;
 
   Future<void> getPaymentSettings() async {
-    await FireStoreUtils.getPaymentSettingsData().then(
-      (value) async {
-        isLoading.value = false;
-        stripeModel.value = StripeModel.fromJson(jsonDecode(Preferences.getString(Preferences.stripeSettings)));
-        payPalModel.value = PayPalModel.fromJson(jsonDecode(Preferences.getString(Preferences.paypalSettings)));
-        payStackModel.value = PayStackModel.fromJson(jsonDecode(Preferences.getString(Preferences.payStack)));
-        mercadoPagoModel.value = MercadoPagoModel.fromJson(jsonDecode(Preferences.getString(Preferences.mercadoPago)));
-        flutterWaveModel.value = FlutterWaveModel.fromJson(jsonDecode(Preferences.getString(Preferences.flutterWave)));
-        paytmModel.value = PaytmModel.fromJson(jsonDecode(Preferences.getString(Preferences.paytmSettings)));
-        payFastModel.value = PayFastModel.fromJson(jsonDecode(Preferences.getString(Preferences.payFastSettings)));
-        razorPayModel.value = RazorPayModel.fromJson(jsonDecode(Preferences.getString(Preferences.razorpaySettings)));
-        midTransModel.value = MidTrans.fromJson(jsonDecode(Preferences.getString(Preferences.midTransSettings)));
-        orangeMoneyModel.value = OrangeMoney.fromJson(jsonDecode(Preferences.getString(Preferences.orangeMoneySettings)));
-        xenditModel.value = Xendit.fromJson(jsonDecode(Preferences.getString(Preferences.xenditSettings)));
-        mtnMomoModel.value = MtnMomo.fromJson(jsonDecode(Preferences.getString(Preferences.mtnMomoSettings)));
-        phonePeModel.value = PhonePe.fromJson(jsonDecode(Preferences.getString(Preferences.phonePaySettings)));
-        instamojoModel.value = Instamojo.fromJson(jsonDecode(Preferences.getString(Preferences.instamojoSettings)));
-        foloosiModel.value = Foloosi.fromJson(jsonDecode(Preferences.getString(Preferences.foloosiSettings)));
-        payMongoModel.value = PayMongo.fromJson(jsonDecode(Preferences.getString(Preferences.payMongoSettings)));
-        cashfreeModel.value = Cashfree.fromJson(jsonDecode(Preferences.getString(Preferences.cashFreeSettings)));
-        walletSettingModel.value = WalletSettingModel.fromJson(jsonDecode(Preferences.getString(Preferences.walletSettings)));
-        cashOnDeliverySettingModel.value = CodSettingModel.fromJson(jsonDecode(Preferences.getString(Preferences.codSettings)));
+    isLoading.value = true;
+    selectedPaymentMethod.value = '';
+    try {
+      checkoutPaymentGatewayConfig.value =
+          await FireStoreUtils.getCheckoutPaymentGatewayConfig();
+      activeGatewayResolution.value =
+          activeGatewayResolver.resolve(checkoutPaymentGatewayConfig.value);
 
-        if (walletSettingModel.value.isEnabled == true) {
-          selectedPaymentMethod.value = PaymentGateway.wallet.name;
-        } else if (cashOnDeliverySettingModel.value.isEnabled == true) {
-          selectedPaymentMethod.value = PaymentGateway.cod.name;
-        } else if (stripeModel.value.isEnabled == true) {
-          selectedPaymentMethod.value = PaymentGateway.stripe.name;
-        } else if (payPalModel.value.isEnabled == true) {
-          selectedPaymentMethod.value = PaymentGateway.paypal.name;
-        } else if (payStackModel.value.isEnable == true) {
-          selectedPaymentMethod.value = PaymentGateway.payStack.name;
-        } else if (mercadoPagoModel.value.isEnabled == true) {
-          selectedPaymentMethod.value = PaymentGateway.mercadoPago.name;
-        } else if (flutterWaveModel.value.isEnable == true) {
-          selectedPaymentMethod.value = PaymentGateway.flutterWave.name;
-        } else if (paytmModel.value.isEnabled == true) {
-          selectedPaymentMethod.value = PaymentGateway.paytm.name;
-        } else if (payFastModel.value.isEnable == true) {
-          selectedPaymentMethod.value = PaymentGateway.payFast.name;
-        } else if (razorPayModel.value.isEnabled == true) {
-          selectedPaymentMethod.value = PaymentGateway.razorpay.name;
-        } else if (midTransModel.value.enable == true) {
-          selectedPaymentMethod.value = PaymentGateway.midTrans.name;
-        } else if (orangeMoneyModel.value.enable == true) {
-          selectedPaymentMethod.value = PaymentGateway.orangeMoney.name;
-        } else if (xenditModel.value.enable == true) {
-          selectedPaymentMethod.value = PaymentGateway.xendit.name;
-        } else if (mtnMomoModel.value.enable == true) {
-          selectedPaymentMethod.value = PaymentGateway.phonePe.name;
-        } else if (xenditModel.value.enable == true) {
-          selectedPaymentMethod.value = PaymentGateway.xendit.name;
-        } else if (mtnMomoModel.value.enable == true) {
-          selectedPaymentMethod.value = PaymentGateway.mtnMomo.name;
-        } else if (phonePeModel.value.enable == true) {
-          selectedPaymentMethod.value = PaymentGateway.phonePe.name;
-        } else if (instamojoModel.value.enable == true) {
-          selectedPaymentMethod.value = PaymentGateway.instamojo.name;
-        } else if (foloosiModel.value.enable == true) {
-          selectedPaymentMethod.value = PaymentGateway.foloosi.name;
-        } else if (payMongoModel.value.enable == true) {
-          selectedPaymentMethod.value = PaymentGateway.payMongo.name;
-        } else if (cashfreeModel.value.enable == true) {
-          selectedPaymentMethod.value = PaymentGateway.cashfree.name;
-        }
-        Stripe.publishableKey = stripeModel.value.clientpublishableKey.toString();
-        Stripe.merchantIdentifier = 'Eatsipy Customer';
-        Stripe.instance.applySettings();
-        setRef();
+      await FireStoreUtils.getCheckoutPaymentSettingsData(
+          activeGatewayResolution.value.gateway);
 
+      razorPayModel.value = RazorPayModel.fromJson(
+          _paymentSettingJson(Preferences.razorpaySettings));
+      phonePeModel.value =
+          PhonePe.fromJson(_paymentSettingJson(Preferences.phonePaySettings));
+      cashfreeModel.value =
+          Cashfree.fromJson(_paymentSettingJson(Preferences.cashFreeSettings));
+      walletSettingModel.value = WalletSettingModel.fromJson(
+          _paymentSettingJson(Preferences.walletSettings));
+      cashOnDeliverySettingModel.value = CodSettingModel.fromJson(
+          _paymentSettingJson(Preferences.codSettings));
+
+      selectedPaymentMethod.value = _defaultPaymentMethod();
+
+      setRef();
+
+      if (activeGatewayResolution.value.gateway ==
+          PaymentGatewayType.razorpay) {
         razorPay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccess);
         razorPay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWaller);
         razorPay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentError);
-      },
-    );
+      }
+    } catch (error, stackTrace) {
+      debugPrint('Payment settings failed to load: $error');
+      debugPrintStack(stackTrace: stackTrace);
+      selectedPaymentMethod.value = '';
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Map<String, dynamic> _paymentSettingJson(String key) {
+    final rawValue = Preferences.getString(key);
+    if (rawValue.trim().isEmpty) {
+      return <String, dynamic>{};
+    }
+    try {
+      final decoded = jsonDecode(rawValue);
+      if (decoded is Map<String, dynamic>) {
+        return decoded;
+      }
+      if (decoded is Map) {
+        return Map<String, dynamic>.from(decoded);
+      }
+    } catch (error) {
+      debugPrint('Invalid payment setting for $key: $error');
+    }
+    return <String, dynamic>{};
+  }
+
+  String _defaultPaymentMethod() {
+    if (cashOnDeliverySettingModel.value.isEnabled == true) {
+      return PaymentMode.cod.name;
+    }
+    if (activeGatewayResolution.value.availableOnlineModes
+        .contains(PaymentMode.upi)) {
+      return PaymentMode.upi.name;
+    }
+    if (activeGatewayResolution.value.availableOnlineModes.isNotEmpty) {
+      return activeGatewayResolution.value.availableOnlineModes.first.name;
+    }
+    if (walletSettingModel.value.isEnabled == true) {
+      return PaymentMode.wallet.name;
+    }
+    return '';
   }
 
   // Strip
@@ -890,12 +1404,14 @@ class CartController extends GetxController {
     try {
       ShowToastDialog.showLoader("Please wait");
       await Stripe.instance.resetPaymentSheetCustomer();
-      Map<String, dynamic>? paymentIntentData = await createStripeIntent(amount: amount);
+      Map<String, dynamic>? paymentIntentData =
+          await createStripeIntent(amount: amount);
       log("stripe Responce====>$paymentIntentData");
       if (paymentIntentData!.containsKey("error")) {
         Get.back();
         ShowToastDialog.closeLoader();
-        ShowToastDialog.showToast("Something went wrong, please contact admin.");
+        ShowToastDialog.showToast(
+            "Something went wrong, please contact admin.");
       } else {
         await Stripe.instance.initPaymentSheet(
             paymentSheetParameters: SetupPaymentSheetParameters(
@@ -955,8 +1471,13 @@ class CartController extends GetxController {
         "shipping[address][country]": "US",
       };
       var stripeSecret = stripeModel.value.stripeSecret;
-      var response =
-          await http.post(Uri.parse('https://api.stripe.com/v1/payment_intents'), body: body, headers: {'Authorization': 'Bearer $stripeSecret', 'Content-Type': 'application/x-www-form-urlencoded'});
+      var response = await http.post(
+          Uri.parse('https://api.stripe.com/v1/payment_intents'),
+          body: body,
+          headers: {
+            'Authorization': 'Bearer $stripeSecret',
+            'Content-Type': 'application/x-www-form-urlencoded'
+          });
 
       return jsonDecode(response.body);
     } catch (e) {
@@ -966,7 +1487,8 @@ class CartController extends GetxController {
   }
 
   //mercadoo
-  Future<Null> mercadoPagoMakePayment({required BuildContext context, required String amount}) async {
+  Future<Null> mercadoPagoMakePayment(
+      {required BuildContext context, required String amount}) async {
     ShowToastDialog.showLoader("Please wait");
     final headers = {
       'Authorization': 'Bearer ${mercadoPagoModel.value.accessToken}',
@@ -989,7 +1511,8 @@ class CartController extends GetxController {
         "pending": "${Constant.globalUrl}payment/pending",
         "success": "${Constant.globalUrl}payment/success",
       },
-      "auto_return": "approved" // Automatically return after payment is approved
+      "auto_return":
+          "approved" // Automatically return after payment is approved
     });
 
     final response = await http.post(
@@ -1012,7 +1535,8 @@ class CartController extends GetxController {
       });
     } else {
       ShowToastDialog.closeLoader();
-      ShowToastDialog.showToast("Unable to initialize payment, credentials are invalid or not authorized.Please check credentials, environment (sandbox/live), and account region.");
+      ShowToastDialog.showToast(
+          "Unable to initialize payment, credentials are invalid or not authorized.Please check credentials, environment (sandbox/live), and account region.");
       print('Error creating preference: ${response.body}');
       return null;
     }
@@ -1020,7 +1544,8 @@ class CartController extends GetxController {
 
 //Paypal
   void paypalPaymentSheet(String amount, context) {
-    String amountData = double.parse(amount).toStringAsFixed(Constant.currencyModel?.decimalDigits ?? 2);
+    String amountData = double.parse(amount)
+        .toStringAsFixed(Constant.currencyModel?.decimalDigits ?? 2);
     ShowToastDialog.closeLoader();
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -1059,7 +1584,11 @@ class CartController extends GetxController {
   ///PayStack Payment Method
   Future<void> payStackPayment(String totalAmount) async {
     ShowToastDialog.showLoader("Please wait");
-    await PayStackURLGen.payStackURLGen(amount: (double.parse(totalAmount) * 100).toStringAsFixed(0), currency: "ZAR", secretKey: payStackModel.value.secretKey.toString(), userModel: userModel.value)
+    await PayStackURLGen.payStackURLGen(
+            amount: (double.parse(totalAmount) * 100).toStringAsFixed(0),
+            currency: "ZAR",
+            secretKey: payStackModel.value.secretKey.toString(),
+            userModel: userModel.value)
         .then((value) async {
       if (value != null) {
         PayStackUrlModel payStackModel0 = value;
@@ -1081,13 +1610,15 @@ class CartController extends GetxController {
         });
       } else {
         ShowToastDialog.closeLoader();
-        ShowToastDialog.showToast("Something went wrong, please contact admin.");
+        ShowToastDialog.showToast(
+            "Something went wrong, please contact admin.");
       }
     });
   }
 
   //flutter wave Payment Method
-  Future<Null> flutterWaveInitiatePayment({required BuildContext context, required String amount}) async {
+  Future<Null> flutterWaveInitiatePayment(
+      {required BuildContext context, required String amount}) async {
     ShowToastDialog.showLoader("Please wait");
     final url = Uri.parse('https://api.flutterwave.com/v3/payments');
     final headers = {
@@ -1117,7 +1648,8 @@ class CartController extends GetxController {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
 
-      Get.to(MercadoPagoScreen(initialURl: data['data']['link']))!.then((value) {
+      Get.to(MercadoPagoScreen(initialURl: data['data']['link']))!
+          .then((value) {
         ShowToastDialog.closeLoader();
         if (value == true) {
           ShowToastDialog.showToast("Payment Successful!!");
@@ -1128,7 +1660,8 @@ class CartController extends GetxController {
       });
     } else {
       ShowToastDialog.closeLoader();
-      ShowToastDialog.showToast("Unable to initialize payment, credentials are invalid or not authorized.Please check credentials, environment (sandbox/live), and account region.");
+      ShowToastDialog.showToast(
+          "Unable to initialize payment, credentials are invalid or not authorized.Please check credentials, environment (sandbox/live), and account region.");
       return null;
     }
   }
@@ -1149,8 +1682,13 @@ class CartController extends GetxController {
   // payFast
   void payFastPayment({required BuildContext context, required String amount}) {
     ShowToastDialog.showLoader("Please wait");
-    PayStackURLGen.getPayHTML(payFastSettingData: payFastModel.value, amount: amount.toString(), userModel: userModel.value).then((String? value) async {
-      bool isDone = await Get.to(PayFastScreen(htmlData: value!, payFastSettingData: payFastModel.value));
+    PayStackURLGen.getPayHTML(
+            payFastSettingData: payFastModel.value,
+            amount: amount.toString(),
+            userModel: userModel.value)
+        .then((String? value) async {
+      bool isDone = await Get.to(PayFastScreen(
+          htmlData: value!, payFastSettingData: payFastModel.value));
       ShowToastDialog.closeLoader();
       if (isDone) {
         ShowToastDialog.showToast("Payment successfully");
@@ -1179,24 +1717,38 @@ class CartController extends GetxController {
         });
 
     final data = jsonDecode(response.body);
-    await verifyCheckSum(checkSum: data["code"], amount: amount, orderId: orderId).then((value) {
+    await verifyCheckSum(
+            checkSum: data["code"], amount: amount, orderId: orderId)
+        .then((value) {
       initiatePayment(amount: amount, orderId: orderId).then((value) {
         if (value != null) {
           String callback = "";
           if (paytmModel.value.isSandboxEnabled == true) {
-            callback = "${callback}https://securegw-stage.paytm.in/theia/paytmCallback?ORDER_ID=$orderId";
+            callback =
+                "${callback}https://securegw-stage.paytm.in/theia/paytmCallback?ORDER_ID=$orderId";
           } else {
-            callback = "${callback}https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=$orderId";
+            callback =
+                "${callback}https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=$orderId";
           }
 
           GetPaymentTxtTokenModel result = value;
-          startTransaction(context, txnTokenBy: result.body.txnToken, orderId: orderId, amount: amount, callBackURL: callback, isStaging: paytmModel.value.isSandboxEnabled);
+          startTransaction(context,
+              txnTokenBy: result.body.txnToken,
+              orderId: orderId,
+              amount: amount,
+              callBackURL: callback,
+              isStaging: paytmModel.value.isSandboxEnabled);
         }
       });
     });
   }
 
-  Future<void> startTransaction(context, {required String txnTokenBy, required orderId, required double amount, required callBackURL, required isStaging}) async {
+  Future<void> startTransaction(context,
+      {required String txnTokenBy,
+      required orderId,
+      required double amount,
+      required callBackURL,
+      required isStaging}) async {
     // try {
     //   var response = AllInOneSdk.startTransaction(
     //     paytmModel.value.paytmMID.toString(),
@@ -1232,7 +1784,10 @@ class CartController extends GetxController {
     // }
   }
 
-  Future verifyCheckSum({required String checkSum, required double amount, required orderId}) async {
+  Future verifyCheckSum(
+      {required String checkSum,
+      required double amount,
+      required orderId}) async {
     String getChecksum = "${Constant.globalUrl}payments/validatechecksum";
     final response = await http.post(
         Uri.parse(
@@ -1249,15 +1804,19 @@ class CartController extends GetxController {
     return data['status'];
   }
 
-  Future<dynamic> initiatePayment({required double amount, required orderId}) async {
+  Future<dynamic> initiatePayment(
+      {required double amount, required orderId}) async {
     String initiateURL = "${Constant.globalUrl}payments/initiatepaytmpayment";
     String callback = "";
     if (paytmModel.value.isSandboxEnabled == true) {
-      callback = "${callback}https://securegw-stage.paytm.in/theia/paytmCallback?ORDER_ID=$orderId";
+      callback =
+          "${callback}https://securegw-stage.paytm.in/theia/paytmCallback?ORDER_ID=$orderId";
     } else {
-      callback = "${callback}https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=$orderId";
+      callback =
+          "${callback}https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=$orderId";
     }
-    final response = await http.post(Uri.parse(initiateURL), headers: {}, body: {
+    final response =
+        await http.post(Uri.parse(initiateURL), headers: {}, body: {
       "mid": paytmModel.value.paytmMID,
       "order_id": orderId,
       "key_secret": paytmModel.value.pAYTMMERCHANTKEY,
@@ -1269,7 +1828,8 @@ class CartController extends GetxController {
     });
     log(response.body);
     final data = jsonDecode(response.body);
-    if (data["body"]["txnToken"] == null || data["body"]["txnToken"].toString().isEmpty) {
+    if (data["body"]["txnToken"] == null ||
+        data["body"]["txnToken"].toString().isEmpty) {
       ShowToastDialog.showToast("something went wrong, please contact admin.");
       return null;
     }
@@ -1279,14 +1839,16 @@ class CartController extends GetxController {
   ///RazorPay payment function
   final Razorpay razorPay = Razorpay();
 
-  void openCheckout({required amount, required orderId}) async {
+  Future<void> openCheckout(
+      {required dynamic amount, required String orderId}) async {
+    final checkoutAmount = (double.tryParse(amount.toString()) ?? 0) * 100;
     var options = {
       'key': razorPayModel.value.razorpayKey,
-      'amount': amount * 100,
+      'amount': checkoutAmount.round(),
       'name': 'Eatsipy',
       'order_id': orderId,
       "currency": "INR",
-      'description': 'wallet Topup',
+      'description': 'Order Payment',
       'retry': {'enabled': true, 'max_count': 1},
       'send_sms_hash': true,
       'prefill': {
@@ -1317,6 +1879,8 @@ class CartController extends GetxController {
   }
 
   void handlePaymentError(PaymentFailureResponse response) {
+    isOrderPlaced.value = false;
+    ShowToastDialog.closeLoader();
     ShowToastDialog.showToast("Payment Failed!!");
   }
 
@@ -1326,7 +1890,8 @@ class CartController extends GetxController {
   }
 
   //Midtrans payment
-  Future<void> midtransMakePayment({required String amount, required BuildContext context}) async {
+  Future<void> midtransMakePayment(
+      {required String amount, required BuildContext context}) async {
     ShowToastDialog.showLoader("Please wait");
     await createPaymentLink(amount: amount).then((url) async {
       if (url != '') {
@@ -1345,14 +1910,17 @@ class CartController extends GetxController {
 
   Future<String> createPaymentLink({required var amount}) async {
     var ordersId = const Uuid().v1();
-    final url = Uri.parse(midTransModel.value.isSandbox! ? 'https://api.sandbox.midtrans.com/v1/payment-links' : 'https://api.midtrans.com/v1/payment-links');
+    final url = Uri.parse(midTransModel.value.isSandbox!
+        ? 'https://api.sandbox.midtrans.com/v1/payment-links'
+        : 'https://api.midtrans.com/v1/payment-links');
 
     final response = await http.post(
       url,
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': generateBasicAuthHeader(midTransModel.value.serverKey!),
+        'Authorization':
+            generateBasicAuthHeader(midTransModel.value.serverKey!),
       },
       body: jsonEncode({
         'transaction_details': {
@@ -1360,7 +1928,9 @@ class CartController extends GetxController {
           'gross_amount': double.parse(amount.toString()).toInt(),
         },
         'usage_limit': 2,
-        "callbacks": {"finish": "https://www.google.com?merchant_order_id=$ordersId"},
+        "callbacks": {
+          "finish": "https://www.google.com?merchant_order_id=$ordersId"
+        },
       }),
     );
 
@@ -1385,11 +1955,13 @@ class CartController extends GetxController {
   static String orderId = '';
   static String amount = '';
 
-  Future<void> orangeMakePayment({required String amount, required BuildContext context}) async {
+  Future<void> orangeMakePayment(
+      {required String amount, required BuildContext context}) async {
     reset();
     var id = const Uuid().v4();
     ShowToastDialog.showLoader("Please wait");
-    var paymentURL = await fetchToken(context: context, orderId: id, amount: amount, currency: 'USD');
+    var paymentURL = await fetchToken(
+        context: context, orderId: id, amount: amount, currency: 'USD');
     if (paymentURL.toString() != '') {
       Get.to(() => OrangeMoneyScreen(
                 initialURl: paymentURL,
@@ -1412,7 +1984,11 @@ class CartController extends GetxController {
     }
   }
 
-  Future fetchToken({required String orderId, required String currency, required BuildContext context, required String amount}) async {
+  Future fetchToken(
+      {required String orderId,
+      required String currency,
+      required BuildContext context,
+      required String amount}) async {
     String apiUrl = 'https://api.orange.com/oauth/v3/token';
     Map<String, String> requestBody = {
       'grant_type': 'client_credentials',
@@ -1433,17 +2009,27 @@ class CartController extends GetxController {
 
       accessToken = responseData['access_token'];
       // ignore: use_build_context_synchronously
-      return await webpayment(context: context, amountData: amount, currency: currency, orderIdData: orderId);
+      return await webpayment(
+          context: context,
+          amountData: amount,
+          currency: currency,
+          orderIdData: orderId);
     } else {
       ShowToastDialog.showToast("Something went wrong, please contact admin.");
       return '';
     }
   }
 
-  Future webpayment({required String orderIdData, required BuildContext context, required String currency, required String amountData}) async {
+  Future webpayment(
+      {required String orderIdData,
+      required BuildContext context,
+      required String currency,
+      required String amountData}) async {
     orderId = orderIdData;
     amount = amountData;
-    String apiUrl = orangeMoneyModel.value.isSandbox! == true ? 'https://api.orange.com/orange-money-webpay/dev/v1/webpayment' : 'https://api.orange.com/orange-money-webpay/cm/v1/webpayment';
+    String apiUrl = orangeMoneyModel.value.isSandbox! == true
+        ? 'https://api.orange.com/orange-money-webpay/dev/v1/webpayment'
+        : 'https://api.orange.com/orange-money-webpay/cm/v1/webpayment';
     Map<String, String> requestBody = {
       "merchant_key": orangeMoneyModel.value.merchantKey ?? '',
       "currency": orangeMoneyModel.value.isSandbox == true ? "OUV" : currency,
@@ -1458,7 +2044,11 @@ class CartController extends GetxController {
 
     var response = await http.post(
       Uri.parse(apiUrl),
-      headers: <String, String>{'Authorization': 'Bearer $accessToken', 'Content-Type': 'application/json', 'Accept': 'application/json'},
+      headers: <String, String>{
+        'Authorization': 'Bearer $accessToken',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
       body: json.encode(requestBody),
     );
 
@@ -1512,7 +2102,8 @@ class CartController extends GetxController {
     const url = 'https://api.xendit.co/v2/invoices';
     var headers = {
       'Content-Type': 'application/json',
-      'Authorization': generateBasicAuthHeader(xenditModel.value.apiKey!.toString()),
+      'Authorization':
+          generateBasicAuthHeader(xenditModel.value.apiKey!.toString()),
       // 'Cookie': '__cf_bm=yERkrx3xDITyFGiou0bbKY1bi7xEwovHNwxV1vCNbVc-1724155511-1.0.1.1-jekyYQmPCwY6vIJ524K0V6_CEw6O.dAwOmQnHtwmaXO_MfTrdnmZMka0KZvjukQgXu5B.K_6FJm47SGOPeWviQ',
     };
 
@@ -1525,7 +2116,8 @@ class CartController extends GetxController {
     });
 
     try {
-      final response = await http.post(Uri.parse(url), headers: headers, body: body);
+      final response =
+          await http.post(Uri.parse(url), headers: headers, body: body);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         XenditModel model = XenditModel.fromJson(jsonDecode(response.body));
@@ -1547,8 +2139,10 @@ class CartController extends GetxController {
       if (day == element.day.toString()) {
         if (element.timeslot!.isNotEmpty) {
           for (var element in element.timeslot!) {
-            var start = DateFormat("dd-MM-yyyy HH:mm").parse("$date ${element.from}");
-            var end = DateFormat("dd-MM-yyyy HH:mm").parse("$date ${element.to}");
+            var start =
+                DateFormat("dd-MM-yyyy HH:mm").parse("$date ${element.from}");
+            var end =
+                DateFormat("dd-MM-yyyy HH:mm").parse("$date ${element.to}");
             if (isCurrentDateInRange(start, end)) {
               isOpen = true;
             }
@@ -1562,7 +2156,8 @@ class CartController extends GetxController {
   Future<void> mtnMomoMakePayment({required String amount}) async {
     ShowToastDialog.showLoader("Please wait..");
     try {
-      var paymentURL = await MtnMomoController.apiuserAPI(mtnMomo: mtnMomoModel.value);
+      var paymentURL =
+          await MtnMomoController.apiuserAPI(mtnMomo: mtnMomoModel.value);
       if (paymentURL != '') {
         ShowToastDialog.closeLoader();
         Get.to(MtnPaymentScreen(
@@ -1574,6 +2169,7 @@ class CartController extends GetxController {
             ShowToastDialog.showToast("Payment Successful!!");
             placeOrder();
           } else {
+            isOrderPlaced.value = false;
             ShowToastDialog.showToast("Payment UnSuccessful!!");
           }
         });
@@ -1588,10 +2184,17 @@ class CartController extends GetxController {
     }
   }
 
-  Future<void> cashFreeMakePayment({required BuildContext context, required String amount, required String paymentDesc}) async {
+  Future<void> cashFreeMakePayment(
+      {required BuildContext context,
+      required String amount,
+      required String paymentDesc}) async {
     ShowToastDialog.showLoader("Please wait");
     await CashfreeService()
-        .createPaymentLink(cashfree: cashfreeModel.value, userModel: userModel.value, amount: double.parse(double.parse(amount).toStringAsFixed(2)), paymentDesc: paymentDesc)
+        .createPaymentLink(
+            cashfree: cashfreeModel.value,
+            userModel: userModel.value,
+            amount: double.parse(double.parse(amount).toStringAsFixed(2)),
+            paymentDesc: paymentDesc)
         .then((result) {
       if (result != null) {
         Get.to(WebUrlServiceScreen(initialURl: result))?.then((value) {
@@ -1605,20 +2208,24 @@ class CartController extends GetxController {
         });
         // final bool isDone = await Navigator.push(context, MaterialPageRoute(builder: (context) => MercadoPagoScreen(initialURl: result['response']['init_point'])));
       } else {
+        isOrderPlaced.value = false;
         ShowToastDialog.closeLoader();
         ShowToastDialog.showToast("Error while transaction!");
       }
     });
   }
 
-  Future<void> makeInstamojoPayment({required String amount, required String paymentDesc}) async {
+  Future<void> makeInstamojoPayment(
+      {required String amount, required String paymentDesc}) async {
     try {
       ShowToastDialog.showLoader("Please wait");
-      final token = await InstamojoService.getAccessToken(instamojoModel: instamojoModel.value);
+      final token = await InstamojoService.getAccessToken(
+          instamojoModel: instamojoModel.value);
       log("token :: $token");
       if (token == null) {
         ShowToastDialog.closeLoader();
-        ShowToastDialog.showToast("Unable to initialize payment, credentials are invalid or not authorized. Please check credentials, environment (sandbox/live), and account region.");
+        ShowToastDialog.showToast(
+            "Unable to initialize payment, credentials are invalid or not authorized. Please check credentials, environment (sandbox/live), and account region.");
         throw Exception("Token is null");
       }
 
@@ -1640,17 +2247,21 @@ class CartController extends GetxController {
         });
       } else {
         ShowToastDialog.closeLoader();
-        ShowToastDialog.showToast("Unable to initialize payment, credentials are invalid or not authorized. Please check credentials, environment (sandbox/live), and account region.");
+        ShowToastDialog.showToast(
+            "Unable to initialize payment, credentials are invalid or not authorized. Please check credentials, environment (sandbox/live), and account region.");
       }
     } catch (e) {
       ShowToastDialog.closeLoader();
-      ShowToastDialog.showToast("Unable to initialize payment, credentials are invalid or not authorized. Please check credentials, environment (sandbox/live), and account region.");
+      ShowToastDialog.showToast(
+          "Unable to initialize payment, credentials are invalid or not authorized. Please check credentials, environment (sandbox/live), and account region.");
       print("Payment Error: $e");
     }
   }
 
-  Future<void> makeFoloosiPayment({required String amount, required String paymentDesc}) async {
-    if (foloosiModel.value.merchantKey == '' || foloosiModel.value.merchantKey?.isEmpty == true) {
+  Future<void> makeFoloosiPayment(
+      {required String amount, required String paymentDesc}) async {
+    if (foloosiModel.value.merchantKey == '' ||
+        foloosiModel.value.merchantKey?.isEmpty == true) {
       ShowToastDialog.showToast("Foloosi merchant key is missing or invalid.");
       return;
     }
@@ -1686,7 +2297,8 @@ class CartController extends GetxController {
     }
   }
 
-  Future<void> makePayMongoPayment({required String amount, required String paymentDesc}) async {
+  Future<void> makePayMongoPayment(
+      {required String amount, required String paymentDesc}) async {
     try {
       ShowToastDialog.showLoader("Please wait");
       if (payMongoModel.value.secretKey == '') {
@@ -1702,7 +2314,8 @@ class CartController extends GetxController {
       String intentId = intentRes["data"]["id"];
       String clientKey = intentRes["data"]["attributes"]["client_key"];
 
-      final methodRes = await service.createPaymentMethodGCash(userModel: userModel.value);
+      final methodRes =
+          await service.createPaymentMethodGCash(userModel: userModel.value);
       String paymentMethodId = methodRes["data"]["id"];
 
       final attachRes = await service.attachPaymentMethod(
@@ -1711,7 +2324,8 @@ class CartController extends GetxController {
         clientKey: clientKey,
       );
 
-      String redirectUrl = attachRes["data"]["attributes"]["next_action"]["redirect"]["url"];
+      String redirectUrl =
+          attachRes["data"]["attributes"]["next_action"]["redirect"]["url"];
 
       Get.to(WebUrlServiceScreen(initialURl: redirectUrl))!.then((value) {
         ShowToastDialog.closeLoader();
