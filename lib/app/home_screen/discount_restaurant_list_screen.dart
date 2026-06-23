@@ -7,6 +7,7 @@ import 'package:eatsipy_customer/themes/app_them_data.dart';
 import 'package:eatsipy_customer/themes/responsive.dart';
 import 'package:eatsipy_customer/utils/dynamic_traslator.dart';
 import 'package:eatsipy_customer/utils/network_image_widget.dart';
+import 'package:eatsipy_customer/utils/quality/restaurant_card_image_resolver.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:eatsipy_customer/widget/translated_text.dart';
@@ -24,14 +25,16 @@ class DiscountRestaurantListScreen extends StatelessWidget {
         builder: (controller) {
           return Scaffold(
             appBar: AppBar(
-              backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
+              backgroundColor:
+                  isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
               centerTitle: false,
               titleSpacing: 0,
               title: TranslatedText(
                 controller.title.value,
                 textAlign: TextAlign.start,
                 style: TextStyle(
-                  fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
+                  fontFamily: 'Urbanist',
+                  fontWeight: FontWeight.w500,
                   fontSize: 16,
                   color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                 ),
@@ -49,35 +52,49 @@ class DiscountRestaurantListScreen extends StatelessWidget {
                         CouponModel offerModel = controller.couponList[index];
                         return InkWell(
                           onTap: () {
-                            Get.to(const RestaurantDetailsScreen(), arguments: {"vendorModel": vendorModel});
+                            Get.to(const RestaurantDetailsScreen(),
+                                arguments: {"vendorModel": vendorModel});
                           },
                           child: Padding(
                             padding: const EdgeInsets.only(bottom: 20),
                             child: Container(
                               decoration: ShapeDecoration(
-                                color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                color: isDark
+                                    ? AppThemeData.grey900
+                                    : AppThemeData.grey50,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16)),
                               ),
                               child: Row(
                                 children: [
                                   ClipRRect(
-                                    borderRadius: const BorderRadius.only(topLeft: Radius.circular(16), bottomLeft: Radius.circular(16)),
+                                    borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(16),
+                                        bottomLeft: Radius.circular(16)),
                                     child: Stack(
                                       children: [
                                         NetworkImageWidget(
-                                          imageUrl: vendorModel.photo.toString(),
+                                          imageUrl: RestaurantCardImageResolver
+                                              .resolveSingleUrl(vendorModel),
                                           fit: BoxFit.cover,
-                                          height: Responsive.height(16, context),
+                                          height:
+                                              Responsive.height(16, context),
                                           width: Responsive.width(28, context),
                                         ),
                                         Container(
-                                          height: Responsive.height(16, context),
+                                          height:
+                                              Responsive.height(16, context),
                                           width: Responsive.width(28, context),
                                           decoration: BoxDecoration(
                                             gradient: LinearGradient(
-                                              begin: const Alignment(-0.00, -1.00),
+                                              begin:
+                                                  const Alignment(-0.00, -1.00),
                                               end: const Alignment(0, 1),
-                                              colors: [Colors.black.withValues(alpha: 0), AppThemeData.grey900],
+                                              colors: [
+                                                Colors.black
+                                                    .withValues(alpha: 0),
+                                                AppThemeData.grey900
+                                              ],
                                             ),
                                           ),
                                         ),
@@ -86,19 +103,31 @@ class DiscountRestaurantListScreen extends StatelessWidget {
                                           left: 10,
                                           child: Container(
                                             decoration: ShapeDecoration(
-                                              color: isDark ? AppThemeData.secondary300 : AppThemeData.secondary300,
-                                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(120)),
+                                              color: isDark
+                                                  ? AppThemeData.secondary300
+                                                  : AppThemeData.secondary300,
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          120)),
                                             ),
                                             child: Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10,
+                                                      vertical: 4),
                                               child: Text(
                                                 "${offerModel.discountType == "Fix Price" ? "${Constant.currencyModel!.symbol}" : ""}${offerModel.discount}${offerModel.discountType == "Percentage" ? "% off".toUpperCase().tr : " off".toUpperCase().tr}",
                                                 textAlign: TextAlign.start,
                                                 maxLines: 1,
                                                 style: TextStyle(
-                                                  overflow: TextOverflow.ellipsis,
-                                                  fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
-                                                  color: isDark ? AppThemeData.grey50 : AppThemeData.grey50,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  fontFamily: 'Urbanist',
+                                                  fontWeight: FontWeight.w600,
+                                                  color: isDark
+                                                      ? AppThemeData.grey50
+                                                      : AppThemeData.grey50,
                                                 ),
                                               ),
                                             ),
@@ -109,9 +138,11 @@ class DiscountRestaurantListScreen extends StatelessWidget {
                                   ),
                                   Expanded(
                                     child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10),
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Row(
                                             children: [
@@ -122,9 +153,13 @@ class DiscountRestaurantListScreen extends StatelessWidget {
                                                   maxLines: 1,
                                                   style: TextStyle(
                                                     fontSize: 18,
-                                                    overflow: TextOverflow.ellipsis,
-                                                    fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
-                                                    color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    fontFamily: 'Urbanist',
+                                                    fontWeight: FontWeight.w600,
+                                                    color: isDark
+                                                        ? AppThemeData.grey50
+                                                        : AppThemeData.grey900,
                                                   ),
                                                 ),
                                               ),
@@ -132,7 +167,11 @@ class DiscountRestaurantListScreen extends StatelessWidget {
                                                 children: [
                                                   SvgPicture.asset(
                                                     "assets/icons/ic_star.svg",
-                                                    colorFilter: ColorFilter.mode(AppThemeData.primary300, BlendMode.srcIn),
+                                                    colorFilter:
+                                                        ColorFilter.mode(
+                                                            AppThemeData
+                                                                .primary300,
+                                                            BlendMode.srcIn),
                                                   ),
                                                   const SizedBox(
                                                     width: 5,
@@ -140,9 +179,14 @@ class DiscountRestaurantListScreen extends StatelessWidget {
                                                   Text(
                                                     "${Constant.calculateReview(reviewCount: vendorModel.reviewsCount!.toStringAsFixed(0), reviewSum: vendorModel.reviewsSum.toString())} (${vendorModel.reviewsCount!.toStringAsFixed(0)})",
                                                     style: TextStyle(
-                                                      color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
+                                                      color: isDark
+                                                          ? AppThemeData
+                                                              .primary300
+                                                          : AppThemeData
+                                                              .primary300,
                                                       fontFamily: 'Urbanist',
-                                                      fontWeight: FontWeight.w600,
+                                                      fontWeight:
+                                                          FontWeight.w600,
                                                     ),
                                                   ),
                                                 ],
@@ -153,22 +197,28 @@ class DiscountRestaurantListScreen extends StatelessWidget {
                                             height: 5,
                                           ),
                                           Row(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Icon(
                                                 Icons.location_on,
                                                 size: 18,
-                                                color: isDark ? AppThemeData.grey300 : AppThemeData.grey600,
+                                                color: isDark
+                                                    ? AppThemeData.grey300
+                                                    : AppThemeData.grey600,
                                               ),
                                               const SizedBox(width: 5),
                                               Expanded(
                                                 child: TranslatedText(
-                                                  vendorModel.location.toString(),
+                                                  vendorModel.location
+                                                      .toString(),
                                                   style: TextStyle(
                                                     fontFamily: 'Urbanist',
                                                     fontWeight: FontWeight.w500,
                                                     fontSize: 12,
-                                                    color: isDark ? AppThemeData.grey400 : AppThemeData.grey400,
+                                                    color: isDark
+                                                        ? AppThemeData.grey400
+                                                        : AppThemeData.grey400,
                                                   ),
                                                 ),
                                               ),
@@ -178,22 +228,36 @@ class DiscountRestaurantListScreen extends StatelessWidget {
                                             height: 5,
                                           ),
                                           Container(
-                                            color: isDark ? AppThemeData.primary600 : AppThemeData.primary50,
+                                            color: isDark
+                                                ? AppThemeData.primary600
+                                                : AppThemeData.primary50,
                                             child: DottedBorder(
-                                              options: RoundedRectDottedBorderOptions(
-                                                radius: const Radius.circular(6),
-                                                color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
+                                              options:
+                                                  RoundedRectDottedBorderOptions(
+                                                radius:
+                                                    const Radius.circular(6),
+                                                color: isDark
+                                                    ? AppThemeData.primary300
+                                                    : AppThemeData.primary300,
                                                 strokeWidth: 1,
                                               ),
                                               child: Padding(
-                                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 10,
+                                                        vertical: 2),
                                                 child: TranslatedText(
                                                   "${offerModel.code}",
                                                   textAlign: TextAlign.start,
                                                   style: TextStyle(
-                                                    fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                                    fontFamily: 'Urbanist',
+                                                    fontWeight: FontWeight.w600,
                                                     fontSize: 16,
-                                                    color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
+                                                    color: isDark
+                                                        ? AppThemeData
+                                                            .primary300
+                                                        : AppThemeData
+                                                            .primary300,
                                                   ),
                                                 ),
                                               ),

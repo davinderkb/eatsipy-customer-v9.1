@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eatsipy_customer/models/admin_commission.dart';
 import 'package:eatsipy_customer/models/subscription_plan_model.dart';
+import 'package:eatsipy_customer/utils/quality/restaurant_card_image_resolver.dart';
 
 class VendorModel {
   String? author;
@@ -50,6 +51,8 @@ class VendorModel {
   String? coverImageUrl;
   bool? showCardShowcase;
   List<CardShowcaseItem>? cardShowcaseItems;
+
+  RestaurantCardImageResolution? imageResolution;
 
   VendorModel(
       {this.author,

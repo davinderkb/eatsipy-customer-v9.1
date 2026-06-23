@@ -192,6 +192,7 @@ class Constant {
   static bool? isEnabledForCustomer = true;
   static bool isEnableAdsFeature = true;
   static bool isSelfDeliveryFeature = false;
+  static bool isScheduledOrderEnabled = true;
 
   static Map<String, List<String>> categoryStockImages = {};
 

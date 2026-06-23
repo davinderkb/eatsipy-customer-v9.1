@@ -8,6 +8,7 @@ import 'package:eatsipy_customer/themes/app_them_data.dart';
 import 'package:eatsipy_customer/themes/responsive.dart';
 import 'package:eatsipy_customer/utils/fire_store_utils.dart';
 import 'package:eatsipy_customer/utils/network_image_widget.dart';
+import 'package:eatsipy_customer/utils/quality/restaurant_card_image_resolver.dart';
 import 'package:eatsipy_customer/widget/translated_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart' as flutterMap;
@@ -32,13 +33,18 @@ class MapView extends StatelessWidget {
                 ? flutterMap.FlutterMap(
                     mapController: controller.osmMapController,
                     options: flutterMap.MapOptions(
-                      initialCenter: location.LatLng(Constant.selectedLocation.location!.latitude ?? 0.0, Constant.selectedLocation.location!.longitude ?? 0.0),
+                      initialCenter: location.LatLng(
+                          Constant.selectedLocation.location!.latitude ?? 0.0,
+                          Constant.selectedLocation.location!.longitude ?? 0.0),
                       initialZoom: 10,
                     ),
                     children: [
                       flutterMap.TileLayer(
-                        urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                        userAgentPackageName: Platform.isAndroid ? 'com.eatsipy.customer.android' : 'com.eatsipy.customer.ios',
+                        urlTemplate:
+                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                        userAgentPackageName: Platform.isAndroid
+                            ? 'com.eatsipy.customer.android'
+                            : 'com.eatsipy.customer.ios',
                       ),
                       flutterMap.MarkerLayer(
                         markers: controller.osmMarker,
@@ -57,14 +63,21 @@ class MapView extends StatelessWidget {
                     mapToolbarEnabled: true,
                     initialCameraPosition: CameraPosition(
                       zoom: 18,
-                      target: controller.homeController.allNearestRestaurant.isEmpty
+                      target: controller
+                              .homeController.allNearestRestaurant.isEmpty
                           ? LatLng(
-                              Constant.selectedLocation.location!.latitude ?? 45.521563,
-                              Constant.selectedLocation.location!.longitude ?? -122.677433,
+                              Constant.selectedLocation.location!.latitude ??
+                                  45.521563,
+                              Constant.selectedLocation.location!.longitude ??
+                                  -122.677433,
                             )
                           : LatLng(
-                              controller.homeController.allNearestRestaurant.first.latitude ?? 45.521563,
-                              controller.homeController.allNearestRestaurant.first.longitude ?? -122.677433,
+                              controller.homeController.allNearestRestaurant
+                                      .first.latitude ??
+                                  45.521563,
+                              controller.homeController.allNearestRestaurant
+                                      .first.longitude ??
+                                  -122.677433,
                             ),
                     ),
                   ),
@@ -82,79 +95,144 @@ class MapView extends StatelessWidget {
                             Expanded(
                               child: PageView.builder(
                                 pageSnapping: true,
-                                controller: PageController(viewportFraction: 0.88),
+                                controller:
+                                    PageController(viewportFraction: 0.88),
                                 onPageChanged: (value) async {
                                   if (Constant.selectedMapType == "osm") {
                                     controller.osmMapController.move(
                                         location.LatLng(
-                                          controller.homeController.allNearestRestaurant[value].latitude!,
-                                          controller.homeController.allNearestRestaurant[value].longitude!,
+                                          controller
+                                              .homeController
+                                              .allNearestRestaurant[value]
+                                              .latitude!,
+                                          controller
+                                              .homeController
+                                              .allNearestRestaurant[value]
+                                              .longitude!,
                                         ),
                                         16);
                                   } else {
-                                    CameraUpdate cameraUpdate = CameraUpdate.newCameraPosition(CameraPosition(
+                                    CameraUpdate cameraUpdate =
+                                        CameraUpdate.newCameraPosition(
+                                            CameraPosition(
                                       zoom: 15,
                                       target: LatLng(
-                                        controller.homeController.allNearestRestaurant[value].latitude!,
-                                        controller.homeController.allNearestRestaurant[value].longitude!,
+                                        controller
+                                            .homeController
+                                            .allNearestRestaurant[value]
+                                            .latitude!,
+                                        controller
+                                            .homeController
+                                            .allNearestRestaurant[value]
+                                            .longitude!,
                                       ),
                                     ));
-                                    controller.mapController!.animateCamera(cameraUpdate);
+                                    controller.mapController!
+                                        .animateCamera(cameraUpdate);
                                   }
                                 },
-                                itemCount: controller.homeController.allNearestRestaurant.length,
+                                itemCount: controller
+                                    .homeController.allNearestRestaurant.length,
                                 scrollDirection: Axis.horizontal,
                                 itemBuilder: (context, index) {
-                                  VendorModel vendorModel = controller.homeController.allNearestRestaurant[index];
-                                  bool isOpen = Constant.statusCheckOpenORClose(vendorModel: vendorModel);
+                                  VendorModel vendorModel = controller
+                                      .homeController
+                                      .allNearestRestaurant[index];
+                                  bool isOpen = Constant.statusCheckOpenORClose(
+                                      vendorModel: vendorModel);
                                   return InkWell(
                                     onTap: () {
-                                      Get.to(const RestaurantDetailsScreen(), arguments: {"vendorModel": vendorModel})?.then((v) {
-                                        controller.homeController.getFavouriteRestaurant();
+                                      Get.to(const RestaurantDetailsScreen(),
+                                          arguments: {
+                                            "vendorModel": vendorModel
+                                          })?.then((v) {
+                                        controller.homeController
+                                            .getFavouriteRestaurant();
                                       });
                                     },
                                     child: Padding(
-                                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: index == 0 ? 0 : 10),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 10,
+                                          horizontal: index == 0 ? 0 : 10),
                                       child: Container(
                                         decoration: BoxDecoration(
-                                          color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
-                                          borderRadius: const BorderRadius.all(Radius.circular(16)),
+                                          color: isDark
+                                              ? AppThemeData.grey900
+                                              : AppThemeData.grey50,
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(16)),
                                         ),
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Stack(
                                               children: [
                                                 ClipRRect(
-                                                  borderRadius: const BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+                                                  borderRadius:
+                                                      const BorderRadius.only(
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                  16),
+                                                          topRight:
+                                                              Radius.circular(
+                                                                  16)),
                                                   child: Stack(
                                                     children: [
                                                       NetworkImageWidget(
-                                                        imageUrl: vendorModel.photo.toString(),
+                                                        imageUrl:
+                                                            RestaurantCardImageResolver
+                                                                .resolveSingleUrl(
+                                                                    vendorModel),
                                                         fit: BoxFit.cover,
-                                                        height: Responsive.height(14, context),
-                                                        width: Responsive.width(100, context),
+                                                        height:
+                                                            Responsive.height(
+                                                                14, context),
+                                                        width: Responsive.width(
+                                                            100, context),
                                                       ),
                                                       Container(
-                                                        height: Responsive.height(14, context),
-                                                        width: Responsive.width(100, context),
-                                                        decoration: BoxDecoration(
-                                                          color: (isOpen) ? null : Colors.black38,
+                                                        height:
+                                                            Responsive.height(
+                                                                14, context),
+                                                        width: Responsive.width(
+                                                            100, context),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: (isOpen)
+                                                              ? null
+                                                              : Colors.black38,
                                                           gradient: (isOpen)
                                                               ? LinearGradient(
-                                                                  begin: const Alignment(-0.00, -1.00),
-                                                                  end: const Alignment(0, 1),
-                                                                  colors: [Colors.black.withValues(alpha: 0), AppThemeData.grey900],
+                                                                  begin:
+                                                                      const Alignment(
+                                                                          -0.00,
+                                                                          -1.00),
+                                                                  end:
+                                                                      const Alignment(
+                                                                          0, 1),
+                                                                  colors: [
+                                                                    Colors.black
+                                                                        .withValues(
+                                                                            alpha:
+                                                                                0),
+                                                                    AppThemeData
+                                                                        .grey900
+                                                                  ],
                                                                 )
                                                               : null,
                                                         ),
                                                         child: (isOpen)
                                                             ? SizedBox()
                                                             : Center(
-                                                                child: Image.asset(
+                                                                child:
+                                                                    Image.asset(
                                                                 "assets/images/closed.PNG",
-                                                                height: Responsive.height(16, context),
-                                                                fit: BoxFit.fill,
+                                                                height: Responsive
+                                                                    .height(16,
+                                                                        context),
+                                                                fit:
+                                                                    BoxFit.fill,
                                                               )),
                                                       ),
                                                       Positioned(
@@ -162,22 +240,66 @@ class MapView extends StatelessWidget {
                                                         top: 10,
                                                         child: InkWell(
                                                           onTap: () async {
-                                                            if (controller.homeController.favouriteList.where((p0) => p0.restaurantId == vendorModel.id).isNotEmpty) {
-                                                              FavouriteModel favouriteModel = FavouriteModel(restaurantId: vendorModel.id, userId: FireStoreUtils.getCurrentUid());
-                                                              controller.homeController.favouriteList.removeWhere((item) => item.restaurantId == vendorModel.id);
-                                                              await FireStoreUtils.removeFavouriteRestaurant(favouriteModel);
+                                                            if (controller
+                                                                .homeController
+                                                                .favouriteList
+                                                                .where((p0) =>
+                                                                    p0.restaurantId ==
+                                                                    vendorModel
+                                                                        .id)
+                                                                .isNotEmpty) {
+                                                              FavouriteModel
+                                                                  favouriteModel =
+                                                                  FavouriteModel(
+                                                                      restaurantId:
+                                                                          vendorModel
+                                                                              .id,
+                                                                      userId: FireStoreUtils
+                                                                          .getCurrentUid());
+                                                              controller
+                                                                  .homeController
+                                                                  .favouriteList
+                                                                  .removeWhere((item) =>
+                                                                      item.restaurantId ==
+                                                                      vendorModel
+                                                                          .id);
+                                                              await FireStoreUtils
+                                                                  .removeFavouriteRestaurant(
+                                                                      favouriteModel);
                                                             } else {
-                                                              FavouriteModel favouriteModel = FavouriteModel(restaurantId: vendorModel.id, userId: FireStoreUtils.getCurrentUid());
-                                                              controller.homeController.favouriteList.add(favouriteModel);
-                                                              await FireStoreUtils.setFavouriteRestaurant(favouriteModel);
+                                                              FavouriteModel
+                                                                  favouriteModel =
+                                                                  FavouriteModel(
+                                                                      restaurantId:
+                                                                          vendorModel
+                                                                              .id,
+                                                                      userId: FireStoreUtils
+                                                                          .getCurrentUid());
+                                                              controller
+                                                                  .homeController
+                                                                  .favouriteList
+                                                                  .add(
+                                                                      favouriteModel);
+                                                              await FireStoreUtils
+                                                                  .setFavouriteRestaurant(
+                                                                      favouriteModel);
                                                             }
                                                           },
                                                           child: Obx(
-                                                            () => controller.homeController.favouriteList.where((p0) => p0.restaurantId == vendorModel.id).isNotEmpty
-                                                                ? SvgPicture.asset(
+                                                            () => controller
+                                                                    .homeController
+                                                                    .favouriteList
+                                                                    .where((p0) =>
+                                                                        p0.restaurantId ==
+                                                                        vendorModel
+                                                                            .id)
+                                                                    .isNotEmpty
+                                                                ? SvgPicture
+                                                                    .asset(
                                                                     "assets/icons/ic_like_fill.svg",
                                                                   )
-                                                                : SvgPicture.asset(
+                                                                : SvgPicture
+                                                                    .asset(
                                                                     "assets/icons/ic_like.svg",
                                                                   ),
                                                           ),
@@ -187,24 +309,49 @@ class MapView extends StatelessWidget {
                                                   ),
                                                 ),
                                                 Transform.translate(
-                                                  offset: Offset(Responsive.width(isRTL == true ? 3 : -3, context), Responsive.height(11, context)),
+                                                  offset: Offset(
+                                                      Responsive.width(
+                                                          isRTL == true
+                                                              ? 3
+                                                              : -3,
+                                                          context),
+                                                      Responsive.height(
+                                                          11, context)),
                                                   child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
-                                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.end,
                                                     children: [
                                                       Visibility(
-                                                        visible: (vendorModel.isSelfDelivery == true && Constant.isSelfDeliveryFeature == true),
+                                                        visible: (vendorModel
+                                                                    .isSelfDelivery ==
+                                                                true &&
+                                                            Constant.isSelfDeliveryFeature ==
+                                                                true),
                                                         child: Row(
                                                           children: [
                                                             Container(
-                                                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-                                                              decoration: BoxDecoration(
-                                                                color: AppThemeData.lightGreen,
-                                                                borderRadius: BorderRadius.circular(120), // Optional
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                      horizontal:
+                                                                          10,
+                                                                      vertical:
+                                                                          7),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: AppThemeData
+                                                                    .lightGreen,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            120), // Optional
                                                               ),
                                                               child: Row(
                                                                 children: [
-                                                                  SvgPicture.asset(
+                                                                  SvgPicture
+                                                                      .asset(
                                                                     "assets/icons/ic_free_delivery.svg",
                                                                   ),
                                                                   const SizedBox(
@@ -212,11 +359,17 @@ class MapView extends StatelessWidget {
                                                                   ),
                                                                   TranslatedText(
                                                                     "Free Delivery",
-                                                                    style: TextStyle(
-                                                                      fontSize: 14,
-                                                                      color: AppThemeData.darkGreen,
-                                                                      fontFamily: 'Urbanist',
-                                                                      fontWeight: FontWeight.w600,
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontSize:
+                                                                          14,
+                                                                      color: AppThemeData
+                                                                          .darkGreen,
+                                                                      fontFamily:
+                                                                          'Urbanist',
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
                                                                     ),
                                                                   ),
                                                                 ],
@@ -229,17 +382,35 @@ class MapView extends StatelessWidget {
                                                         ),
                                                       ),
                                                       Container(
-                                                        decoration: ShapeDecoration(
-                                                          color: isDark ? AppThemeData.primary600 : AppThemeData.primary50,
-                                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(120)),
+                                                        decoration:
+                                                            ShapeDecoration(
+                                                          color: isDark
+                                                              ? AppThemeData
+                                                                  .primary600
+                                                              : AppThemeData
+                                                                  .primary50,
+                                                          shape: RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          120)),
                                                         ),
                                                         child: Padding(
-                                                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                                  horizontal:
+                                                                      12,
+                                                                  vertical: 8),
                                                           child: Row(
                                                             children: [
                                                               SvgPicture.asset(
                                                                 "assets/icons/ic_star.svg",
-                                                                colorFilter: ColorFilter.mode(AppThemeData.primary300, BlendMode.srcIn),
+                                                                colorFilter: ColorFilter.mode(
+                                                                    AppThemeData
+                                                                        .primary300,
+                                                                    BlendMode
+                                                                        .srcIn),
                                                               ),
                                                               const SizedBox(
                                                                 width: 5,
@@ -247,9 +418,16 @@ class MapView extends StatelessWidget {
                                                               Text(
                                                                 "${Constant.calculateReview(reviewCount: vendorModel.reviewsCount.toString(), reviewSum: vendorModel.reviewsSum.toString())} (${vendorModel.reviewsCount!.toStringAsFixed(0)})",
                                                                 style: TextStyle(
-                                                                    color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
-                                                                    fontFamily: 'Urbanist',
-                                                                    fontWeight: FontWeight.w600),
+                                                                    color: isDark
+                                                                        ? AppThemeData
+                                                                            .primary300
+                                                                        : AppThemeData
+                                                                            .primary300,
+                                                                    fontFamily:
+                                                                        'Urbanist',
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600),
                                                               ),
                                                             ],
                                                           ),
@@ -259,32 +437,70 @@ class MapView extends StatelessWidget {
                                                         width: 10,
                                                       ),
                                                       Container(
-                                                        decoration: ShapeDecoration(
-                                                          color: isDark ? AppThemeData.secondary600 : AppThemeData.secondary50,
-                                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(120)),
+                                                        decoration:
+                                                            ShapeDecoration(
+                                                          color: isDark
+                                                              ? AppThemeData
+                                                                  .secondary600
+                                                              : AppThemeData
+                                                                  .secondary50,
+                                                          shape: RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          120)),
                                                         ),
                                                         child: Padding(
-                                                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                                  horizontal:
+                                                                      12,
+                                                                  vertical: 8),
                                                           child: Row(
                                                             children: [
                                                               SvgPicture.asset(
                                                                 "assets/icons/ic_map_distance.svg",
-                                                                colorFilter: const ColorFilter.mode(AppThemeData.secondary300, BlendMode.srcIn),
+                                                                colorFilter: const ColorFilter
+                                                                    .mode(
+                                                                    AppThemeData
+                                                                        .secondary300,
+                                                                    BlendMode
+                                                                        .srcIn),
                                                               ),
                                                               const SizedBox(
                                                                 width: 5,
                                                               ),
                                                               TranslatedText(
                                                                 "${Constant.getDistance(
-                                                                  lat1: vendorModel.latitude.toString(),
-                                                                  lng1: vendorModel.longitude.toString(),
-                                                                  lat2: Constant.selectedLocation.location!.latitude.toString(),
-                                                                  lng2: Constant.selectedLocation.location!.longitude.toString(),
+                                                                  lat1: vendorModel
+                                                                      .latitude
+                                                                      .toString(),
+                                                                  lng1: vendorModel
+                                                                      .longitude
+                                                                      .toString(),
+                                                                  lat2: Constant
+                                                                      .selectedLocation
+                                                                      .location!
+                                                                      .latitude
+                                                                      .toString(),
+                                                                  lng2: Constant
+                                                                      .selectedLocation
+                                                                      .location!
+                                                                      .longitude
+                                                                      .toString(),
                                                                 )} ${Constant.distanceType}",
                                                                 style: TextStyle(
-                                                                    color: isDark ? AppThemeData.secondary300 : AppThemeData.secondary300,
-                                                                    fontFamily: 'Urbanist',
-                                                                    fontWeight: FontWeight.w600),
+                                                                    color: isDark
+                                                                        ? AppThemeData
+                                                                            .secondary300
+                                                                        : AppThemeData
+                                                                            .secondary300,
+                                                                    fontFamily:
+                                                                        'Urbanist',
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600),
                                                               ),
                                                             ],
                                                           ),
@@ -299,41 +515,71 @@ class MapView extends StatelessWidget {
                                               height: 15,
                                             ),
                                             Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10),
                                               child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
                                                   TranslatedText(
-                                                    vendorModel.title.toString(),
+                                                    vendorModel.title
+                                                        .toString(),
                                                     textAlign: TextAlign.start,
                                                     maxLines: 1,
                                                     style: TextStyle(
                                                       fontSize: 18,
-                                                      overflow: TextOverflow.ellipsis,
-                                                      fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
-                                                      color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      fontFamily: 'Urbanist',
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color: isDark
+                                                          ? AppThemeData.grey50
+                                                          : AppThemeData
+                                                              .grey900,
                                                     ),
                                                   ),
                                                   TranslatedText(
-                                                    vendorModel.location.toString(),
+                                                    vendorModel.location
+                                                        .toString(),
                                                     textAlign: TextAlign.start,
                                                     maxLines: 1,
                                                     style: TextStyle(
-                                                      overflow: TextOverflow.ellipsis,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                       fontFamily: 'Urbanist',
-                                                      fontWeight: FontWeight.w500,
-                                                      color: isDark ? AppThemeData.grey400 : AppThemeData.grey400,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: isDark
+                                                          ? AppThemeData.grey400
+                                                          : AppThemeData
+                                                              .grey400,
                                                     ),
                                                   ),
                                                   (isOpen == false)
                                                       ? Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
                                                           children: [
                                                             TranslatedText(
-                                                              Constant.getNextOpeningTime(vendorModel, DateTime.now()),
+                                                              Constant.getNextOpeningTime(
+                                                                  vendorModel,
+                                                                  DateTime
+                                                                      .now()),
                                                               maxLines: 1,
-                                                              overflow: TextOverflow.ellipsis,
-                                                              style: TextStyle(color: AppThemeData.danger300, fontFamily: 'Urbanist', fontWeight: FontWeight.w500),
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              style: TextStyle(
+                                                                  color: AppThemeData
+                                                                      .danger300,
+                                                                  fontFamily:
+                                                                      'Urbanist',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500),
                                                             )
                                                           ],
                                                         )

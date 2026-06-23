@@ -17,6 +17,7 @@ import 'package:eatsipy_customer/themes/responsive.dart';
 import 'package:eatsipy_customer/themes/round_button_fill.dart';
 import 'package:eatsipy_customer/utils/fire_store_utils.dart';
 import 'package:eatsipy_customer/utils/network_image_widget.dart';
+import 'package:eatsipy_customer/utils/quality/restaurant_card_image_resolver.dart';
 import 'package:eatsipy_customer/widget/restaurant_image_view.dart';
 import 'package:flutter/material.dart';
 import 'package:eatsipy_customer/widget/translated_text.dart';
@@ -35,7 +36,8 @@ class DineInScreen extends StatelessWidget {
         builder: (controller) {
           return Scaffold(
             body: NestedScrollView(
-              headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+              headerSliverBuilder:
+                  (BuildContext context, bool innerBoxIsScrolled) {
                 return <Widget>[
                   SliverAppBar(
                     expandedHeight: Responsive.height(38, context),
@@ -51,7 +53,9 @@ class DineInScreen extends StatelessWidget {
                           },
                           child: Icon(
                             Icons.arrow_back,
-                            color: isDark ? AppThemeData.grey50 : AppThemeData.grey50,
+                            color: isDark
+                                ? AppThemeData.grey50
+                                : AppThemeData.grey50,
                           ),
                         ),
                       ],
@@ -66,7 +70,8 @@ class DineInScreen extends StatelessWidget {
                           ),
                           Center(
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -77,7 +82,9 @@ class DineInScreen extends StatelessWidget {
                                       fontSize: 24,
                                       fontFamily: 'Urbanist',
                                       fontWeight: FontWeight.w600,
-                                      color: isDark ? AppThemeData.grey900 : AppThemeData.grey900,
+                                      color: isDark
+                                          ? AppThemeData.grey900
+                                          : AppThemeData.grey900,
                                     ),
                                   ),
                                   TranslatedText(
@@ -86,7 +93,9 @@ class DineInScreen extends StatelessWidget {
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontFamily: 'Urbanist',
-                                      color: isDark ? AppThemeData.grey900 : AppThemeData.grey900,
+                                      color: isDark
+                                          ? AppThemeData.grey900
+                                          : AppThemeData.grey900,
                                     ),
                                   ),
                                 ],
@@ -101,7 +110,8 @@ class DineInScreen extends StatelessWidget {
               },
               body: controller.isLoading.value
                   ? Constant.loader()
-                  : Constant.isZoneAvailable == false || controller.allNearestRestaurant.isEmpty
+                  : Constant.isZoneAvailable == false ||
+                          controller.allNearestRestaurant.isEmpty
                       ? Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: Column(
@@ -117,7 +127,13 @@ class DineInScreen extends StatelessWidget {
                               ),
                               TranslatedText(
                                 "No Restaurants Found in Your Area",
-                                style: TextStyle(color: isDark ? AppThemeData.grey100 : AppThemeData.grey800, fontSize: 22, fontFamily: 'Urbanist', fontWeight: FontWeight.w600),
+                                style: TextStyle(
+                                    color: isDark
+                                        ? AppThemeData.grey100
+                                        : AppThemeData.grey800,
+                                    fontSize: 22,
+                                    fontFamily: 'Urbanist',
+                                    fontWeight: FontWeight.w600),
                               ),
                               const SizedBox(
                                 height: 5,
@@ -125,7 +141,13 @@ class DineInScreen extends StatelessWidget {
                               TranslatedText(
                                 "Currently, there are no available restaurants in your zone. Try changing your location to find nearby options.",
                                 textAlign: TextAlign.center,
-                                style: TextStyle(color: isDark ? AppThemeData.grey50 : AppThemeData.grey500, fontSize: 16, fontFamily: 'Urbanist', fontWeight: FontWeight.w700),
+                                style: TextStyle(
+                                    color: isDark
+                                        ? AppThemeData.grey50
+                                        : AppThemeData.grey500,
+                                    fontSize: 16,
+                                    fontFamily: 'Urbanist',
+                                    fontWeight: FontWeight.w700),
                               ),
                               const SizedBox(
                                 height: 20,
@@ -147,7 +169,8 @@ class DineInScreen extends StatelessWidget {
                           child: Column(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,8 +178,10 @@ class DineInScreen extends StatelessWidget {
                                     const SizedBox(
                                       height: 10,
                                     ),
-                                    titleView(isDark, "Explore the Categories", () {
-                                      Get.to(const ViewAllCategoryDineInScreen());
+                                    titleView(isDark, "Explore the Categories",
+                                        () {
+                                      Get.to(
+                                          const ViewAllCategoryDineInScreen());
                                     }),
                                     const SizedBox(
                                       height: 10,
@@ -171,12 +196,19 @@ class DineInScreen extends StatelessWidget {
                               controller.newArrivalRestaurantList.isEmpty
                                   ? const SizedBox()
                                   : Container(
-                                      decoration: const BoxDecoration(image: DecorationImage(image: AssetImage("assets/images/ic_new_arrival_dinein.png"), fit: BoxFit.cover)),
+                                      decoration: const BoxDecoration(
+                                          image: DecorationImage(
+                                              image: AssetImage(
+                                                  "assets/images/ic_new_arrival_dinein.png"),
+                                              fit: BoxFit.cover)),
                                       child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 16, vertical: 16),
                                         child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Row(
                                               children: [
@@ -185,22 +217,36 @@ class DineInScreen extends StatelessWidget {
                                                     "New Arrivals",
                                                     textAlign: TextAlign.start,
                                                     style: TextStyle(
-                                                      fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
+                                                      fontFamily: 'Urbanist',
+                                                      fontWeight:
+                                                          FontWeight.w600,
                                                       fontSize: 16,
-                                                      color: isDark ? AppThemeData.grey50 : AppThemeData.grey50,
+                                                      color: isDark
+                                                          ? AppThemeData.grey50
+                                                          : AppThemeData.grey50,
                                                     ),
                                                   ),
                                                 ),
                                                 InkWell(
                                                   onTap: () {
-                                                    Get.to(const DineInRestaurantListScreen(), arguments: {"vendorList": controller.newArrivalRestaurantList, "title": "New Arrival"});
+                                                    Get.to(
+                                                        const DineInRestaurantListScreen(),
+                                                        arguments: {
+                                                          "vendorList": controller
+                                                              .newArrivalRestaurantList,
+                                                          "title": "New Arrival"
+                                                        });
                                                   },
                                                   child: TranslatedText(
                                                     "View all",
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
                                                       fontFamily: 'Urbanist',
-                                                      color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
+                                                      color: isDark
+                                                          ? AppThemeData
+                                                              .primary300
+                                                          : AppThemeData
+                                                              .primary300,
                                                     ),
                                                   ),
                                                 )
@@ -217,14 +263,19 @@ class DineInScreen extends StatelessWidget {
                               controller.bannerBottomModel.isEmpty
                                   ? const SizedBox()
                                   : Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-                                      child: BannerBottomView(controller: controller),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16, vertical: 20),
+                                      child: BannerBottomView(
+                                          controller: controller),
                                     ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
                                 child: Container(
                                   decoration: ShapeDecoration(
-                                    color: isDark ? AppThemeData.grey700 : AppThemeData.grey200,
+                                    color: isDark
+                                        ? AppThemeData.grey700
+                                        : AppThemeData.grey200,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(120),
                                     ),
@@ -239,22 +290,36 @@ class DineInScreen extends StatelessWidget {
                                               controller.isPopular.value = true;
                                             },
                                             child: Container(
-                                              decoration: controller.isPopular.value == false
+                                              decoration: controller
+                                                          .isPopular.value ==
+                                                      false
                                                   ? null
                                                   : ShapeDecoration(
-                                                      color: AppThemeData.grey900,
-                                                      shape: RoundedRectangleBorder(
-                                                        borderRadius: BorderRadius.circular(120),
+                                                      color:
+                                                          AppThemeData.grey900,
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(120),
                                                       ),
                                                     ),
                                               child: Padding(
-                                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 16,
+                                                        vertical: 10),
                                                 child: TranslatedText(
                                                   "Popular Restaurants",
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
-                                                    fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
-                                                    color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
+                                                    fontFamily: 'Urbanist',
+                                                    fontWeight: FontWeight.w600,
+                                                    color: isDark
+                                                        ? AppThemeData
+                                                            .primary300
+                                                        : AppThemeData
+                                                            .primary300,
                                                   ),
                                                 ),
                                               ),
@@ -264,31 +329,48 @@ class DineInScreen extends StatelessWidget {
                                         Expanded(
                                           child: InkWell(
                                             onTap: () {
-                                              controller.isPopular.value = false;
+                                              controller.isPopular.value =
+                                                  false;
                                             },
                                             child: Container(
-                                              decoration: controller.isPopular.value == true
+                                              decoration: controller
+                                                          .isPopular.value ==
+                                                      true
                                                   ? null
                                                   : ShapeDecoration(
-                                                      color: AppThemeData.grey900,
-                                                      shape: RoundedRectangleBorder(
-                                                        borderRadius: BorderRadius.circular(120),
+                                                      color:
+                                                          AppThemeData.grey900,
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(120),
                                                       ),
                                                     ),
                                               child: Padding(
-                                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 16,
+                                                        vertical: 10),
                                                 child: TranslatedText(
                                                   "All Restaurants",
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
-                                                    fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
-                                                    color: controller.isPopular.value == true
+                                                    fontFamily: 'Urbanist',
+                                                    fontWeight: FontWeight.w600,
+                                                    color: controller.isPopular
+                                                                .value ==
+                                                            true
                                                         ? isDark
-                                                            ? AppThemeData.grey400
-                                                            : AppThemeData.grey500
+                                                            ? AppThemeData
+                                                                .grey400
+                                                            : AppThemeData
+                                                                .grey500
                                                         : isDark
-                                                            ? AppThemeData.primary300
-                                                            : AppThemeData.primary300,
+                                                            ? AppThemeData
+                                                                .primary300
+                                                            : AppThemeData
+                                                                .primary300,
                                                   ),
                                                 ),
                                               ),
@@ -301,8 +383,11 @@ class DineInScreen extends StatelessWidget {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-                                child: controller.isPopular.value ? PopularRestaurant(controller: controller) : AllRestaurant(controller: controller),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 20),
+                                child: controller.isPopular.value
+                                    ? PopularRestaurant(controller: controller)
+                                    : AllRestaurant(controller: controller),
                               )
                             ],
                           ),
@@ -320,7 +405,8 @@ class DineInScreen extends StatelessWidget {
             name,
             textAlign: TextAlign.start,
             style: TextStyle(
-              fontFamily: 'Urbanist', fontWeight: FontWeight.w700,
+              fontFamily: 'Urbanist',
+              fontWeight: FontWeight.w700,
               color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
             ),
           ),
@@ -363,14 +449,16 @@ class PopularRestaurant extends StatelessWidget {
 
         return InkWell(
           onTap: () {
-            Get.to(const DineInDetailsScreen(), arguments: {"vendorModel": vendorModel});
+            Get.to(const DineInDetailsScreen(),
+                arguments: {"vendorModel": vendorModel});
           },
           child: Padding(
             padding: const EdgeInsets.only(bottom: 20),
             child: Container(
               decoration: ShapeDecoration(
                 color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -378,7 +466,9 @@ class PopularRestaurant extends StatelessWidget {
                   Stack(
                     children: [
                       ClipRRect(
-                        borderRadius: const BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+                        borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(16),
+                            topRight: Radius.circular(16)),
                         child: Stack(
                           children: [
                             RestaurantImageView(
@@ -391,7 +481,10 @@ class PopularRestaurant extends StatelessWidget {
                                 gradient: LinearGradient(
                                   begin: const Alignment(-0.00, -1.00),
                                   end: const Alignment(0, 1),
-                                  colors: [Colors.black.withValues(alpha: 0), AppThemeData.grey900],
+                                  colors: [
+                                    Colors.black.withValues(alpha: 0),
+                                    AppThemeData.grey900
+                                  ],
                                 ),
                               ),
                             ),
@@ -400,18 +493,39 @@ class PopularRestaurant extends StatelessWidget {
                               top: 10,
                               child: InkWell(
                                 onTap: () async {
-                                  if (controller.favouriteList.where((p0) => p0.restaurantId == vendorModel.id).isNotEmpty) {
-                                    FavouriteModel favouriteModel = FavouriteModel(restaurantId: vendorModel.id, userId: FireStoreUtils.getCurrentUid());
-                                    controller.favouriteList.removeWhere((item) => item.restaurantId == vendorModel.id);
-                                    await FireStoreUtils.removeFavouriteRestaurant(favouriteModel);
+                                  if (controller.favouriteList
+                                      .where((p0) =>
+                                          p0.restaurantId == vendorModel.id)
+                                      .isNotEmpty) {
+                                    FavouriteModel favouriteModel =
+                                        FavouriteModel(
+                                            restaurantId: vendorModel.id,
+                                            userId:
+                                                FireStoreUtils.getCurrentUid());
+                                    controller.favouriteList.removeWhere(
+                                        (item) =>
+                                            item.restaurantId ==
+                                            vendorModel.id);
+                                    await FireStoreUtils
+                                        .removeFavouriteRestaurant(
+                                            favouriteModel);
                                   } else {
-                                    FavouriteModel favouriteModel = FavouriteModel(restaurantId: vendorModel.id, userId: FireStoreUtils.getCurrentUid());
-                                    controller.favouriteList.add(favouriteModel);
-                                    await FireStoreUtils.setFavouriteRestaurant(favouriteModel);
+                                    FavouriteModel favouriteModel =
+                                        FavouriteModel(
+                                            restaurantId: vendorModel.id,
+                                            userId:
+                                                FireStoreUtils.getCurrentUid());
+                                    controller.favouriteList
+                                        .add(favouriteModel);
+                                    await FireStoreUtils.setFavouriteRestaurant(
+                                        favouriteModel);
                                   }
                                 },
                                 child: Obx(
-                                  () => controller.favouriteList.where((p0) => p0.restaurantId == vendorModel.id).isNotEmpty
+                                  () => controller.favouriteList
+                                          .where((p0) =>
+                                              p0.restaurantId == vendorModel.id)
+                                          .isNotEmpty
                                       ? SvgPicture.asset(
                                           "assets/icons/ic_like_fill.svg",
                                         )
@@ -425,23 +539,31 @@ class PopularRestaurant extends StatelessWidget {
                         ),
                       ),
                       Transform.translate(
-                        offset: Offset(Responsive.width(isRTL == true ? 3 : -3, context), Responsive.height(17.5, context)),
+                        offset: Offset(
+                            Responsive.width(isRTL == true ? 3 : -3, context),
+                            Responsive.height(17.5, context)),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Container(
                               decoration: ShapeDecoration(
-                                color: isDark ? AppThemeData.primary600 : AppThemeData.primary50,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(120)),
+                                color: isDark
+                                    ? AppThemeData.primary600
+                                    : AppThemeData.primary50,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(120)),
                               ),
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 8),
                                 child: Row(
                                   children: [
                                     SvgPicture.asset(
                                       "assets/icons/ic_star.svg",
-                                      colorFilter: ColorFilter.mode(AppThemeData.primary300, BlendMode.srcIn),
+                                      colorFilter: ColorFilter.mode(
+                                          AppThemeData.primary300,
+                                          BlendMode.srcIn),
                                     ),
                                     const SizedBox(
                                       width: 5,
@@ -449,7 +571,9 @@ class PopularRestaurant extends StatelessWidget {
                                     Text(
                                       "${Constant.calculateReview(reviewCount: vendorModel.reviewsCount!.toStringAsFixed(0), reviewSum: vendorModel.reviewsSum.toString())} (${vendorModel.reviewsCount!.toStringAsFixed(0)})",
                                       style: TextStyle(
-                                        color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
+                                        color: isDark
+                                            ? AppThemeData.primary300
+                                            : AppThemeData.primary300,
                                         fontFamily: 'Urbanist',
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -463,16 +587,22 @@ class PopularRestaurant extends StatelessWidget {
                             ),
                             Container(
                               decoration: ShapeDecoration(
-                                color: isDark ? AppThemeData.secondary600 : AppThemeData.secondary50,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(120)),
+                                color: isDark
+                                    ? AppThemeData.secondary600
+                                    : AppThemeData.secondary50,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(120)),
                               ),
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 8),
                                 child: Row(
                                   children: [
                                     SvgPicture.asset(
                                       "assets/icons/ic_map_distance.svg",
-                                      colorFilter: const ColorFilter.mode(AppThemeData.secondary300, BlendMode.srcIn),
+                                      colorFilter: const ColorFilter.mode(
+                                          AppThemeData.secondary300,
+                                          BlendMode.srcIn),
                                     ),
                                     const SizedBox(
                                       width: 5,
@@ -481,11 +611,17 @@ class PopularRestaurant extends StatelessWidget {
                                       "${Constant.getDistance(
                                         lat1: vendorModel.latitude.toString(),
                                         lng1: vendorModel.longitude.toString(),
-                                        lat2: Constant.selectedLocation.location!.latitude.toString(),
-                                        lng2: Constant.selectedLocation.location!.longitude.toString(),
+                                        lat2: Constant
+                                            .selectedLocation.location!.latitude
+                                            .toString(),
+                                        lng2: Constant.selectedLocation
+                                            .location!.longitude
+                                            .toString(),
                                       )} ${Constant.distanceType}",
                                       style: TextStyle(
-                                        color: isDark ? AppThemeData.secondary300 : AppThemeData.secondary300,
+                                        color: isDark
+                                            ? AppThemeData.secondary300
+                                            : AppThemeData.secondary300,
                                         fontFamily: 'Urbanist',
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -514,8 +650,11 @@ class PopularRestaurant extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 18,
                             overflow: TextOverflow.ellipsis,
-                            fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
-                            color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                            fontFamily: 'Urbanist',
+                            fontWeight: FontWeight.w600,
+                            color: isDark
+                                ? AppThemeData.grey50
+                                : AppThemeData.grey900,
                           ),
                         ),
                         TranslatedText(
@@ -526,7 +665,9 @@ class PopularRestaurant extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             fontFamily: 'Urbanist',
                             fontWeight: FontWeight.w500,
-                            color: isDark ? AppThemeData.grey400 : AppThemeData.grey400,
+                            color: isDark
+                                ? AppThemeData.grey400
+                                : AppThemeData.grey400,
                           ),
                         ),
                       ],
@@ -565,14 +706,16 @@ class AllRestaurant extends StatelessWidget {
         bool isOpen = Constant.statusCheckOpenORClose(vendorModel: vendorModel);
         return InkWell(
           onTap: () {
-            Get.to(const DineInDetailsScreen(), arguments: {"vendorModel": vendorModel});
+            Get.to(const DineInDetailsScreen(),
+                arguments: {"vendorModel": vendorModel});
           },
           child: Padding(
             padding: const EdgeInsets.only(bottom: 20),
             child: Container(
               decoration: ShapeDecoration(
                 color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -580,7 +723,9 @@ class AllRestaurant extends StatelessWidget {
                   Stack(
                     children: [
                       ClipRRect(
-                        borderRadius: const BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+                        borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(16),
+                            topRight: Radius.circular(16)),
                         child: Stack(
                           children: [
                             ColorFiltered(
@@ -624,7 +769,10 @@ class AllRestaurant extends StatelessWidget {
                                     ? LinearGradient(
                                         begin: const Alignment(-0.00, -1.00),
                                         end: const Alignment(0, 1),
-                                        colors: [Colors.black.withValues(alpha: 0), AppThemeData.grey900],
+                                        colors: [
+                                          Colors.black.withValues(alpha: 0),
+                                          AppThemeData.grey900
+                                        ],
                                       )
                                     : null,
                               ),
@@ -643,18 +791,39 @@ class AllRestaurant extends StatelessWidget {
                               top: 10,
                               child: InkWell(
                                 onTap: () async {
-                                  if (controller.favouriteList.where((p0) => p0.restaurantId == vendorModel.id).isNotEmpty) {
-                                    FavouriteModel favouriteModel = FavouriteModel(restaurantId: vendorModel.id, userId: FireStoreUtils.getCurrentUid());
-                                    controller.favouriteList.removeWhere((item) => item.restaurantId == vendorModel.id);
-                                    await FireStoreUtils.removeFavouriteRestaurant(favouriteModel);
+                                  if (controller.favouriteList
+                                      .where((p0) =>
+                                          p0.restaurantId == vendorModel.id)
+                                      .isNotEmpty) {
+                                    FavouriteModel favouriteModel =
+                                        FavouriteModel(
+                                            restaurantId: vendorModel.id,
+                                            userId:
+                                                FireStoreUtils.getCurrentUid());
+                                    controller.favouriteList.removeWhere(
+                                        (item) =>
+                                            item.restaurantId ==
+                                            vendorModel.id);
+                                    await FireStoreUtils
+                                        .removeFavouriteRestaurant(
+                                            favouriteModel);
                                   } else {
-                                    FavouriteModel favouriteModel = FavouriteModel(restaurantId: vendorModel.id, userId: FireStoreUtils.getCurrentUid());
-                                    controller.favouriteList.add(favouriteModel);
-                                    await FireStoreUtils.setFavouriteRestaurant(favouriteModel);
+                                    FavouriteModel favouriteModel =
+                                        FavouriteModel(
+                                            restaurantId: vendorModel.id,
+                                            userId:
+                                                FireStoreUtils.getCurrentUid());
+                                    controller.favouriteList
+                                        .add(favouriteModel);
+                                    await FireStoreUtils.setFavouriteRestaurant(
+                                        favouriteModel);
                                   }
                                 },
                                 child: Obx(
-                                  () => controller.favouriteList.where((p0) => p0.restaurantId == vendorModel.id).isNotEmpty
+                                  () => controller.favouriteList
+                                          .where((p0) =>
+                                              p0.restaurantId == vendorModel.id)
+                                          .isNotEmpty
                                       ? SvgPicture.asset(
                                           "assets/icons/ic_like_fill.svg",
                                         )
@@ -668,23 +837,31 @@ class AllRestaurant extends StatelessWidget {
                         ),
                       ),
                       Transform.translate(
-                        offset: Offset(Responsive.width(isRTL == true ? 3 : -3, context), Responsive.height(17.5, context)),
+                        offset: Offset(
+                            Responsive.width(isRTL == true ? 3 : -3, context),
+                            Responsive.height(17.5, context)),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Container(
                               decoration: ShapeDecoration(
-                                color: isDark ? AppThemeData.primary600 : AppThemeData.primary50,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(120)),
+                                color: isDark
+                                    ? AppThemeData.primary600
+                                    : AppThemeData.primary50,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(120)),
                               ),
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 8),
                                 child: Row(
                                   children: [
                                     SvgPicture.asset(
                                       "assets/icons/ic_star.svg",
-                                      colorFilter: ColorFilter.mode(AppThemeData.primary300, BlendMode.srcIn),
+                                      colorFilter: ColorFilter.mode(
+                                          AppThemeData.primary300,
+                                          BlendMode.srcIn),
                                     ),
                                     const SizedBox(
                                       width: 5,
@@ -692,7 +869,9 @@ class AllRestaurant extends StatelessWidget {
                                     Text(
                                       "${Constant.calculateReview(reviewCount: vendorModel.reviewsCount.toString(), reviewSum: vendorModel.reviewsSum.toString())} (${vendorModel.reviewsCount!.toStringAsFixed(0)})",
                                       style: TextStyle(
-                                        color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
+                                        color: isDark
+                                            ? AppThemeData.primary300
+                                            : AppThemeData.primary300,
                                         fontFamily: 'Urbanist',
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -706,16 +885,22 @@ class AllRestaurant extends StatelessWidget {
                             ),
                             Container(
                               decoration: ShapeDecoration(
-                                color: isDark ? AppThemeData.secondary600 : AppThemeData.secondary50,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(120)),
+                                color: isDark
+                                    ? AppThemeData.secondary600
+                                    : AppThemeData.secondary50,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(120)),
                               ),
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 8),
                                 child: Row(
                                   children: [
                                     SvgPicture.asset(
                                       "assets/icons/ic_map_distance.svg",
-                                      colorFilter: const ColorFilter.mode(AppThemeData.secondary300, BlendMode.srcIn),
+                                      colorFilter: const ColorFilter.mode(
+                                          AppThemeData.secondary300,
+                                          BlendMode.srcIn),
                                     ),
                                     const SizedBox(
                                       width: 5,
@@ -724,11 +909,17 @@ class AllRestaurant extends StatelessWidget {
                                       "${Constant.getDistance(
                                         lat1: vendorModel.latitude.toString(),
                                         lng1: vendorModel.longitude.toString(),
-                                        lat2: Constant.selectedLocation.location!.latitude.toString(),
-                                        lng2: Constant.selectedLocation.location!.longitude.toString(),
+                                        lat2: Constant
+                                            .selectedLocation.location!.latitude
+                                            .toString(),
+                                        lng2: Constant.selectedLocation
+                                            .location!.longitude
+                                            .toString(),
                                       )} ${Constant.distanceType}",
                                       style: TextStyle(
-                                        color: isDark ? AppThemeData.secondary300 : AppThemeData.secondary300,
+                                        color: isDark
+                                            ? AppThemeData.secondary300
+                                            : AppThemeData.secondary300,
                                         fontFamily: 'Urbanist',
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -757,8 +948,11 @@ class AllRestaurant extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 18,
                             overflow: TextOverflow.ellipsis,
-                            fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
-                            color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                            fontFamily: 'Urbanist',
+                            fontWeight: FontWeight.w600,
+                            color: isDark
+                                ? AppThemeData.grey50
+                                : AppThemeData.grey900,
                           ),
                         ),
                         TranslatedText(
@@ -769,7 +963,9 @@ class AllRestaurant extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             fontFamily: 'Urbanist',
                             fontWeight: FontWeight.w500,
-                            color: isDark ? AppThemeData.grey400 : AppThemeData.grey400,
+                            color: isDark
+                                ? AppThemeData.grey400
+                                : AppThemeData.grey400,
                           ),
                         ),
                         (isOpen == false)
@@ -777,10 +973,14 @@ class AllRestaurant extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   TranslatedText(
-                                    Constant.getNextOpeningTime(vendorModel, DateTime.now()),
+                                    Constant.getNextOpeningTime(
+                                        vendorModel, DateTime.now()),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(color: AppThemeData.danger300, fontFamily: 'Urbanist', fontWeight: FontWeight.w500),
+                                    style: TextStyle(
+                                        color: AppThemeData.danger300,
+                                        fontFamily: 'Urbanist',
+                                        fontWeight: FontWeight.w500),
                                   )
                                 ],
                               )
@@ -814,13 +1014,17 @@ class NewArrival extends StatelessWidget {
       child: ListView.builder(
         physics: const BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal,
-        itemCount: controller.newArrivalRestaurantList.length >= 10 ? 10 : controller.newArrivalRestaurantList.length,
+        itemCount: controller.newArrivalRestaurantList.length >= 10
+            ? 10
+            : controller.newArrivalRestaurantList.length,
         itemBuilder: (BuildContext context, int index) {
           VendorModel vendorModel = controller.newArrivalRestaurantList[index];
-          bool isOpen = Constant.statusCheckOpenORClose(vendorModel: vendorModel);
+          bool isOpen =
+              Constant.statusCheckOpenORClose(vendorModel: vendorModel);
           return InkWell(
             onTap: () {
-              Get.to(const DineInDetailsScreen(), arguments: {"vendorModel": vendorModel});
+              Get.to(const DineInDetailsScreen(),
+                  arguments: {"vendorModel": vendorModel});
             },
             child: Padding(
               padding: const EdgeInsets.only(right: 10),
@@ -831,11 +1035,14 @@ class NewArrival extends StatelessWidget {
                   children: [
                     Expanded(
                       child: ClipRRect(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
                         child: Stack(
                           children: [
                             NetworkImageWidget(
-                              imageUrl: vendorModel.photo.toString(),
+                              imageUrl:
+                                  RestaurantCardImageResolver.resolveSingleUrl(
+                                      vendorModel),
                               fit: BoxFit.cover,
                               height: Responsive.height(100, context),
                               width: Responsive.width(100, context),
@@ -845,7 +1052,10 @@ class NewArrival extends StatelessWidget {
                                 gradient: LinearGradient(
                                   begin: const Alignment(0.00, 1.00),
                                   end: const Alignment(0, -1),
-                                  colors: [Colors.black.withValues(alpha: 0), AppThemeData.grey900],
+                                  colors: [
+                                    Colors.black.withValues(alpha: 0),
+                                    AppThemeData.grey900
+                                  ],
                                 ),
                               ),
                             ),
@@ -854,18 +1064,39 @@ class NewArrival extends StatelessWidget {
                               top: 10,
                               child: InkWell(
                                 onTap: () async {
-                                  if (controller.favouriteList.where((p0) => p0.restaurantId == vendorModel.id).isNotEmpty) {
-                                    FavouriteModel favouriteModel = FavouriteModel(restaurantId: vendorModel.id, userId: FireStoreUtils.getCurrentUid());
-                                    controller.favouriteList.removeWhere((item) => item.restaurantId == vendorModel.id);
-                                    await FireStoreUtils.removeFavouriteRestaurant(favouriteModel);
+                                  if (controller.favouriteList
+                                      .where((p0) =>
+                                          p0.restaurantId == vendorModel.id)
+                                      .isNotEmpty) {
+                                    FavouriteModel favouriteModel =
+                                        FavouriteModel(
+                                            restaurantId: vendorModel.id,
+                                            userId:
+                                                FireStoreUtils.getCurrentUid());
+                                    controller.favouriteList.removeWhere(
+                                        (item) =>
+                                            item.restaurantId ==
+                                            vendorModel.id);
+                                    await FireStoreUtils
+                                        .removeFavouriteRestaurant(
+                                            favouriteModel);
                                   } else {
-                                    FavouriteModel favouriteModel = FavouriteModel(restaurantId: vendorModel.id, userId: FireStoreUtils.getCurrentUid());
-                                    controller.favouriteList.add(favouriteModel);
-                                    await FireStoreUtils.setFavouriteRestaurant(favouriteModel);
+                                    FavouriteModel favouriteModel =
+                                        FavouriteModel(
+                                            restaurantId: vendorModel.id,
+                                            userId:
+                                                FireStoreUtils.getCurrentUid());
+                                    controller.favouriteList
+                                        .add(favouriteModel);
+                                    await FireStoreUtils.setFavouriteRestaurant(
+                                        favouriteModel);
                                   }
                                 },
                                 child: Obx(
-                                  () => controller.favouriteList.where((p0) => p0.restaurantId == vendorModel.id).isNotEmpty
+                                  () => controller.favouriteList
+                                          .where((p0) =>
+                                              p0.restaurantId == vendorModel.id)
+                                          .isNotEmpty
                                       ? SvgPicture.asset(
                                           "assets/icons/ic_like_fill.svg",
                                         )
@@ -889,8 +1120,10 @@ class NewArrival extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 16,
                         overflow: TextOverflow.ellipsis,
-                        fontFamily: 'Urbanist', fontWeight: FontWeight.w600,
-                        color: isDark ? AppThemeData.grey50 : AppThemeData.grey50,
+                        fontFamily: 'Urbanist',
+                        fontWeight: FontWeight.w600,
+                        color:
+                            isDark ? AppThemeData.grey50 : AppThemeData.grey50,
                       ),
                     ),
                     Row(
@@ -899,7 +1132,8 @@ class NewArrival extends StatelessWidget {
                           children: [
                             SvgPicture.asset(
                               "assets/icons/ic_star.svg",
-                              colorFilter: ColorFilter.mode(AppThemeData.primary300, BlendMode.srcIn),
+                              colorFilter: ColorFilter.mode(
+                                  AppThemeData.primary300, BlendMode.srcIn),
                             ),
                             const SizedBox(
                               width: 10,
@@ -912,7 +1146,9 @@ class NewArrival extends StatelessWidget {
                                 overflow: TextOverflow.ellipsis,
                                 fontFamily: 'Urbanist',
                                 fontWeight: FontWeight.w500,
-                                color: isDark ? AppThemeData.grey400 : AppThemeData.grey400,
+                                color: isDark
+                                    ? AppThemeData.grey400
+                                    : AppThemeData.grey400,
                               ),
                             ),
                           ],
@@ -922,7 +1158,8 @@ class NewArrival extends StatelessWidget {
                         ),
                         Row(
                           children: [
-                            SvgPicture.asset("assets/icons/ic_map_distance.svg"),
+                            SvgPicture.asset(
+                                "assets/icons/ic_map_distance.svg"),
                             const SizedBox(
                               width: 10,
                             ),
@@ -930,8 +1167,12 @@ class NewArrival extends StatelessWidget {
                               "${Constant.getDistance(
                                 lat1: vendorModel.latitude.toString(),
                                 lng1: vendorModel.longitude.toString(),
-                                lat2: Constant.selectedLocation.location!.latitude.toString(),
-                                lng2: Constant.selectedLocation.location!.longitude.toString(),
+                                lat2: Constant
+                                    .selectedLocation.location!.latitude
+                                    .toString(),
+                                lng2: Constant
+                                    .selectedLocation.location!.longitude
+                                    .toString(),
                               )} ${Constant.distanceType}",
                               textAlign: TextAlign.start,
                               maxLines: 1,
@@ -939,7 +1180,9 @@ class NewArrival extends StatelessWidget {
                                 overflow: TextOverflow.ellipsis,
                                 fontFamily: 'Urbanist',
                                 fontWeight: FontWeight.w500,
-                                color: isDark ? AppThemeData.grey400 : AppThemeData.grey400,
+                                color: isDark
+                                    ? AppThemeData.grey400
+                                    : AppThemeData.grey400,
                               ),
                             ),
                           ],
@@ -954,7 +1197,9 @@ class NewArrival extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         fontFamily: 'Urbanist',
                         fontWeight: FontWeight.w500,
-                        color: isDark ? AppThemeData.grey400 : AppThemeData.grey400,
+                        color: isDark
+                            ? AppThemeData.grey400
+                            : AppThemeData.grey400,
                       ),
                     ),
                     (isOpen == false)
@@ -962,10 +1207,14 @@ class NewArrival extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               TranslatedText(
-                                Constant.getNextOpeningTime(vendorModel, DateTime.now()),
+                                Constant.getNextOpeningTime(
+                                    vendorModel, DateTime.now()),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(color: AppThemeData.danger300, fontFamily: 'Urbanist', fontWeight: FontWeight.w500),
+                                style: TextStyle(
+                                    color: AppThemeData.danger300,
+                                    fontFamily: 'Urbanist',
+                                    fontWeight: FontWeight.w500),
                               )
                             ],
                           )
@@ -996,10 +1245,14 @@ class CategoryView extends StatelessWidget {
         padding: EdgeInsets.zero,
         itemCount: controller.vendorCategoryModel.length,
         itemBuilder: (context, index) {
-          VendorCategoryModel vendorCategoryModel = controller.vendorCategoryModel[index];
+          VendorCategoryModel vendorCategoryModel =
+              controller.vendorCategoryModel[index];
           return InkWell(
             onTap: () {
-              Get.to(const CategoryRestaurantScreen(), arguments: {"vendorCategoryModel": vendorCategoryModel, "dineIn": true});
+              Get.to(const CategoryRestaurantScreen(), arguments: {
+                "vendorCategoryModel": vendorCategoryModel,
+                "dineIn": true
+              });
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -1012,7 +1265,9 @@ class CategoryView extends StatelessWidget {
                       side: BorderSide(
                         width: 1,
                         strokeAlign: BorderSide.strokeAlignOutside,
-                        color: isDark ? AppThemeData.grey800 : AppThemeData.grey100,
+                        color: isDark
+                            ? AppThemeData.grey800
+                            : AppThemeData.grey100,
                       ),
                       borderRadius: BorderRadius.circular(100),
                     ),
@@ -1032,14 +1287,18 @@ class CategoryView extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 10),
                         child: TranslatedText(
                           '${vendorCategoryModel.title}',
                           textAlign: TextAlign.center,
                           maxLines: 1,
                           style: TextStyle(
-                            color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
-                            fontFamily: 'Urbanist', fontWeight: FontWeight.w500,
+                            color: isDark
+                                ? AppThemeData.grey50
+                                : AppThemeData.grey900,
+                            fontFamily: 'Urbanist',
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       )
@@ -1082,26 +1341,36 @@ class BannerBottomView extends StatelessWidget {
                 onTap: () async {
                   if (bannerModel.redirect_type == "store") {
                     ShowToastDialog.showLoader("Please wait");
-                    VendorModel? vendorModel = await FireStoreUtils.getVendorById(bannerModel.redirect_id.toString());
+                    VendorModel? vendorModel =
+                        await FireStoreUtils.getVendorById(
+                            bannerModel.redirect_id.toString());
 
                     if (vendorModel!.zoneId == Constant.selectedZone!.id) {
                       ShowToastDialog.closeLoader();
-                      Get.to(const RestaurantDetailsScreen(), arguments: {"vendorModel": vendorModel});
+                      Get.to(const RestaurantDetailsScreen(),
+                          arguments: {"vendorModel": vendorModel});
                     } else {
                       ShowToastDialog.closeLoader();
-                      ShowToastDialog.showToast("Sorry, The Zone is not available in your area. change the other location first.");
+                      ShowToastDialog.showToast(
+                          "Sorry, The Zone is not available in your area. change the other location first.");
                     }
                   } else if (bannerModel.redirect_type == "product") {
                     ShowToastDialog.showLoader("Please wait");
-                    ProductModel? productModel = await FireStoreUtils.getProductById(bannerModel.redirect_id.toString());
-                    VendorModel? vendorModel = await FireStoreUtils.getVendorById(productModel!.vendorID.toString());
+                    ProductModel? productModel =
+                        await FireStoreUtils.getProductById(
+                            bannerModel.redirect_id.toString());
+                    VendorModel? vendorModel =
+                        await FireStoreUtils.getVendorById(
+                            productModel!.vendorID.toString());
 
                     if (vendorModel!.zoneId == Constant.selectedZone!.id) {
                       ShowToastDialog.closeLoader();
-                      Get.to(const RestaurantDetailsScreen(), arguments: {"vendorModel": vendorModel});
+                      Get.to(const RestaurantDetailsScreen(),
+                          arguments: {"vendorModel": vendorModel});
                     } else {
                       ShowToastDialog.closeLoader();
-                      ShowToastDialog.showToast("Sorry, The Zone is not available in your area. change the other location first.");
+                      ShowToastDialog.showToast(
+                          "Sorry, The Zone is not available in your area. change the other location first.");
                     }
                   } else if (bannerModel.redirect_type == "external_link") {
                     final uri = Uri.parse(bannerModel.redirect_id.toString());
@@ -1142,7 +1411,9 @@ class BannerBottomView extends StatelessWidget {
                     width: 9,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: controller.currentBottomPage.value == index ? AppThemeData.primary300 : Colors.black12,
+                      color: controller.currentBottomPage.value == index
+                          ? AppThemeData.primary300
+                          : Colors.black12,
                     ),
                   ),
                 );

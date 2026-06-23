@@ -811,24 +811,6 @@ class HomeScreen extends StatelessWidget {
                                                                       .grey800,
                                                             ),
                                                           ),
-                                                          const SizedBox(
-                                                              height: 2),
-                                                          Text(
-                                                            "${controller.closedRestaurantList.length} restaurants will be opening soon.",
-                                                            style: TextStyle(
-                                                              fontSize: 13,
-                                                              fontFamily:
-                                                                  'Urbanist',
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
-                                                              color: isDark
-                                                                  ? AppThemeData
-                                                                      .grey400
-                                                                  : AppThemeData
-                                                                      .grey500,
-                                                            ),
-                                                          ),
                                                         ],
                                                       ),
                                                     ),
@@ -844,8 +826,6 @@ class HomeScreen extends StatelessWidget {
                                             child: _sectionHeader(
                                               isDark,
                                               "Restaurants Delivering Now",
-                                              controller
-                                                  .openRestaurantList.length,
                                             ),
                                           ),
                                         if (controller
@@ -871,8 +851,6 @@ class HomeScreen extends StatelessWidget {
                                                       .isEmpty
                                                   ? "Opening Soon"
                                                   : "Currently Unavailable",
-                                              controller
-                                                  .closedRestaurantList.length,
                                               subtitle:
                                                   "Sorted by nearest opening time",
                                             ),
@@ -1084,8 +1062,8 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _sectionHeader(bool isDark, String title, int count,
-      {String? subtitle}) {
+  Widget _sectionHeader(bool isDark, String title,
+      {int? count, String? subtitle}) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 10),
       child: Column(
@@ -1102,16 +1080,18 @@ class HomeScreen extends StatelessWidget {
                   color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                 ),
               ),
-              const SizedBox(width: 6),
-              Text(
-                "($count)",
-                style: TextStyle(
-                  fontSize: 14,
-                  fontFamily: 'Urbanist',
-                  fontWeight: FontWeight.w500,
-                  color: isDark ? AppThemeData.grey400 : AppThemeData.grey500,
+              if (count != null) ...[
+                const SizedBox(width: 6),
+                Text(
+                  "($count)",
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontFamily: 'Urbanist',
+                    fontWeight: FontWeight.w500,
+                    color: isDark ? AppThemeData.grey400 : AppThemeData.grey500,
+                  ),
                 ),
-              ),
+              ],
             ],
           ),
           if (subtitle != null)

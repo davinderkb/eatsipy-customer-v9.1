@@ -357,6 +357,8 @@ class FireStoreUtils {
             value.data()?['isEnableAdsFeature'] ?? false;
         Constant.isSelfDeliveryFeature =
             value.data()!['isSelfDelivery'] ?? false;
+        Constant.isScheduledOrderEnabled =
+            value.data()?['is_scheduled_order_enabled'] ?? true;
         AppThemeData.primary300 = Color(int.parse(
             value.data()!['app_customer_color'].replaceFirst("#", "0xff")));
         Constant.taxScope = value.data()?['taxScope'] ?? "";

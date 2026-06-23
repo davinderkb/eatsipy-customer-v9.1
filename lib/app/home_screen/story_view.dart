@@ -7,6 +7,7 @@ import 'package:eatsipy_customer/models/vendor_model.dart';
 import 'package:eatsipy_customer/themes/app_them_data.dart';
 import 'package:eatsipy_customer/utils/fire_store_utils.dart';
 import 'package:eatsipy_customer/utils/network_image_widget.dart';
+import 'package:eatsipy_customer/utils/quality/restaurant_card_image_resolver.dart';
 import 'package:eatsipy_customer/widget/story_view/controller/story_controller.dart';
 import 'package:eatsipy_customer/widget/story_view/utils.dart';
 import 'package:flutter/material.dart';
@@ -102,22 +103,28 @@ class MoreStoriesState extends State<MoreStories> {
                   }
                 }),
             Padding(
-              padding: EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top + 30, left: 16, right: 16),
+              padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).viewPadding.top + 30,
+                  left: 16,
+                  right: 16),
               child: FutureBuilder(
-                  future: FireStoreUtils.getVendorById(widget.storyList[widget.index].vendorID.toString()),
+                  future: FireStoreUtils.getVendorById(
+                      widget.storyList[widget.index].vendorID.toString()),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return SizedBox();
                     } else {
                       if (snapshot.hasError) {
-                        return Center(child: TranslatedText('Error: ${snapshot.error}'));
+                        return Center(
+                            child: TranslatedText('Error: ${snapshot.error}'));
                       } else if (snapshot.data == null) {
                         return const SizedBox();
                       } else {
                         VendorModel vendorModel = snapshot.data!;
                         return InkWell(
                           onTap: () {
-                            Get.to(const RestaurantDetailsScreen(), arguments: {"vendorModel": vendorModel});
+                            Get.to(const RestaurantDetailsScreen(),
+                                arguments: {"vendorModel": vendorModel});
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -125,7 +132,8 @@ class MoreStoriesState extends State<MoreStories> {
                             children: [
                               ClipOval(
                                 child: NetworkImageWidget(
-                                  imageUrl: vendorModel.photo.toString(),
+                                  imageUrl: RestaurantCardImageResolver
+                                      .resolveSingleUrl(vendorModel),
                                   width: 50,
                                   height: 50,
                                   fit: BoxFit.cover,
@@ -152,7 +160,8 @@ class MoreStoriesState extends State<MoreStories> {
                                   ),
                                   Row(
                                     children: [
-                                      SvgPicture.asset("assets/icons/ic_star.svg"),
+                                      SvgPicture.asset(
+                                          "assets/icons/ic_star.svg"),
                                       const SizedBox(
                                         width: 5,
                                       ),
@@ -177,10 +186,13 @@ class MoreStoriesState extends State<MoreStories> {
                                 },
                                 child: Container(
                                   padding: const EdgeInsets.all(10.0),
-                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(30), color: Colors.grey),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      color: Colors.grey),
                                   child: SvgPicture.asset(
                                     "assets/icons/ic_close.svg",
-                                    colorFilter: ColorFilter.mode(AppThemeData.grey800, BlendMode.srcIn),
+                                    colorFilter: ColorFilter.mode(
+                                        AppThemeData.grey800, BlendMode.srcIn),
                                   ),
                                 ),
                               ),

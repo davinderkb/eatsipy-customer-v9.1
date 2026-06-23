@@ -44,7 +44,7 @@ class CheckoutBillSummaryCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TranslatedText(
-                      "To Pay",
+                      "Order Total",
                       style: TextStyle(
                         fontFamily: 'Urbanist',
                         fontWeight: FontWeight.w600,
@@ -82,7 +82,7 @@ class CheckoutBillSummaryCard extends StatelessWidget {
                 ),
               ),
               TranslatedText(
-                "View Bill Details",
+                "View Breakdown",
                 style: TextStyle(
                   fontFamily: 'Urbanist',
                   fontWeight: FontWeight.w700,

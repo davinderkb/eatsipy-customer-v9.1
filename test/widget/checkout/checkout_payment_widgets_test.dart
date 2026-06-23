@@ -77,10 +77,10 @@ void main() {
       ),
     );
 
-    expect(find.text('To Pay'), findsOneWidget);
+    expect(find.text('Order Total'), findsOneWidget);
     expect(find.text('Rs.180'), findsOneWidget);
     expect(find.text('Rs.50 wallet applied'), findsOneWidget);
-    expect(find.text('View Bill Details'), findsOneWidget);
+    expect(find.text('View Breakdown'), findsOneWidget);
 
     await tester.tap(find.byType(CheckoutBillSummaryCard));
     expect(tapped, isTrue);

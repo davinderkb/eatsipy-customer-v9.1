@@ -13,6 +13,7 @@ import 'package:eatsipy_customer/services/cart_provider.dart';
 import 'package:eatsipy_customer/utils/fire_store_utils.dart';
 import 'package:eatsipy_customer/utils/preferences.dart';
 import 'package:eatsipy_customer/utils/quality/home_quality_helpers.dart';
+import 'package:eatsipy_customer/utils/quality/restaurant_card_image_resolver.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -149,6 +150,12 @@ class HomeController extends GetxController {
 
       // Assign fallback images BEFORE triggering reactive rebuild
       assignFallbackImages(restaurants);
+      for (final vendor in restaurants) {
+        vendor.imageResolution = RestaurantCardImageResolver.resolve(
+          vendor: vendor,
+          fallbackImageUrl: fallbackImageAssignments[vendor.id],
+        );
+      }
       allNearestRestaurant.assignAll(restaurants);
       newArrivalRestaurantList.assignAll(
         restaurants
@@ -172,6 +179,8 @@ class HomeController extends GetxController {
         final scoreB = (ratingB * 0.7) + (1.0 / (1.0 + ageB / 30) * 5.0 * 0.3);
         return scoreB.compareTo(scoreA);
       });
+      newArrivalRestaurantList
+          .assignAll(_placeholdersLast(newArrivalRestaurantList));
       Constant.restaurantList = allNearestRestaurant;
       _applyFilters();
 
@@ -193,18 +202,29 @@ class HomeController extends GetxController {
     final values = await FireStoreUtils.getHomeCoupon();
     final now = DateTime.now();
 
-    couponList.clear();
-    couponRestaurantList.clear();
+    final tempCoupons = <CouponModel>[];
+    final tempVendors = <VendorModel>[];
     for (final c in values) {
       if (c.expiresAt!.toDate().isAfter(now)) {
         final match =
             restaurants.firstWhereOrNull((r) => r.id == c.resturantId);
         if (match != null) {
-          couponList.add(c);
-          couponRestaurantList.add(match);
+          tempCoupons.add(c);
+          tempVendors.add(match);
         }
       }
     }
+    final indices = List.generate(tempVendors.length, (i) => i);
+    indices.sort((a, b) {
+      final aPlaceholder = tempVendors[a].imageResolution?.mode ==
+          RestaurantCardImageMode.placeholder;
+      final bPlaceholder = tempVendors[b].imageResolution?.mode ==
+          RestaurantCardImageMode.placeholder;
+      if (aPlaceholder != bPlaceholder) return aPlaceholder ? 1 : -1;
+      return 0;
+    });
+    couponList.assignAll(indices.map((i) => tempCoupons[i]));
+    couponRestaurantList.assignAll(indices.map((i) => tempVendors[i]));
   }
 
   Future<void> _fetchStories(List<VendorModel> restaurants) async {
@@ -301,8 +321,21 @@ class HomeController extends GetxController {
       isOpen: (vendor) => Constant.statusCheckOpenORClose(vendorModel: vendor),
       nextOpeningOf: (vendor) => Constant.getNextOpeningDateTime(vendor, now),
     );
-    openRestaurantList.assignAll(split.open);
-    closedRestaurantList.assignAll(split.closed);
+    openRestaurantList.assignAll(_placeholdersLast(split.open));
+    closedRestaurantList.assignAll(_placeholdersLast(split.closed));
+  }
+
+  List<VendorModel> _placeholdersLast(List<VendorModel> list) {
+    final resolved = <VendorModel>[];
+    final placeholders = <VendorModel>[];
+    for (final v in list) {
+      if (v.imageResolution?.mode == RestaurantCardImageMode.placeholder) {
+        placeholders.add(v);
+      } else {
+        resolved.add(v);
+      }
+    }
+    return [...resolved, ...placeholders];
   }
 
   List<VendorModel> _filterList(List<VendorModel> source) {

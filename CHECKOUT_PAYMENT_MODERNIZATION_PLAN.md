@@ -4,7 +4,7 @@
 
 - Current phase: Phase 8 verification after checkout modernization implementation.
 - Baseline verification: `flutter test` passed with 42 tests before checkout modernization work.
-- Latest verification: `flutter test` passed with 69 tests after checkout widget/golden coverage and final mounted-guard cleanup. `dart format --set-exit-if-changed` passed on touched checkout/payment files. Newly added payment layers and checkout component tests pass scoped analyzer with no issues; wider touched-file analyzer still exits non-zero because of legacy info-level lints in older cart/select-payment/Firestore files.
+- Latest verification: `dart format --set-exit-if-changed lib/constant/constant.dart lib/utils/fire_store_utils.dart lib/app/cart_screen/cart_screen.dart` passed. `flutter analyze lib/app/cart_screen/cart_screen.dart` passed with no issues. Full `flutter analyze` on `lib/constant/constant.dart` and `lib/utils/fire_store_utils.dart` still reports pre-existing info-level legacy lints unrelated to this change. `flutter test` passed with 69 tests after scheduled-order global setting support.
 - Existing uncommitted fixes to preserve:
   - `lib/app/cart_screen/cart_screen.dart`
   - `lib/controllers/cart_controller.dart`
@@ -51,6 +51,24 @@
 - Added widget tests for checkout payment mode presentation and gateway-name hiding.
 - Added golden tests for checkout bill summary and payment mode rows.
 - Added mounted guards around checkout payment handoff to avoid launching payment after cart screen disposal.
+- Redesigned `CartScreen` checkout hierarchy to: Your Order, Complete Your Meal, Offers, Delivery, Payment, Order Total, Tip Your Delivery Partner, sticky CTA.
+- Replaced fixed-height checkout footer with a safe-area-aware sticky footer and compact payment/total/action layout.
+- Replaced oversized delivery type/tip areas with a segmented delivery control, dedicated ETA/address cards, and compact tip chips.
+- Renamed customer-facing checkout copy from "Frequently ordered together" to "Complete Your Meal", offer labels to "Offers", "Payment Method" to "Payment", and "Bill Details" to "Order Total".
+- Refined checkout cart items to remove food images, keep item/customization text on the left, quantity/final price on the right, and render variant/addon details as human-friendly secondary text instead of large chip blocks or addon price labels.
+- Grouped ETA, delivery type, and address into one compact Delivery card.
+- Moved `+ Add More Items` and `Add note for restaurant` inside the single `Your Order` card and removed the standalone Delivery Instructions section.
+- Refined the order card actions so `Add More Items` and `Restaurant Note` sit in parallel. Restaurant notes now open in a bottom sheet with frequent suggestions, and saved notes render below items with edit access.
+- Aligned checkout add-on/customization text with the item name instead of the veg/non-veg marker.
+- Refined checkout customization editing: customizable cart rows show a small `Edit` affordance, item-row taps open the editor instead of restaurant/menu navigation, preselect existing add-ons in the cart editor, and save add-on selection/unselection back to the same cart row.
+- Refined restaurant note UX to an input-like `Add note for restaurant` row with neutral styling; the note bottom sheet shows only 2-3 recent user notes below the text field when available and no hardcoded quick suggestions.
+- Refined `Add More Items` to a plain surface action with subtle elevation and theme-colored icon/text.
+- Reduced checkout body bottom clearance after the Tip section so the final section stays reachable above the sticky CTA without excessive blank overscroll.
+- Made `Complete Your Meal` checkout cards responsive so image height, card width, and list height scale together and avoid small-screen overflow.
+- Removed the duplicate body Payment section; selected payment and `Change` now remain in the sticky Total Payable footer only.
+- Added customer checkout support for `settings/globalSettings.is_scheduled_order_enabled`: Schedule is hidden and checkout behaves as instant delivery when disabled.
+- Documented admin-panel support for the scheduled-order toggle: admin should expose a global settings switch that writes `settings/globalSettings.is_scheduled_order_enabled`.
+- Renamed compact bill card label to "Order Total", changed the action to "View Breakdown", and added `Addons` to the order-total bottom sheet when addon amounts exist.
 
 ## Pending Work
 

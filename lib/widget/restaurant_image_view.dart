@@ -43,10 +43,11 @@ class _RestaurantImageViewState extends State<RestaurantImageView> {
 
   void _resolveMode() {
     final vendor = widget.vendorModel;
-    _resolution = RestaurantCardImageResolver.resolve(
-      vendor: vendor,
-      fallbackImageUrl: widget.fallbackImageUrl,
-    );
+    _resolution = vendor.imageResolution ??
+        RestaurantCardImageResolver.resolve(
+          vendor: vendor,
+          fallbackImageUrl: widget.fallbackImageUrl,
+        );
     debugPrint(
         '📸 ImageView ${vendor.title}: mode=${_resolution.mode}, fallbackUrl=${widget.fallbackImageUrl}');
   }

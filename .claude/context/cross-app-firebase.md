@@ -56,6 +56,16 @@ Map of lowercase category keyword → list of image URLs:
 
 ---
 
+## Existing Settings Document (`settings/globalSettings`)
+
+| Field | Type | Default | Purpose |
+|-------|------|---------|---------|
+| `is_scheduled_order_enabled` | bool | `true` | Controls whether customer checkout shows scheduled delivery. When false, checkout hides Schedule and treats delivery as instant. |
+
+Admin panel should expose this as a global checkout toggle, for example "Enable scheduled orders". No migration is required; if the field is missing, customer app treats scheduled orders as enabled for backward compatibility.
+
+---
+
 ## New Settings Document (`settings/paymentGatewayConfig`)
 
 Customer checkout supports PhonePe, Cashfree, and Razorpay in code, but admin selects exactly one active online gateway at a time. Users choose payment modes, not gateways.

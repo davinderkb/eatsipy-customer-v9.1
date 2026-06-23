@@ -31,6 +31,7 @@ import 'package:eatsipy_customer/themes/round_button_fill.dart';
 import 'package:eatsipy_customer/themes/text_field_widget.dart';
 import 'package:eatsipy_customer/utils/fire_store_utils.dart';
 import 'package:eatsipy_customer/utils/network_image_widget.dart';
+import 'package:eatsipy_customer/utils/quality/restaurant_card_image_resolver.dart';
 import 'package:eatsipy_customer/utils/preferences.dart';
 import 'package:eatsipy_customer/utils/translation_notifier.dart';
 import 'package:eatsipy_customer/widget/gradiant_text.dart';
@@ -59,7 +60,8 @@ class HomeScreenTwo extends StatelessWidget {
       init: HomeController(),
       builder: (controller) {
         return Scaffold(
-          backgroundColor: isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
+          backgroundColor:
+              isDark ? AppThemeData.surfaceDark : AppThemeData.surface,
           body: controller.isLoading.value
               ? Constant.loader()
               : Constant.isZoneAvailable == false
@@ -78,7 +80,13 @@ class HomeScreenTwo extends StatelessWidget {
                           ),
                           TranslatedText(
                             "No Restaurants Found in Your Area",
-                            style: TextStyle(color: isDark ? AppThemeData.grey100 : AppThemeData.grey800, fontSize: 22, fontFamily: 'Urbanist', fontWeight: FontWeight.w600),
+                            style: TextStyle(
+                                color: isDark
+                                    ? AppThemeData.grey100
+                                    : AppThemeData.grey800,
+                                fontSize: 22,
+                                fontFamily: 'Urbanist',
+                                fontWeight: FontWeight.w600),
                           ),
                           const SizedBox(
                             height: 5,
@@ -86,7 +94,13 @@ class HomeScreenTwo extends StatelessWidget {
                           TranslatedText(
                             "Currently, there are no available restaurants in your zone. Try changing your location to find nearby options.",
                             textAlign: TextAlign.center,
-                            style: TextStyle(color: isDark ? AppThemeData.grey50 : AppThemeData.grey500, fontSize: 16, fontFamily: 'Urbanist', fontWeight: FontWeight.w700),
+                            style: TextStyle(
+                                color: isDark
+                                    ? AppThemeData.grey50
+                                    : AppThemeData.grey500,
+                                fontSize: 16,
+                                fontFamily: 'Urbanist',
+                                fontWeight: FontWeight.w700),
                           ),
                           const SizedBox(
                             height: 20,
@@ -105,26 +119,37 @@ class HomeScreenTwo extends StatelessWidget {
                       ),
                     )
                   : Padding(
-                      padding: EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top),
+                      padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).viewPadding.top),
                       child: controller.isListView.value == false
                           ? const MapView()
                           : Column(
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         children: [
                                           InkWell(
                                             onTap: () {
-                                              DashBoardController dashBoardController = Get.put(DashBoardController());
-                                              dashBoardController.selectedIndex.value = 3;
+                                              DashBoardController
+                                                  dashBoardController = Get.put(
+                                                      DashBoardController());
+                                              dashBoardController
+                                                  .selectedIndex.value = 3;
                                             },
                                             child: ClipOval(
                                               child: NetworkImageWidget(
-                                                imageUrl: Constant.userModel == null ? "" : Constant.userModel!.profilePictureURL.toString(),
+                                                imageUrl:
+                                                    Constant.userModel == null
+                                                        ? ""
+                                                        : Constant.userModel!
+                                                            .profilePictureURL
+                                                            .toString(),
                                                 height: 40,
                                                 width: 40,
                                                 errorWidget: Image.asset(
@@ -141,125 +166,239 @@ class HomeScreenTwo extends StatelessWidget {
                                           ),
                                           Expanded(
                                             child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 Constant.userModel == null
                                                     ? InkWell(
                                                         onTap: () {
-                                                          Get.offAll(const LoginScreen());
+                                                          Get.offAll(
+                                                              const LoginScreen());
                                                         },
                                                         child: TranslatedText(
                                                           "Login",
-                                                          textAlign: TextAlign.center,
+                                                          textAlign:
+                                                              TextAlign.center,
                                                           style: TextStyle(
-                                                            fontFamily: 'Urbanist',
-                                                            fontWeight: FontWeight.w500,
-                                                            color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                            fontFamily:
+                                                                'Urbanist',
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            color: isDark
+                                                                ? AppThemeData
+                                                                    .grey50
+                                                                : AppThemeData
+                                                                    .grey900,
                                                             fontSize: 12,
                                                           ),
                                                         ),
                                                       )
                                                     : TranslatedText(
                                                         "${Constant.userModel!.fullName()}",
-                                                        textAlign: TextAlign.center,
+                                                        textAlign:
+                                                            TextAlign.center,
                                                         style: TextStyle(
-                                                          fontFamily: 'Urbanist',
-                                                          fontWeight: FontWeight.w500,
-                                                          color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                          fontFamily:
+                                                              'Urbanist',
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: isDark
+                                                              ? AppThemeData
+                                                                  .grey50
+                                                              : AppThemeData
+                                                                  .grey900,
                                                           fontSize: 12,
                                                         ),
                                                       ),
                                                 InkWell(
                                                   onTap: () async {
-                                                    if (Constant.userModel != null) {
-                                                      Get.to(const AddressListScreen())!.then(
+                                                    if (Constant.userModel !=
+                                                        null) {
+                                                      Get.to(const AddressListScreen())!
+                                                          .then(
                                                         (value) {
                                                           if (value != null) {
-                                                            ShippingAddress addressModel = value;
-                                                            Constant.selectedLocation = addressModel;
-                                                            controller.getData();
+                                                            ShippingAddress
+                                                                addressModel =
+                                                                value;
+                                                            Constant.selectedLocation =
+                                                                addressModel;
+                                                            controller
+                                                                .getData();
                                                           }
                                                         },
                                                       );
                                                     } else {
                                                       Constant.checkPermission(
                                                           onTap: () async {
-                                                            ShowToastDialog.showLoader("Please wait");
-                                                            ShippingAddress addressModel = ShippingAddress();
+                                                            ShowToastDialog
+                                                                .showLoader(
+                                                                    "Please wait");
+                                                            ShippingAddress
+                                                                addressModel =
+                                                                ShippingAddress();
                                                             try {
-                                                              await Geolocator.requestPermission();
-                                                              await Geolocator.getCurrentPosition();
-                                                              ShowToastDialog.closeLoader();
-                                                              if (Constant.selectedMapType == 'osm') {
-                                                                final result = await Get.to(() => MapPickerPage());
-                                                                if (result != null) {
-                                                                  final firstPlace = result;
-                                                                  final lat = firstPlace.coordinates.latitude;
-                                                                  final lng = firstPlace.coordinates.longitude;
-                                                                  final address = firstPlace.address;
+                                                              await Geolocator
+                                                                  .requestPermission();
+                                                              await Geolocator
+                                                                  .getCurrentPosition();
+                                                              ShowToastDialog
+                                                                  .closeLoader();
+                                                              if (Constant
+                                                                      .selectedMapType ==
+                                                                  'osm') {
+                                                                final result =
+                                                                    await Get.to(
+                                                                        () =>
+                                                                            MapPickerPage());
+                                                                if (result !=
+                                                                    null) {
+                                                                  final firstPlace =
+                                                                      result;
+                                                                  final lat = firstPlace
+                                                                      .coordinates
+                                                                      .latitude;
+                                                                  final lng = firstPlace
+                                                                      .coordinates
+                                                                      .longitude;
+                                                                  final address =
+                                                                      firstPlace
+                                                                          .address;
 
-                                                                  addressModel.addressAs = "Home";
-                                                                  addressModel.locality = address.toString();
-                                                                  addressModel.location = UserLocation(latitude: lat, longitude: lng);
-                                                                  Constant.selectedLocation = addressModel;
-                                                                  controller.getData();
+                                                                  addressModel
+                                                                          .addressAs =
+                                                                      "Home";
+                                                                  addressModel
+                                                                          .locality =
+                                                                      address
+                                                                          .toString();
+                                                                  addressModel
+                                                                          .location =
+                                                                      UserLocation(
+                                                                          latitude:
+                                                                              lat,
+                                                                          longitude:
+                                                                              lng);
+                                                                  Constant.selectedLocation =
+                                                                      addressModel;
+                                                                  controller
+                                                                      .getData();
                                                                   Get.back();
                                                                 }
                                                               } else {
-                                                                Get.to(LocationPickerScreen())!.then((value) async {
-                                                                  if (value != null) {
-                                                                    SelectedLocationModel selectedLocationModel = value;
+                                                                Get.to(LocationPickerScreen())!
+                                                                    .then(
+                                                                        (value) async {
+                                                                  if (value !=
+                                                                      null) {
+                                                                    SelectedLocationModel
+                                                                        selectedLocationModel =
+                                                                        value;
 
-                                                                    ShippingAddress addressModel = ShippingAddress();
-                                                                    addressModel.addressAs = "Home";
-                                                                    addressModel.locality = Constant.formatAddress(selectedLocation: selectedLocationModel);
-                                                                    addressModel.location =
-                                                                        UserLocation(latitude: selectedLocationModel.latLng!.latitude, longitude: selectedLocationModel.latLng!.longitude);
-                                                                    Constant.selectedLocation = addressModel;
-                                                                    controller.getData();
+                                                                    ShippingAddress
+                                                                        addressModel =
+                                                                        ShippingAddress();
+                                                                    addressModel
+                                                                            .addressAs =
+                                                                        "Home";
+                                                                    addressModel
+                                                                            .locality =
+                                                                        Constant.formatAddress(
+                                                                            selectedLocation:
+                                                                                selectedLocationModel);
+                                                                    addressModel.location = UserLocation(
+                                                                        latitude: selectedLocationModel
+                                                                            .latLng!
+                                                                            .latitude,
+                                                                        longitude: selectedLocationModel
+                                                                            .latLng!
+                                                                            .longitude);
+                                                                    Constant.selectedLocation =
+                                                                        addressModel;
+                                                                    controller
+                                                                        .getData();
                                                                     Get.back();
                                                                   }
                                                                 });
                                                               }
                                                             } catch (e) {
-                                                              await placemarkFromCoordinates(19.228825, 72.854118).then((valuePlaceMaker) {
-                                                                Placemark placeMark = valuePlaceMaker[0];
-                                                                addressModel.addressAs = "Home";
-                                                                addressModel.location = UserLocation(latitude: 19.228825, longitude: 72.854118);
-                                                                String currentLocation =
+                                                              await placemarkFromCoordinates(
+                                                                      19.228825,
+                                                                      72.854118)
+                                                                  .then(
+                                                                      (valuePlaceMaker) {
+                                                                Placemark
+                                                                    placeMark =
+                                                                    valuePlaceMaker[
+                                                                        0];
+                                                                addressModel
+                                                                        .addressAs =
+                                                                    "Home";
+                                                                addressModel
+                                                                        .location =
+                                                                    UserLocation(
+                                                                        latitude:
+                                                                            19.228825,
+                                                                        longitude:
+                                                                            72.854118);
+                                                                String
+                                                                    currentLocation =
                                                                     "${placeMark.name}, ${placeMark.subLocality}, ${placeMark.locality}, ${placeMark.administrativeArea}, ${placeMark.postalCode}, ${placeMark.country}";
-                                                                addressModel.locality = currentLocation;
+                                                                addressModel
+                                                                        .locality =
+                                                                    currentLocation;
                                                               });
 
-                                                              Constant.selectedLocation = addressModel;
-                                                              ShowToastDialog.closeLoader();
-                                                              controller.getData();
+                                                              Constant.selectedLocation =
+                                                                  addressModel;
+                                                              ShowToastDialog
+                                                                  .closeLoader();
+                                                              controller
+                                                                  .getData();
                                                             }
                                                           },
                                                           context: context);
                                                     }
                                                   },
                                                   child: ValueListenableBuilder(
-                                                      valueListenable: TranslationNotifier.refresh,
+                                                      valueListenable:
+                                                          TranslationNotifier
+                                                              .refresh,
                                                       builder: (_, __, ___) {
                                                         return Text.rich(
                                                           maxLines: 1,
-                                                          overflow: TextOverflow.ellipsis,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
                                                           TextSpan(
                                                             children: [
                                                               TextSpan(
-                                                                text: Constant.selectedLocation.getFullAddress(),
-                                                                style: TextStyle(
-                                                                  fontFamily: 'Urbanist',
-                                                                  fontWeight: FontWeight.w500,
-                                                                  overflow: TextOverflow.ellipsis,
-                                                                  color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                                text: Constant
+                                                                    .selectedLocation
+                                                                    .getFullAddress(),
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'Urbanist',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                  color: isDark
+                                                                      ? AppThemeData
+                                                                          .grey50
+                                                                      : AppThemeData
+                                                                          .grey900,
                                                                   fontSize: 14,
                                                                 ),
                                                               ),
                                                               WidgetSpan(
-                                                                child: SvgPicture.asset("assets/icons/ic_down.svg"),
+                                                                child: SvgPicture
+                                                                    .asset(
+                                                                        "assets/icons/ic_down.svg"),
                                                               ),
                                                             ],
                                                           ),
@@ -274,35 +413,55 @@ class HomeScreenTwo extends StatelessWidget {
                                           ),
                                           Obx(
                                             () => badges.Badge(
-                                              showBadge: cartItem.isEmpty ? false : true,
-                                              position: badges.BadgePosition.topEnd(top: -4, end: -4),
+                                              showBadge: cartItem.isEmpty
+                                                  ? false
+                                                  : true,
+                                              position:
+                                                  badges.BadgePosition.topEnd(
+                                                      top: -4, end: -4),
                                               badgeContent: Text(
                                                 "${cartItem.length}",
                                                 style: const TextStyle(
                                                   fontSize: 11,
-                                                  overflow: TextOverflow.ellipsis,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                   fontFamily: 'Urbanist',
                                                   fontWeight: FontWeight.w600,
                                                   color: AppThemeData.grey50,
                                                 ),
                                               ),
-                                              badgeStyle: const badges.BadgeStyle(
+                                              badgeStyle:
+                                                  const badges.BadgeStyle(
                                                 shape: badges.BadgeShape.circle,
-                                                badgeColor: AppThemeData.cartBadge,
+                                                badgeColor:
+                                                    AppThemeData.cartBadge,
                                                 padding: EdgeInsets.all(5),
                                               ),
                                               child: InkWell(
                                                 onTap: () async {
-                                                  (await Get.to(const CartScreen()));
+                                                  (await Get.to(
+                                                      const CartScreen()));
                                                   controller.getCartData();
                                                 },
                                                 child: ClipOval(
                                                   child: Container(
-                                                      padding: const EdgeInsets.all(8.0),
-                                                      color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      color: isDark
+                                                          ? AppThemeData.grey900
+                                                          : AppThemeData.grey50,
                                                       child: SvgPicture.asset(
                                                         "assets/icons/ic_shoping_cart.svg",
-                                                        colorFilter: ColorFilter.mode(isDark ? AppThemeData.grey50 : AppThemeData.grey900, BlendMode.srcIn),
+                                                        colorFilter:
+                                                            ColorFilter.mode(
+                                                                isDark
+                                                                    ? AppThemeData
+                                                                        .grey50
+                                                                    : AppThemeData
+                                                                        .grey900,
+                                                                BlendMode
+                                                                    .srcIn),
                                                       )),
                                                 ),
                                               ),
@@ -315,15 +474,22 @@ class HomeScreenTwo extends StatelessWidget {
                                       ),
                                       InkWell(
                                         onTap: () {
-                                          Get.to(const SearchScreen(), arguments: {"vendorList": controller.allNearestRestaurant});
+                                          Get.to(const SearchScreen(),
+                                              arguments: {
+                                                "vendorList": controller
+                                                    .allNearestRestaurant
+                                              });
                                         },
                                         child: TextFieldWidget(
-                                          hintText: 'Search the dish, restaurant, food, meals',
+                                          hintText:
+                                              'Search the dish, restaurant, food, meals',
                                           controller: null,
                                           enable: false,
                                           prefix: Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                                            child: SvgPicture.asset("assets/icons/ic_search.svg"),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 16),
+                                            child: SvgPicture.asset(
+                                                "assets/icons/ic_search.svg"),
                                           ),
                                         ),
                                       ),
@@ -340,45 +506,60 @@ class HomeScreenTwo extends StatelessWidget {
                                         controller.bannerModel.isEmpty
                                             ? const SizedBox()
                                             : Padding(
-                                                padding: const EdgeInsets.symmetric(horizontal: 16),
-                                                child: BannerView(controller: controller),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 16),
+                                                child: BannerView(
+                                                    controller: controller),
                                               ),
                                         const SizedBox(
                                           height: 20,
                                         ),
                                         Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                                          child: CategoryView(controller: controller),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 16),
+                                          child: CategoryView(
+                                              controller: controller),
                                         ),
                                         controller.couponRestaurantList.isEmpty
                                             ? const SizedBox()
                                             : Padding(
-                                                padding: const EdgeInsets.symmetric(horizontal: 16),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 16),
                                                 child: Column(
                                                   children: [
                                                     const SizedBox(
                                                       height: 20,
                                                     ),
-                                                    OfferView(controller: controller),
+                                                    OfferView(
+                                                        controller: controller),
                                                   ],
                                                 ),
                                               ),
-                                        controller.storyList.isEmpty || Constant.storyEnable == false
+                                        controller.storyList.isEmpty ||
+                                                Constant.storyEnable == false
                                             ? const SizedBox()
                                             : Padding(
-                                                padding: const EdgeInsets.symmetric(horizontal: 16),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 16),
                                                 child: Column(
                                                   children: [
                                                     const SizedBox(
                                                       height: 20,
                                                     ),
-                                                    StoryView(controller: controller),
+                                                    StoryView(
+                                                        controller: controller),
                                                   ],
                                                 ),
                                               ),
                                         Visibility(
-                                          visible: Constant.isEnableAdsFeature == true,
-                                          child: controller.advertisementList.isEmpty
+                                          visible:
+                                              Constant.isEnableAdsFeature ==
+                                                  true,
+                                          child: controller
+                                                  .advertisementList.isEmpty
                                               ? const SizedBox()
                                               : Column(
                                                   children: [
@@ -386,42 +567,79 @@ class HomeScreenTwo extends StatelessWidget {
                                                       height: 20,
                                                     ),
                                                     Container(
-                                                      margin: const EdgeInsets.symmetric(horizontal: 16),
-                                                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                                                      margin: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 16),
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 16,
+                                                          vertical: 16),
                                                       decoration: BoxDecoration(
-                                                        borderRadius: BorderRadius.circular(20),
-                                                        color: AppThemeData.primary300.withAlpha(40),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20),
+                                                        color: AppThemeData
+                                                            .primary300
+                                                            .withAlpha(40),
                                                       ),
                                                       child: Column(
-                                                        mainAxisAlignment: MainAxisAlignment.start,
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
                                                         children: [
                                                           Row(
                                                             children: [
                                                               Expanded(
-                                                                child: TranslatedText(
+                                                                child:
+                                                                    TranslatedText(
                                                                   "Highlights for you",
-                                                                  textAlign: TextAlign.start,
-                                                                  style: TextStyle(
-                                                                    fontFamily: 'Urbanist',
-                                                                    fontWeight: FontWeight.w600,
-                                                                    fontSize: 16,
-                                                                    color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .start,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontFamily:
+                                                                        'Urbanist',
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                    fontSize:
+                                                                        16,
+                                                                    color: isDark
+                                                                        ? AppThemeData
+                                                                            .grey50
+                                                                        : AppThemeData
+                                                                            .grey900,
                                                                   ),
                                                                 ),
                                                               ),
                                                               InkWell(
                                                                 onTap: () {
-                                                                  Get.to(AllAdvertisementScreen())?.then((value) {
-                                                                    controller.getFavouriteRestaurant();
+                                                                  Get.to(AllAdvertisementScreen())
+                                                                      ?.then(
+                                                                          (value) {
+                                                                    controller
+                                                                        .getFavouriteRestaurant();
                                                                   });
                                                                 },
-                                                                child: TranslatedText(
+                                                                child:
+                                                                    TranslatedText(
                                                                   "See all",
-                                                                  textAlign: TextAlign.center,
-                                                                  style: TextStyle(
-                                                                    fontFamily: 'Urbanist',
-                                                                    color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontFamily:
+                                                                        'Urbanist',
+                                                                    color: isDark
+                                                                        ? AppThemeData
+                                                                            .primary300
+                                                                        : AppThemeData
+                                                                            .primary300,
                                                                   ),
                                                                 ),
                                                               )
@@ -432,13 +650,33 @@ class HomeScreenTwo extends StatelessWidget {
                                                           ),
                                                           SizedBox(
                                                             height: 220,
-                                                            child: ListView.builder(
-                                                              physics: const BouncingScrollPhysics(),
-                                                              scrollDirection: Axis.horizontal,
-                                                              itemCount: controller.advertisementList.length >= 10 ? 10 : controller.advertisementList.length,
-                                                              padding: EdgeInsets.all(0),
-                                                              itemBuilder: (BuildContext context, int index) {
-                                                                return AdvertisementHomeCard(controller: controller, model: controller.advertisementList[index]);
+                                                            child: ListView
+                                                                .builder(
+                                                              physics:
+                                                                  const BouncingScrollPhysics(),
+                                                              scrollDirection:
+                                                                  Axis.horizontal,
+                                                              itemCount: controller
+                                                                          .advertisementList
+                                                                          .length >=
+                                                                      10
+                                                                  ? 10
+                                                                  : controller
+                                                                      .advertisementList
+                                                                      .length,
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(0),
+                                                              itemBuilder:
+                                                                  (BuildContext
+                                                                          context,
+                                                                      int index) {
+                                                                return AdvertisementHomeCard(
+                                                                    controller:
+                                                                        controller,
+                                                                    model: controller
+                                                                            .advertisementList[
+                                                                        index]);
                                                               },
                                                             ),
                                                           ),
@@ -467,25 +705,34 @@ class HomeScreenTwo extends StatelessWidget {
                               ],
                             ),
                     ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
           floatingActionButton: !Constant.showHomeQuickActions
               ? null
               : Container(
-                  decoration: BoxDecoration(color: isDark ? AppThemeData.grey800 : AppThemeData.grey100, borderRadius: const BorderRadius.all(Radius.circular(30))),
+                  decoration: BoxDecoration(
+                      color:
+                          isDark ? AppThemeData.grey800 : AppThemeData.grey100,
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(30))),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Container(
                           decoration: BoxDecoration(
-                            color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
+                            color: isDark
+                                ? AppThemeData.grey900
+                                : AppThemeData.grey50,
                             borderRadius: const BorderRadius.all(
                               Radius.circular(30),
                             ),
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
                             child: Row(
                               children: [
                                 InkWell(
@@ -494,12 +741,19 @@ class HomeScreenTwo extends StatelessWidget {
                                   },
                                   child: ClipOval(
                                     child: Container(
-                                        decoration: BoxDecoration(color: controller.isListView.value ? AppThemeData.primary300 : null),
+                                        decoration: BoxDecoration(
+                                            color: controller.isListView.value
+                                                ? AppThemeData.primary300
+                                                : null),
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: SvgPicture.asset(
                                             "assets/icons/ic_view_grid_list.svg",
-                                            colorFilter: ColorFilter.mode(controller.isListView.value ? AppThemeData.grey50 : AppThemeData.grey500, BlendMode.srcIn),
+                                            colorFilter: ColorFilter.mode(
+                                                controller.isListView.value
+                                                    ? AppThemeData.grey50
+                                                    : AppThemeData.grey500,
+                                                BlendMode.srcIn),
                                           ),
                                         )),
                                   ),
@@ -513,12 +767,22 @@ class HomeScreenTwo extends StatelessWidget {
                                   },
                                   child: ClipOval(
                                     child: Container(
-                                        decoration: BoxDecoration(color: controller.isListView.value == false ? AppThemeData.primary300 : null),
+                                        decoration: BoxDecoration(
+                                            color:
+                                                controller.isListView.value ==
+                                                        false
+                                                    ? AppThemeData.primary300
+                                                    : null),
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: SvgPicture.asset(
                                             "assets/icons/ic_map_draw.svg",
-                                            colorFilter: ColorFilter.mode(controller.isListView.value == false ? AppThemeData.grey50 : AppThemeData.grey500, BlendMode.srcIn),
+                                            colorFilter: ColorFilter.mode(
+                                                controller.isListView.value ==
+                                                        false
+                                                    ? AppThemeData.grey50
+                                                    : AppThemeData.grey500,
+                                                BlendMode.srcIn),
                                           ),
                                         )),
                                   ),
@@ -536,12 +800,19 @@ class HomeScreenTwo extends StatelessWidget {
                           },
                           child: ClipOval(
                             child: Container(
-                                decoration: BoxDecoration(color: isDark ? AppThemeData.grey900 : AppThemeData.grey50),
+                                decoration: BoxDecoration(
+                                    color: isDark
+                                        ? AppThemeData.grey900
+                                        : AppThemeData.grey50),
                                 child: Padding(
                                   padding: const EdgeInsets.all(10),
                                   child: SvgPicture.asset(
                                     "assets/icons/ic_scan_code.svg",
-                                    colorFilter: ColorFilter.mode(isDark ? AppThemeData.grey400 : AppThemeData.grey500, BlendMode.srcIn),
+                                    colorFilter: ColorFilter.mode(
+                                        isDark
+                                            ? AppThemeData.grey400
+                                            : AppThemeData.grey500,
+                                        BlendMode.srcIn),
                                   ),
                                 )),
                           ),
@@ -554,7 +825,10 @@ class HomeScreenTwo extends StatelessWidget {
                           underline: const SizedBox(),
                           value: controller.selectedOrderTypeValue.value,
                           icon: const Icon(Icons.keyboard_arrow_down),
-                          items: <String>['Delivery', if (Constant.takeawayEnabled) 'TakeAway'].map((String value) {
+                          items: <String>[
+                            'Delivery',
+                            if (Constant.takeawayEnabled) 'TakeAway'
+                          ].map((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
                               child: TranslatedText(
@@ -563,14 +837,17 @@ class HomeScreenTwo extends StatelessWidget {
                                   fontFamily: 'Urbanist',
                                   fontWeight: FontWeight.w600,
                                   fontSize: 16,
-                                  color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                  color: isDark
+                                      ? AppThemeData.grey50
+                                      : AppThemeData.grey900,
                                 ),
                               ),
                             );
                           }).toList(),
                           onChanged: (value) async {
                             if (cartItem.isEmpty) {
-                              await Preferences.setString(Preferences.foodDeliveryType, value!);
+                              await Preferences.setString(
+                                  Preferences.foodDeliveryType, value!);
                               controller.selectedOrderTypeValue.value = value;
                               controller.getData();
                             } else {
@@ -579,14 +856,19 @@ class HomeScreenTwo extends StatelessWidget {
                                   builder: (BuildContext context) {
                                     return CustomDialogBox(
                                       title: "Alert",
-                                      descriptions: "Do you really want to change the delivery option? Your cart will be empty.",
+                                      descriptions:
+                                          "Do you really want to change the delivery option? Your cart will be empty.",
                                       positiveString: "Ok",
                                       negativeString: "Cancel",
                                       positiveClick: () async {
-                                        await Preferences.setString(Preferences.foodDeliveryType, value!);
-                                        controller.selectedOrderTypeValue.value = value;
+                                        await Preferences.setString(
+                                            Preferences.foodDeliveryType,
+                                            value!);
+                                        controller.selectedOrderTypeValue
+                                            .value = value;
                                         controller.getData();
-                                        DatabaseHelper.instance.deleteAllCartProducts();
+                                        DatabaseHelper.instance
+                                            .deleteAllCartProducts();
                                         controller.cartProvider.clearDatabase();
                                         controller.getCartData();
                                         Get.back();
@@ -646,7 +928,9 @@ class CategoryView extends StatelessWidget {
                           style: TextStyle(
                             fontFamily: 'Urbanist',
                             fontWeight: FontWeight.w600,
-                            color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                            color: isDark
+                                ? AppThemeData.grey50
+                                : AppThemeData.grey900,
                             fontSize: 18,
                           ),
                         ),
@@ -661,7 +945,9 @@ class CategoryView extends StatelessWidget {
                           style: TextStyle(
                             fontFamily: 'Urbanist',
                             fontWeight: FontWeight.w500,
-                            color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
+                            color: isDark
+                                ? AppThemeData.primary300
+                                : AppThemeData.primary300,
                             fontSize: 14,
                           ),
                         ),
@@ -688,15 +974,22 @@ class CategoryView extends StatelessWidget {
             ),
             GridView.builder(
               padding: EdgeInsets.zero,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4, childAspectRatio: 5 / 6),
-              itemCount: controller.vendorCategoryModel.length >= 8 ? 8 : controller.vendorCategoryModel.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4, childAspectRatio: 5 / 6),
+              itemCount: controller.vendorCategoryModel.length >= 8
+                  ? 8
+                  : controller.vendorCategoryModel.length,
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemBuilder: (context, index) {
-                VendorCategoryModel vendorCategoryModel = controller.vendorCategoryModel[index];
+                VendorCategoryModel vendorCategoryModel =
+                    controller.vendorCategoryModel[index];
                 return InkWell(
                   onTap: () {
-                    Get.to(const CategoryRestaurantScreen(), arguments: {"vendorCategoryModel": vendorCategoryModel, "dineIn": false});
+                    Get.to(const CategoryRestaurantScreen(), arguments: {
+                      "vendorCategoryModel": vendorCategoryModel,
+                      "dineIn": false
+                    });
                   },
                   child: Column(
                     children: [
@@ -704,7 +997,9 @@ class CategoryView extends StatelessWidget {
                         child: SizedBox(
                           width: 60,
                           height: 60,
-                          child: NetworkImageWidget(imageUrl: vendorCategoryModel.photo.toString(), fit: BoxFit.cover),
+                          child: NetworkImageWidget(
+                              imageUrl: vendorCategoryModel.photo.toString(),
+                              fit: BoxFit.cover),
                         ),
                       ),
                       TranslatedText(
@@ -713,7 +1008,9 @@ class CategoryView extends StatelessWidget {
                         style: TextStyle(
                           fontFamily: 'Urbanist',
                           fontWeight: FontWeight.w500,
-                          color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                          color: isDark
+                              ? AppThemeData.grey50
+                              : AppThemeData.grey900,
                           fontSize: 12,
                         ),
                       ),
@@ -765,7 +1062,9 @@ class OfferView extends StatelessWidget {
                           style: TextStyle(
                             fontFamily: 'Urbanist',
                             fontWeight: FontWeight.w600,
-                            color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                            color: isDark
+                                ? AppThemeData.grey50
+                                : AppThemeData.grey900,
                             fontSize: 18,
                           ),
                         ),
@@ -773,7 +1072,11 @@ class OfferView extends StatelessWidget {
                       InkWell(
                         onTap: () {
                           Get.to(const DiscountRestaurantListScreen(),
-                              arguments: {"vendorList": controller.couponRestaurantList, "couponList": controller.couponList, "title": "Discounts Restaurants"});
+                              arguments: {
+                                "vendorList": controller.couponRestaurantList,
+                                "couponList": controller.couponList,
+                                "title": "Discounts Restaurants"
+                              });
                         },
                         child: TranslatedText(
                           "See all",
@@ -781,7 +1084,9 @@ class OfferView extends StatelessWidget {
                           style: TextStyle(
                             fontFamily: 'Urbanist',
                             fontWeight: FontWeight.w500,
-                            color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
+                            color: isDark
+                                ? AppThemeData.primary300
+                                : AppThemeData.primary300,
                             fontSize: 14,
                           ),
                         ),
@@ -813,24 +1118,30 @@ class OfferView extends StatelessWidget {
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
                     physics: const BouncingScrollPhysics(),
-                    itemCount: controller.couponRestaurantList.length >= 15 ? 15 : controller.couponRestaurantList.length,
+                    itemCount: controller.couponRestaurantList.length >= 15
+                        ? 15
+                        : controller.couponRestaurantList.length,
                     itemBuilder: (context, index) {
-                      VendorModel vendorModel = controller.couponRestaurantList[index];
+                      VendorModel vendorModel =
+                          controller.couponRestaurantList[index];
                       CouponModel offerModel = controller.couponList[index];
                       return InkWell(
                         onTap: () {
-                          Get.to(const RestaurantDetailsScreen(), arguments: {"vendorModel": vendorModel});
+                          Get.to(const RestaurantDetailsScreen(),
+                              arguments: {"vendorModel": vendorModel});
                         },
                         child: Padding(
                           padding: const EdgeInsets.only(right: 10),
                           child: SizedBox(
                             width: Responsive.width(34, context),
                             child: ClipRRect(
-                              borderRadius: const BorderRadius.all(Radius.circular(10)),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10)),
                               child: Stack(
                                 children: [
                                   NetworkImageWidget(
-                                    imageUrl: vendorModel.photo.toString(),
+                                    imageUrl: RestaurantCardImageResolver
+                                        .resolveSingleUrl(vendorModel),
                                     fit: BoxFit.cover,
                                     height: Responsive.height(100, context),
                                     width: Responsive.width(100, context),
@@ -840,17 +1151,22 @@ class OfferView extends StatelessWidget {
                                       gradient: LinearGradient(
                                         begin: const Alignment(-0.00, -1.00),
                                         end: const Alignment(0, 1),
-                                        colors: [Colors.black.withValues(alpha: 0), AppThemeData.grey900],
+                                        colors: [
+                                          Colors.black.withValues(alpha: 0),
+                                          AppThemeData.grey900
+                                        ],
                                       ),
                                     ),
                                   ),
                                   Align(
                                     alignment: Alignment.bottomCenter,
                                     child: Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 10),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 10),
                                       child: Column(
                                         mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
                                         children: [
                                           TranslatedText(
                                             vendorModel.title.toString(),
@@ -861,7 +1177,9 @@ class OfferView extends StatelessWidget {
                                               overflow: TextOverflow.ellipsis,
                                               fontFamily: 'Urbanist',
                                               fontWeight: FontWeight.w600,
-                                              color: isDark ? AppThemeData.grey50 : AppThemeData.grey50,
+                                              color: isDark
+                                                  ? AppThemeData.grey50
+                                                  : AppThemeData.grey50,
                                             ),
                                           ),
                                           const SizedBox(
@@ -870,7 +1188,9 @@ class OfferView extends StatelessWidget {
                                           RoundedButtonFill(
                                             title:
                                                 "${offerModel.discountType == "Fix Price" ? "${Constant.currencyModel!.symbol}" : ""}${offerModel.discount}${offerModel.discountType == "Percentage" ? "% off" : "off"}",
-                                            color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
+                                            color: Colors.primaries[Random()
+                                                .nextInt(
+                                                    Colors.primaries.length)],
                                             textColor: AppThemeData.grey50,
                                             width: 20,
                                             height: 3.5,
@@ -922,26 +1242,34 @@ class BannerView extends StatelessWidget {
             onTap: () async {
               if (bannerModel.redirect_type == "store") {
                 ShowToastDialog.showLoader("Please wait");
-                VendorModel? vendorModel = await FireStoreUtils.getVendorById(bannerModel.redirect_id.toString());
+                VendorModel? vendorModel = await FireStoreUtils.getVendorById(
+                    bannerModel.redirect_id.toString());
 
                 if (vendorModel!.zoneId == Constant.selectedZone!.id) {
                   ShowToastDialog.closeLoader();
-                  Get.to(const RestaurantDetailsScreen(), arguments: {"vendorModel": vendorModel});
+                  Get.to(const RestaurantDetailsScreen(),
+                      arguments: {"vendorModel": vendorModel});
                 } else {
                   ShowToastDialog.closeLoader();
-                  ShowToastDialog.showToast("Sorry, The Zone is not available in your area. change the other location first.");
+                  ShowToastDialog.showToast(
+                      "Sorry, The Zone is not available in your area. change the other location first.");
                 }
               } else if (bannerModel.redirect_type == "product") {
                 ShowToastDialog.showLoader("Please wait");
-                ProductModel? productModel = await FireStoreUtils.getProductById(bannerModel.redirect_id.toString());
-                VendorModel? vendorModel = await FireStoreUtils.getVendorById(productModel!.vendorID.toString());
+                ProductModel? productModel =
+                    await FireStoreUtils.getProductById(
+                        bannerModel.redirect_id.toString());
+                VendorModel? vendorModel = await FireStoreUtils.getVendorById(
+                    productModel!.vendorID.toString());
 
                 if (vendorModel!.zoneId == Constant.selectedZone!.id) {
                   ShowToastDialog.closeLoader();
-                  Get.to(const RestaurantDetailsScreen(), arguments: {"vendorModel": vendorModel});
+                  Get.to(const RestaurantDetailsScreen(),
+                      arguments: {"vendorModel": vendorModel});
                 } else {
                   ShowToastDialog.closeLoader();
-                  ShowToastDialog.showToast("Sorry, The Zone is not available in your area. change the other location first.");
+                  ShowToastDialog.showToast(
+                      "Sorry, The Zone is not available in your area. change the other location first.");
                 }
               } else if (bannerModel.redirect_type == "external_link") {
                 final uri = Uri.parse(bannerModel.redirect_id.toString());
@@ -979,7 +1307,11 @@ class StoryView extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       height: Responsive.height(32, context),
-      decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(20)), image: DecorationImage(image: AssetImage("assets/images/story_bg.png"), fit: BoxFit.cover)),
+      decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+          image: DecorationImage(
+              image: AssetImage("assets/images/story_bg.png"),
+              fit: BoxFit.cover)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -996,7 +1328,9 @@ class StoryView extends StatelessWidget {
                         style: TextStyle(
                           fontFamily: 'Urbanist',
                           fontWeight: FontWeight.w600,
-                          color: isDark ? AppThemeData.grey50 : AppThemeData.grey50,
+                          color: isDark
+                              ? AppThemeData.grey50
+                              : AppThemeData.grey50,
                           fontSize: 18,
                         ),
                       ),
@@ -1040,7 +1374,8 @@ class StoryView extends StatelessWidget {
                       child: SizedBox(
                         width: 134,
                         child: ClipRRect(
-                          borderRadius: const BorderRadius.all(Radius.circular(10)),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
                           child: Stack(
                             children: [
                               NetworkImageWidget(
@@ -1053,26 +1388,37 @@ class StoryView extends StatelessWidget {
                                 color: Colors.black.withValues(alpha: 0.30),
                               ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 8),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 5, vertical: 8),
                                 child: FutureBuilder(
-                                    future: FireStoreUtils.getVendorById(storyModel.vendorID.toString()),
+                                    future: FireStoreUtils.getVendorById(
+                                        storyModel.vendorID.toString()),
                                     builder: (context, snapshot) {
-                                      if (snapshot.connectionState == ConnectionState.waiting) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
                                         return Constant.loader();
                                       } else {
                                         if (snapshot.hasError) {
-                                          return Center(child: TranslatedText('Error: ${snapshot.error}'));
+                                          return Center(
+                                              child: TranslatedText(
+                                                  'Error: ${snapshot.error}'));
                                         } else if (snapshot.data == null) {
                                           return const SizedBox();
                                         } else {
-                                          VendorModel vendorModel = snapshot.data!;
+                                          VendorModel vendorModel =
+                                              snapshot.data!;
                                           return Row(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               ClipOval(
                                                 child: NetworkImageWidget(
-                                                  imageUrl: vendorModel.photo.toString(),
+                                                  imageUrl:
+                                                      RestaurantCardImageResolver
+                                                          .resolveSingleUrl(
+                                                              vendorModel),
                                                   width: 30,
                                                   height: 30,
                                                   fit: BoxFit.cover,
@@ -1083,35 +1429,48 @@ class StoryView extends StatelessWidget {
                                               ),
                                               Expanded(
                                                 child: Column(
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                   children: [
                                                     TranslatedText(
-                                                      vendorModel.title.toString(),
-                                                      textAlign: TextAlign.center,
+                                                      vendorModel.title
+                                                          .toString(),
+                                                      textAlign:
+                                                          TextAlign.center,
                                                       maxLines: 1,
                                                       style: const TextStyle(
                                                         color: Colors.white,
                                                         fontSize: 12,
-                                                        overflow: TextOverflow.ellipsis,
-                                                        fontWeight: FontWeight.w700,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        fontWeight:
+                                                            FontWeight.w700,
                                                       ),
                                                     ),
                                                     Row(
                                                       children: [
-                                                        SvgPicture.asset("assets/icons/ic_star.svg"),
+                                                        SvgPicture.asset(
+                                                            "assets/icons/ic_star.svg"),
                                                         const SizedBox(
                                                           width: 5,
                                                         ),
                                                         Text(
                                                           "${Constant.calculateReview(reviewCount: vendorModel.reviewsCount.toString(), reviewSum: vendorModel.reviewsSum!.toStringAsFixed(0))} ${'reviews'}",
-                                                          textAlign: TextAlign.center,
+                                                          textAlign:
+                                                              TextAlign.center,
                                                           maxLines: 1,
-                                                          style: const TextStyle(
-                                                            color: AppThemeData.warning300,
+                                                          style:
+                                                              const TextStyle(
+                                                            color: AppThemeData
+                                                                .warning300,
                                                             fontSize: 10,
-                                                            overflow: TextOverflow.ellipsis,
-                                                            fontWeight: FontWeight.w700,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            fontWeight:
+                                                                FontWeight.w700,
                                                           ),
                                                         ),
                                                       ],
@@ -1172,14 +1531,18 @@ class RestaurantView extends StatelessWidget {
                       style: TextStyle(
                         fontFamily: 'Urbanist',
                         fontWeight: FontWeight.w600,
-                        color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                        color:
+                            isDark ? AppThemeData.grey50 : AppThemeData.grey900,
                         fontSize: 18,
                       ),
                     ),
                   ),
                   InkWell(
                     onTap: () {
-                      Get.to(const RestaurantListScreen(), arguments: {"vendorList": controller.allNearestRestaurant, "title": "Best Restaurants"});
+                      Get.to(const RestaurantListScreen(), arguments: {
+                        "vendorList": controller.allNearestRestaurant,
+                        "title": "Best Restaurants"
+                      });
                     },
                     child: TranslatedText(
                       "See all",
@@ -1187,7 +1550,9 @@ class RestaurantView extends StatelessWidget {
                       style: TextStyle(
                         fontFamily: 'Urbanist',
                         fontWeight: FontWeight.w500,
-                        color: isDark ? AppThemeData.primary300 : AppThemeData.primary300,
+                        color: isDark
+                            ? AppThemeData.primary300
+                            : AppThemeData.primary300,
                         fontSize: 14,
                       ),
                     ),
@@ -1207,38 +1572,47 @@ class RestaurantView extends StatelessWidget {
                 scrollDirection: Axis.vertical,
                 itemCount: controller.allNearestRestaurant.length,
                 itemBuilder: (BuildContext context, int index) {
-                  VendorModel vendorModel = controller.allNearestRestaurant[index];
+                  VendorModel vendorModel =
+                      controller.allNearestRestaurant[index];
 
                   List<CouponModel> tempList = [];
                   List<double> discountAmountTempList = [];
                   for (var element in controller.couponList) {
-                    if (vendorModel.id == element.resturantId && element.expiresAt!.toDate().isAfter(DateTime.now())) {
+                    if (vendorModel.id == element.resturantId &&
+                        element.expiresAt!.toDate().isAfter(DateTime.now())) {
                       tempList.add(element);
-                      discountAmountTempList.add(double.parse(element.discount.toString()));
+                      discountAmountTempList
+                          .add(double.parse(element.discount.toString()));
                     }
                   }
                   return InkWell(
                     onTap: () {
-                      Get.to(const RestaurantDetailsScreen(), arguments: {"vendorModel": vendorModel});
+                      Get.to(const RestaurantDetailsScreen(),
+                          arguments: {"vendorModel": vendorModel});
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 20),
                       child: Container(
                         decoration: ShapeDecoration(
-                          color: isDark ? AppThemeData.grey900 : AppThemeData.grey50,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          color: isDark
+                              ? AppThemeData.grey900
+                              : AppThemeData.grey50,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16)),
                         ),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             ClipRRect(
-                              borderRadius: const BorderRadius.all(Radius.circular(16)),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(16)),
                               child: Stack(
                                 children: [
                                   NetworkImageWidget(
                                     height: Responsive.height(14, context),
                                     width: Responsive.width(30, context),
-                                    imageUrl: vendorModel.photo.toString(),
+                                    imageUrl: RestaurantCardImageResolver
+                                        .resolveSingleUrl(vendorModel),
                                     fit: BoxFit.cover,
                                   ),
                                   Container(
@@ -1248,7 +1622,10 @@ class RestaurantView extends StatelessWidget {
                                       gradient: LinearGradient(
                                         begin: const Alignment(-0.00, -1.00),
                                         end: const Alignment(0, 1),
-                                        colors: [Colors.black.withValues(alpha: 0), AppThemeData.grey900],
+                                        colors: [
+                                          Colors.black.withValues(alpha: 0),
+                                          AppThemeData.grey900
+                                        ],
                                       ),
                                     ),
                                   ),
@@ -1259,20 +1636,25 @@ class RestaurantView extends StatelessWidget {
                                           left: 0,
                                           right: 0,
                                           child: Padding(
-                                            padding: const EdgeInsets.only(bottom: 10),
+                                            padding: const EdgeInsets.only(
+                                                bottom: 10),
                                             child: Column(
                                               mainAxisSize: MainAxisSize.min,
-                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
                                               children: [
                                                 TranslatedText(
                                                   "Upto",
                                                   textAlign: TextAlign.center,
                                                   maxLines: 1,
                                                   style: TextStyle(
-                                                    overflow: TextOverflow.ellipsis,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                     fontFamily: 'Urbanist',
                                                     fontWeight: FontWeight.w900,
-                                                    color: isDark ? AppThemeData.grey50 : AppThemeData.grey50,
+                                                    color: isDark
+                                                        ? AppThemeData.grey50
+                                                        : AppThemeData.grey50,
                                                   ),
                                                 ),
                                                 Text(
@@ -1281,10 +1663,13 @@ class RestaurantView extends StatelessWidget {
                                                   maxLines: 1,
                                                   style: TextStyle(
                                                     fontSize: 18,
-                                                    overflow: TextOverflow.ellipsis,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                     fontFamily: 'Urbanist',
                                                     fontWeight: FontWeight.w600,
-                                                    color: isDark ? AppThemeData.grey50 : AppThemeData.grey50,
+                                                    color: isDark
+                                                        ? AppThemeData.grey50
+                                                        : AppThemeData.grey50,
                                                   ),
                                                 ),
                                               ],
@@ -1311,7 +1696,9 @@ class RestaurantView extends StatelessWidget {
                                       overflow: TextOverflow.ellipsis,
                                       fontFamily: 'Urbanist',
                                       fontWeight: FontWeight.w600,
-                                      color: isDark ? AppThemeData.grey50 : AppThemeData.grey900,
+                                      color: isDark
+                                          ? AppThemeData.grey50
+                                          : AppThemeData.grey900,
                                     ),
                                   ),
                                   TranslatedText(
@@ -1322,7 +1709,9 @@ class RestaurantView extends StatelessWidget {
                                       overflow: TextOverflow.ellipsis,
                                       fontFamily: 'Urbanist',
                                       fontWeight: FontWeight.w500,
-                                      color: isDark ? AppThemeData.grey400 : AppThemeData.grey400,
+                                      color: isDark
+                                          ? AppThemeData.grey400
+                                          : AppThemeData.grey400,
                                     ),
                                   ),
                                   const SizedBox(
@@ -1333,7 +1722,11 @@ class RestaurantView extends StatelessWidget {
                                     child: Row(
                                       children: [
                                         Visibility(
-                                          visible: (vendorModel.isSelfDelivery == true && Constant.isSelfDeliveryFeature == true),
+                                          visible: (vendorModel
+                                                      .isSelfDelivery ==
+                                                  true &&
+                                              Constant.isSelfDeliveryFeature ==
+                                                  true),
                                           child: Row(
                                             children: [
                                               SvgPicture.asset(
@@ -1346,10 +1739,13 @@ class RestaurantView extends StatelessWidget {
                                               TranslatedText(
                                                 "Free Delivery",
                                                 style: TextStyle(
-                                                  overflow: TextOverflow.ellipsis,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                   fontFamily: 'Urbanist',
                                                   fontWeight: FontWeight.w500,
-                                                  color: isDark ? AppThemeData.grey400 : AppThemeData.grey400,
+                                                  color: isDark
+                                                      ? AppThemeData.grey400
+                                                      : AppThemeData.grey400,
                                                 ),
                                               ),
                                               const SizedBox(
@@ -1361,11 +1757,15 @@ class RestaurantView extends StatelessWidget {
                                         Row(
                                           children: [
                                             Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10),
                                               child: SvgPicture.asset(
                                                 "assets/icons/ic_star.svg",
                                                 width: 18,
-                                                colorFilter: ColorFilter.mode(AppThemeData.primary300, BlendMode.srcIn),
+                                                colorFilter: ColorFilter.mode(
+                                                    AppThemeData.primary300,
+                                                    BlendMode.srcIn),
                                               ),
                                             ),
                                             Text(
@@ -1376,7 +1776,9 @@ class RestaurantView extends StatelessWidget {
                                                 overflow: TextOverflow.ellipsis,
                                                 fontFamily: 'Urbanist',
                                                 fontWeight: FontWeight.w500,
-                                                color: isDark ? AppThemeData.grey400 : AppThemeData.grey400,
+                                                color: isDark
+                                                    ? AppThemeData.grey400
+                                                    : AppThemeData.grey400,
                                               ),
                                             ),
                                           ],
@@ -1384,19 +1786,29 @@ class RestaurantView extends StatelessWidget {
                                         Row(
                                           children: [
                                             Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10),
                                               child: Icon(
                                                 Icons.circle,
                                                 size: 5,
-                                                color: isDark ? AppThemeData.grey400 : AppThemeData.grey500,
+                                                color: isDark
+                                                    ? AppThemeData.grey400
+                                                    : AppThemeData.grey500,
                                               ),
                                             ),
                                             TranslatedText(
                                               "${Constant.getDistance(
-                                                lat1: vendorModel.latitude.toString(),
-                                                lng1: vendorModel.longitude.toString(),
-                                                lat2: Constant.selectedLocation.location!.latitude.toString(),
-                                                lng2: Constant.selectedLocation.location!.longitude.toString(),
+                                                lat1: vendorModel.latitude
+                                                    .toString(),
+                                                lng1: vendorModel.longitude
+                                                    .toString(),
+                                                lat2: Constant.selectedLocation
+                                                    .location!.latitude
+                                                    .toString(),
+                                                lng2: Constant.selectedLocation
+                                                    .location!.longitude
+                                                    .toString(),
                                               )} ${Constant.distanceType}",
                                               textAlign: TextAlign.start,
                                               maxLines: 1,
@@ -1404,7 +1816,9 @@ class RestaurantView extends StatelessWidget {
                                                 overflow: TextOverflow.ellipsis,
                                                 fontFamily: 'Urbanist',
                                                 fontWeight: FontWeight.w500,
-                                                color: isDark ? AppThemeData.grey400 : AppThemeData.grey400,
+                                                color: isDark
+                                                    ? AppThemeData.grey400
+                                                    : AppThemeData.grey400,
                                               ),
                                             ),
                                           ],

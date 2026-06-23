@@ -171,11 +171,23 @@ No nested card container. Name + price stacked vertically on left (name 14px w50
 - If the active online gateway is missing, disabled, unhealthy, or does not support a mode, hide affected online modes and keep Wallet/COD independent.
 
 ### Checkout Hierarchy
-- Preferred checkout order: delivery address, restaurant/item summary, offers/coupons, compact bill row, payment row, remarks, tip, sticky CTA.
-- Remove duplicate remarks or tip sections. Each should appear once.
+- Preferred checkout order: Your Order, Complete Your Meal, Offers, Delivery, Order Total, Tip Your Delivery Partner, sticky CTA.
+- Remove duplicate notes, remarks, instructions, or tip sections. Each should appear at most once.
+- Keep a lightly elevated, plain surface `Add More Items` action and an input-like `Add note for restaurant` row inside the single `Your Order` card. Restaurant note uses a neutral icon/color treatment and opens a bottom sheet with only 2-3 recent user notes, if available, shown below the text field with a history icon. Do not show hardcoded quick suggestions, create a standalone Delivery Instructions card, or duplicate edit-note action.
+- Use compact segmented delivery type control (`Instant Delivery` / `Schedule`) inside the Delivery card.
+- Show Schedule only when `settings/globalSettings.is_scheduled_order_enabled` is true. If disabled, checkout must behave as instant delivery and not show a one-option segmented control.
+- Delivery should be one grouped card containing ETA, delivery type, and address; avoid separate nested white cards for each row.
+- Checkout cart item rows do not show food images. Use item/customization text on the left and quantity/final price on the right; customization/add-on lines must align with the item name, not with the veg/non-veg marker.
+- Customizable checkout items show a small `Edit` affordance below their variant/add-on summary. Tapping the checkout item row opens the same editor instead of navigating to restaurant/menu. The cart editor must reflect already-selected add-ons and update the same cart row when selections are changed.
+- Cart item variants/addons are secondary text only. Do not render large "Variants" or "Addons" chip blocks, separate addon prices, or an "Addons:" label inside checkout items.
 - Keep the primary payment action in a sticky bottom CTA with the selected mode on the left and amount/action on the right.
+- Payment mode selection should be exposed through the sticky footer `Change` affordance; avoid a duplicate Payment section in the checkout body.
+- Footer must use `SafeArea`, avoid fixed fragile heights, and leave enough scroll bottom padding so the last section is reachable.
+- Body bottom clearance should be just enough to keep the last section above the sticky CTA; avoid large blank overscroll after the Tip section.
 - Disable the CTA while payment/order processing is active to prevent duplicate payments.
 - Suggested add-ons may appear after the cart item summary when safe simple products are available; hide the section completely when empty.
+- Suggested add-ons section is customer-facing as "Complete Your Meal"; old "Frequently ordered together" copy should not be used in checkout.
+- Complete Your Meal cards must size from available width and keep the image/button constraints compact enough to avoid overflow on small or text-scaled screens.
 
 ### Wallet Split Tender
 - Wallet auto-applies by default when enabled and balance is positive.
@@ -184,8 +196,8 @@ No nested card container. Name + price stacked vertically on left (name 14px w50
 - Support full wallet, full COD, full online, wallet + COD, and wallet + online.
 - Wallet debit should happen only after online payment success and immediately before order creation.
 
-### Bill Details
-- Main cart should show a compact "To Pay" row with a "View Bill Details" action.
+### Order Total
+- Main cart should show a compact "Order Total" row with a "View Breakdown" action.
 - Full breakdown opens in a draggable bottom sheet and includes item total, discounts, packaging, delivery, platform fee, taxes, tip, wallet deduction, and final payable.
 - The cart body should not show the full bill table inline.
 

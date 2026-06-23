@@ -241,9 +241,18 @@ For food delivery checkout, keep the UX mode-centric and never gateway-centric:
 - Users choose UPI, Wallet, Card, Net Banking, or COD.
 - Gateway names stay internal. Admin config selects exactly one active online gateway that powers online modes.
 - Load only the active online gateway SDK/settings plus Wallet and COD.
-- Use a sticky bottom CTA, compact bill row, bill-details bottom sheet, payment-method bottom sheet, and one remarks/tip section each.
+- Use the compact conversion hierarchy: Your Order, Complete Your Meal, Offers, Delivery, Order Total, Tip Your Delivery Partner, sticky CTA.
+- Use compact cards and segmented controls: delivery is one grouped card with ETA, one-row `Instant Delivery` / `Schedule`, and address; the footer is safe-area aware instead of fixed-height.
+- Show the `Schedule` delivery option only when `settings/globalSettings.is_scheduled_order_enabled == true`; otherwise default checkout to instant delivery and hide the schedule control.
+- Checkout order items should not show food images. Keep item rows compact: item name and customization summary share the same left edge, quantity stepper and final price sit on the right, variants/addons render as human-friendly secondary text, and addon price labels are omitted.
+- Customizable checkout items show a small `Edit` affordance below their variant/add-on summary, and tapping the item row opens the same customization editor instead of navigating to the menu. The editor must preselect existing add-ons and save selection/unselection back to the same cart row without changing quantity or variant identity.
+- Keep a lightly elevated, plain surface `Add More Items` action and an input-like `Add note for restaurant` row inside the single `Your Order` card. The note uses neutral styling and opens a bottom sheet with only 2-3 recent user notes, if available, shown below the text field with a history icon. Do not show hardcoded quick suggestions, add a separate delivery-instructions card, or duplicate edit-note action.
+- Use a sticky bottom CTA, compact `Order Total` row, order-total bottom sheet, payment bottom sheet launched from the sticky footer `Change` affordance, and one tip section. Do not add a separate body Payment section when footer already shows selected payment.
+- Keep checkout body bottom clearance just large enough for the sticky CTA. Avoid oversized blank scroll space after the final Tip section.
+- Rename "Frequently ordered together" to "Complete Your Meal", "Offers & Benefits" or "Offers & Savings" to "Offers", "Payment Method" to "Payment", and "Bill Details" to "Order Total" in checkout.
 - Keep gateway-specific SDK/link creation behind an adapter interface so checkout UI and cart coordination stay mode-centric.
 - Suggested add-ons should use existing menu/product data, be limited, and disappear completely when there are no safe local recommendations.
+- `Complete Your Meal` cards must use responsive card/image/list sizing and compact button constraints so they do not overflow by a pixel on narrow or scaled screens.
 - Auto-apply wallet when enabled and balance is positive, but allow the user to turn it off.
 - Support full wallet, full COD, full online, wallet + COD, and wallet + online without changing old order parsing.
 - Refund UX must separate wallet and online/COD portions; source refunds can be `pending_manual_review` when automation is not available.

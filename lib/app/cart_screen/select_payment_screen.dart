@@ -58,7 +58,7 @@ class SelectPaymentScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         TranslatedText(
-                          "Payment Method",
+                          "Payment",
                           textAlign: TextAlign.start,
                           style: TextStyle(
                             fontFamily: 'Urbanist',
@@ -96,13 +96,30 @@ class SelectPaymentScreen extends StatelessWidget {
                                 if (controller.isWalletEnabled &&
                                     controller.walletBalance > 0)
                                   walletToggle(controller, isDark),
-                                ...controller.selectablePaymentModes
-                                    .where((mode) =>
-                                        mode != PaymentMode.wallet ||
-                                        controller
-                                            .walletSplitResult.isWalletOnly)
-                                    .map((mode) =>
-                                        modeCard(controller, mode, isDark)),
+                                RadioGroup<String>(
+                                  groupValue:
+                                      controller.selectedPaymentMethod.value,
+                                  onChanged: (value) {
+                                    final selectedMode =
+                                        PaymentMode.values.firstWhereOrNull(
+                                      (mode) => mode.name == value,
+                                    );
+                                    if (selectedMode != null) {
+                                      controller
+                                          .selectPaymentMode(selectedMode);
+                                    }
+                                  },
+                                  child: Column(
+                                    children: controller.selectablePaymentModes
+                                        .where((mode) =>
+                                            mode != PaymentMode.wallet ||
+                                            controller
+                                                .walletSplitResult.isWalletOnly)
+                                        .map((mode) =>
+                                            modeCard(controller, mode, isDark))
+                                        .toList(),
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -159,7 +176,7 @@ class SelectPaymentScreen extends StatelessWidget {
       () => SwitchListTile(
         contentPadding: EdgeInsets.zero,
         value: controller.isWalletApplied.value,
-        activeColor: AppThemeData.primary300,
+        activeThumbColor: AppThemeData.primary300,
         onChanged: controller.setWalletApplied,
         secondary: Icon(
           controller.paymentModeIcon(PaymentMode.wallet),
@@ -242,9 +259,7 @@ class SelectPaymentScreen extends StatelessWidget {
               ),
               Radio<String>(
                 value: mode.name,
-                groupValue: controller.selectedPaymentMethod.value,
                 activeColor: AppThemeData.primary300,
-                onChanged: (_) => controller.selectPaymentMode(mode),
               ),
             ],
           ),
@@ -343,15 +358,17 @@ class SelectPaymentScreen extends StatelessWidget {
                   const Expanded(
                     child: SizedBox(),
                   ),
-                  Radio(
-                    value: value.name,
+                  RadioGroup<String>(
                     groupValue: controller.selectedPaymentMethod.value,
-                    activeColor: isDark
-                        ? AppThemeData.primary300
-                        : AppThemeData.primary300,
-                    onChanged: (value) {
-                      controller.selectedPaymentMethod.value = value.toString();
+                    onChanged: (selectedValue) {
+                      if (selectedValue != null) {
+                        controller.selectedPaymentMethod.value = selectedValue;
+                      }
                     },
+                    child: Radio<String>(
+                      value: value.name,
+                      activeColor: AppThemeData.primary300,
+                    ),
                   )
                 ],
               ),

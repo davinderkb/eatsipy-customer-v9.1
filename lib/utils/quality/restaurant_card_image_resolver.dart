@@ -58,7 +58,19 @@ class RestaurantCardImageResolver {
   }
 
   static bool needsFallback(VendorModel vendor) {
-    return resolve(vendor: vendor).mode == RestaurantCardImageMode.placeholder;
+    final mode = resolve(vendor: vendor).mode;
+    return mode == RestaurantCardImageMode.placeholder;
+  }
+
+  static String resolveSingleUrl(VendorModel vendor,
+      {String? fallbackImageUrl}) {
+    final resolution = vendor.imageResolution ??
+        resolve(vendor: vendor, fallbackImageUrl: fallbackImageUrl);
+    if (resolution.mode == RestaurantCardImageMode.showcase &&
+        resolution.showcaseItems.isNotEmpty) {
+      return resolution.showcaseItems.first.imageUrl ?? '';
+    }
+    return resolution.imageUrl ?? '';
   }
 
   static bool _isValidHttpUrl(String? value) {
